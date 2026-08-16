@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "cltdistrib-site",
+      "runtimeExecutable": "powershell",
+      "runtimeArgs": ["-ExecutionPolicy", "Bypass", "-File", "C:\\Users\\cleme\\Downloads\\cltdistrib-site\\.claude\\serve.ps1"],
+      "port": 8130
+    }
+  ]
+}
