@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>CLTDistrib — Distributeurs automatiques clé en main</title>
+<meta name="description" content="CLTDistrib installe et gère des distributeurs automatiques (boissons, snacks) dans les entreprises et sites à forte affluence : installation, produits, réapprovisionnement et maintenance, sans investissement pour vous.">
+<meta property="og:title" content="CLTDistrib — Distributeurs automatiques clé en main">
+<meta property="og:description" content="Un distributeur automatique installé, approvisionné et géré de bout en bout — sans investissement pour vous.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%231F6B44'/%3E%3Crect x='5' y='5' width='6' height='6' rx='1' fill='%23fff'/%3E%3Crect x='13' y='5' width='6' height='6' rx='1' fill='%23fff'/%3E%3Crect x='5' y='13' width='6' height='6' rx='1' fill='%23fff'/%3E%3Crect x='13' y='13' width='6' height='6' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -805,7 +810,7 @@ img{ max-width:100%; display:block; }
         <div class="support__card">
           <h3>Déjà équipé chez CLTDistrib ?</h3>
           <p>Panne, réapprovisionnement, question sur votre contrat : contactez-moi directement, un seul canal pour tout.</p>
-          <a href="mailto:contact@cltdistrib.fr?subject=Support%20—%20Distributeur%20installé" class="btn btn--accent">
+          <a href="mailto:clementpiresvalente@gmail.com?subject=Support%20—%20Distributeur%20installé" class="btn btn--accent">
             <svg class="icon" viewBox="0 0 24 24" style="color:#fff"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
             Signaler un besoin
           </a>
@@ -848,9 +853,7 @@ img{ max-width:100%; display:block; }
         <p class="form-note">Réponse automatique instantanée. Pour toute demande précise, contactez-moi directement.</p>
       </div>
       <div class="contact-row" style="margin-top:22px;justify-content:center">
-        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg> contact@cltdistrib.fr
-        <span style="width:18px"></span>
-        <svg class="icon" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg> 01 23 45 67 89
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg> <a href="mailto:clementpiresvalente@gmail.com">clementpiresvalente@gmail.com</a>
       </div>
     </div>
   </section>
@@ -864,7 +867,7 @@ img{ max-width:100%; display:block; }
         <a class="nav__link" href="#assistant">Une question ?</a>
         <a class="nav__link" href="#" id="footerProBtn">Espace pro</a>
       </div>
-      <small>© 2026 CLTDistrib. Tous droits réservés.</small>
+      <small>© 2026 CLTDistrib. Tous droits réservés. · <a href="mentions-legales.html" style="color:inherit;text-decoration:underline">Mentions légales</a></small>
     </div>
   </footer>
 
@@ -1073,34 +1076,52 @@ function uid(prefix){
 }
 
 /* ============================================================
-   STORAGE (window.storage when available, else in-memory only —
-   use Exporter/Importer to keep data when used outside claude.ai)
+   STORAGE (window.storage quand disponible — sandbox Claude.ai —,
+   sinon localStorage du navigateur ; Exporter/Importer en secours)
    ============================================================ */
-function hasStorage(){
+function hasClaudeStorage(){
   return typeof window.storage !== "undefined" && window.storage;
+}
+function hasLocalStorage(){
+  try{ var k = "__test__"; localStorage.setItem(k,"1"); localStorage.removeItem(k); return true; }
+  catch(e){ return false; }
 }
 
 function loadData(){
-  if(!hasStorage()){ renderAll(); return; }
-  window.storage.get(STORAGE_KEY, false).then(function(res){
-    if(res && res.value){
-      try{ appData = JSON.parse(res.value); }catch(e){ /* keep default */ }
-    }
-    renderAll();
-  }).catch(function(){ renderAll(); });
+  if(hasClaudeStorage()){
+    window.storage.get(STORAGE_KEY, false).then(function(res){
+      if(res && res.value){
+        try{ appData = JSON.parse(res.value); }catch(e){ /* keep default */ }
+      }
+      renderAll();
+    }).catch(function(){ renderAll(); });
+    return;
+  }
+  if(hasLocalStorage()){
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ try{ appData = JSON.parse(raw); }catch(e){ /* keep default */ } }
+  }
+  renderAll();
 }
 
 function saveData(){
   var indicator = document.getElementById("saveIndicator");
-  if(indicator){ indicator.querySelector("span.dot"); indicator.textContent = ""; indicator.innerHTML = '<span class="dot" style="background:#C98A2B"></span> Enregistrement...'; }
+  if(indicator){ indicator.innerHTML = '<span class="dot" style="background:#C98A2B"></span> Enregistrement...'; }
   clearTimeout(saveTimer);
   saveTimer = setTimeout(function(){
-    if(hasStorage()){
+    if(hasClaudeStorage()){
       window.storage.set(STORAGE_KEY, JSON.stringify(appData), false).then(function(){
         if(indicator){ indicator.innerHTML = '<span class="dot"></span> Enregistré'; }
       }).catch(function(){
         if(indicator){ indicator.innerHTML = '<span class="dot" style="background:#BE5340"></span> Non sauvegardé — pensez à exporter'; }
       });
+    } else if(hasLocalStorage()){
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        if(indicator){ indicator.innerHTML = '<span class="dot"></span> Enregistré sur cet appareil'; }
+      }catch(e){
+        if(indicator){ indicator.innerHTML = '<span class="dot" style="background:#BE5340"></span> Non sauvegardé — pensez à exporter'; }
+      }
     } else {
       if(indicator){ indicator.innerHTML = '<span class="dot" style="background:#C98A2B"></span> Session uniquement — pensez à exporter'; }
     }
@@ -1296,9 +1317,40 @@ function initMachinePush(){
 }
 
 /* ============================================================
-   ÉCHANGE (chat automatique — sans mention "IA" côté visiteur)
+   ÉCHANGE (FAQ automatique par mots-clés — 100% local, sans API)
    ============================================================ */
-var CHAT_SYSTEM_PROMPT = "Tu es l'assistant virtuel du site de CLTDistrib, une entreprise individuelle de mise à disposition et de gestion de distributeurs automatiques (boissons, snacks) dans des entreprises et sites à forte fréquentation : bureaux, sites industriels, entrepôts/logistique, zones commerciales. L'entrepreneur gère seul l'installation, le choix des produits, le réapprovisionnement, la maintenance et le suivi (stocks, avis, chiffre d'affaires) de chaque distributeur. Ton rôle est d'expliquer aux visiteurs du site ce que fait l'entreprise et comment le service est géré au quotidien : installation, sélection des produits, réapprovisionnement, maintenance, suivi. Réponds en français, de façon claire, chaleureuse et concise (3 à 5 phrases maximum). Ce site n'est pas destiné à passer commande : si on te demande de commander ou réserver un distributeur, invite la personne à contacter directement l'entreprise par email (contact@cltdistrib.fr) ou téléphone (01 23 45 67 89). N'invente jamais de tarifs précis ; reste général et invite à contacter directement pour un devis.";
+var CHAT_FAQ = [
+  { keys:["install","pose","mise en place","mettre en place"],
+    reply:"Chaque installation tient compte des contraintes du site — extérieur ou intérieur — ainsi que de l'alimentation électrique nécessaire et de l'encombrement du distributeur. Le délai moyen entre le premier échange et la mise en service est inférieur à 15 jours." },
+  { keys:["produit","boisson","snack","offre","choix","varié"],
+    reply:"La sélection de produits s'adapte à l'environnement : pour les salariés et les clients d'une entreprise, ou pour un espace public où le distributeur crée de la vie avec une offre de restauration rapide et d'hydratation." },
+  { keys:["maintenance","panne","entretien","répar","incident"],
+    reply:"J'assure moi-même l'entretien courant, avec l'appui du constructeur pour les interventions plus importantes. En cas de panne, contactez-moi directement et j'interviens dès que possible." },
+  { keys:["stock","réappro","reappro","rupture"],
+    reply:"Le stock de chaque machine est suivi en ligne, en temps réel, ce qui permet d'anticiper les besoins et de planifier le réapprovisionnement avant la rupture." },
+  { keys:["prix","tarif","coût","cout","investissement","payer","gratuit","frais"],
+    reply:"L'installation, la machine et la maintenance sont entièrement à ma charge : aucun frais et aucune gestion de votre côté. Pour un devis précis adapté à votre site, contactez-moi directement." },
+  { keys:["emplacement","où","ou mettre","lieu","site"],
+    reply:"On étudie ensemble les emplacements possibles sur votre site pour choisir celui qui s'intègre le mieux à votre organisation, selon le passage des personnes et les horaires." },
+  { keys:["délai","delai","combien de temps","rapide"],
+    reply:"Le délai moyen d'installation, du premier échange à la mise en service, est inférieur à 15 jours." },
+  { keys:["commander","réserver","reserver","devis","contact","contacter","email","téléphone","telephone","joindre"],
+    reply:"Ce site sert à présenter le service — pas à passer commande. Pour un devis ou toute question précise, écrivez-moi directement à clementpiresvalente@gmail.com." },
+  { keys:["bonjour","salut","hello","bonsoir"],
+    reply:"Bonjour ! Posez-moi vos questions sur le service CLTDistrib : emplacement, produits, installation, suivi des stocks ou maintenance." }
+];
+var CHAT_FALLBACK = "Je n'ai pas de réponse toute prête pour cette question. Écrivez-moi directement à clementpiresvalente@gmail.com et je vous répondrai personnellement.";
+
+function findFaqReply(text){
+  var norm = text.toLowerCase();
+  for(var i=0;i<CHAT_FAQ.length;i++){
+    var entry = CHAT_FAQ[i];
+    for(var j=0;j<entry.keys.length;j++){
+      if(norm.indexOf(entry.keys[j]) !== -1) return entry.reply;
+    }
+  }
+  return CHAT_FALLBACK;
+}
 
 var chatHistory = [];
 var chatMessagesEl = document.getElementById("chatMessages");
@@ -1356,34 +1408,14 @@ function sendChatMessage(){
   chatSendBtn.disabled = true;
   addTyping();
 
-  fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 1000,
-      system: CHAT_SYSTEM_PROMPT,
-      messages: chatHistory
-    })
-  }).then(function(res){ return res.json(); })
-    .then(function(data){
-      removeTyping();
-      chatBusy = false;
-      chatSendBtn.disabled = false;
-      var textOut = "";
-      if(data && data.content){
-        textOut = data.content.map(function(block){ return block.type === "text" ? block.text : ""; }).join("\n").trim();
-      }
-      if(!textOut){ textOut = "Désolé, je n'ai pas pu générer de réponse. Contactez-moi directement à contact@cltdistrib.fr."; }
-      addMessage("assistant", textOut);
-      chatHistory.push({ role:"assistant", content:textOut });
-    })
-    .catch(function(){
-      removeTyping();
-      chatBusy = false;
-      chatSendBtn.disabled = false;
-      addMessage("error", "Une erreur est survenue. Réessayez, ou contactez-moi directement à contact@cltdistrib.fr.");
-    });
+  var reply = findFaqReply(text);
+  setTimeout(function(){
+    removeTyping();
+    chatBusy = false;
+    chatSendBtn.disabled = false;
+    addMessage("assistant", reply);
+    chatHistory.push({ role:"assistant", content:reply });
+  }, 500 + Math.random()*400);
 }
 
 /* Bouton flottant + CTA : ouvrent et amènent le focus sur l'assistant */
