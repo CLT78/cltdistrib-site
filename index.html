@@ -491,13 +491,18 @@ img{ max-width:100%; display:block; }
 }
 
 /* ============================================================
-   DISTRIBUTEUR INTERACTIF — vraie photo + effets
+   DISTRIBUTEUR INTERACTIF — scroll-driven, photo au premier plan
    ============================================================ */
-.machine-photo-wrap{ display:flex; flex-direction:column; align-items:center; gap:26px; }
+.scrollytell{ display:grid; grid-template-columns:1.1fr 1fr; gap:60px; align-items:start; }
+.scrollytell__visual{ position:sticky; top:100px; z-index:2; }
+
 .machine-photo{
-  position:relative; max-width:380px; width:100%; border-radius:22px; overflow:hidden;
-  box-shadow:var(--shadow-m); background:#0A1114;
+  position:relative; max-width:520px; width:100%; margin:0 auto; border-radius:26px; overflow:hidden;
+  box-shadow:0 30px 70px rgba(22,35,43,.28), 0 8px 20px rgba(22,35,43,.18); background:#0A1114;
+  animation:board-float 7s ease-in-out infinite;
 }
+.machine-photo.is-shifting{ animation:board-float 7s ease-in-out infinite, feature-shift .5s ease; }
+@keyframes feature-shift{ 0%{ transform:scale(1); } 40%{ transform:scale(1.025); } 100%{ transform:scale(1); } }
 .machine-photo__img{ width:100%; display:block; }
 
 .hotspot-dot{
@@ -512,7 +517,8 @@ img{ max-width:100%; display:block; }
 
 .hotspot-ring{
   position:absolute; border:2px solid var(--teal-light); border-radius:16px; opacity:0; pointer-events:none;
-  transition:opacity .35s ease; box-shadow:0 0 24px rgba(79,174,124,.5); z-index:1;
+  transition:opacity .35s ease, top .4s ease, left .4s ease, width .4s ease, height .4s ease;
+  box-shadow:0 0 24px rgba(79,174,124,.5); z-index:1;
 }
 .hotspot-ring.is-active{ opacity:1; animation:ring-pulse 1.8s ease-in-out infinite; }
 @keyframes ring-pulse{ 0%,100%{ box-shadow:0 0 18px rgba(79,174,124,.4); } 50%{ box-shadow:0 0 34px rgba(79,174,124,.75); } }
@@ -526,23 +532,23 @@ img{ max-width:100%; display:block; }
 .machine-caption.is-visible{ opacity:1; transform:translate(-50%,0); }
 .machine-caption strong{ color:var(--teal-light); display:block; font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; margin-bottom:4px; text-transform:uppercase; }
 
-.machine__keypad-wrap{ background:var(--ink); border-radius:var(--radius-m); padding:14px; width:100%; max-width:520px; }
-.machine__keypad{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
-.machine__btn{
-  display:flex; flex-direction:column; align-items:flex-start; gap:3px; background:#1D2C34; border:1px solid #2C3F48;
-  color:#D7E1E3; padding:11px 13px; border-radius:9px; font-size:12.5px; font-weight:600; text-align:left;
-  transition:transform .2s ease, background-color .2s ease, border-color .2s ease; font-family:var(--font-body);
+.scrollytell__steps{ display:flex; flex-direction:column; }
+.scroll-step{
+  min-height:64vh; display:flex; flex-direction:column; justify-content:center;
+  padding:20px 0; opacity:.3; transform:translateX(10px); transition:opacity .4s ease, transform .4s ease;
 }
-.machine__btn-code{ font-size:10px; color:var(--teal-light); letter-spacing:.03em; }
-.machine__btn:hover{ border-color:var(--teal-light); transform:translateY(-2px); }
-.machine__btn.is-active{ background:var(--teal); border-color:var(--teal); color:#fff; }
-.machine__btn.is-active .machine__btn-code{ color:#EAF6F0; }
+.scroll-step:last-child{ min-height:40vh; }
+.scroll-step.is-active{ opacity:1; transform:translateX(0); }
+.scroll-step__code{ font-family:var(--font-mono); font-size:13px; color:var(--teal); font-weight:600; }
+.scroll-step h3{ font-size:26px; margin-top:10px; }
+.scroll-step p{ margin-top:12px; color:var(--ink-soft); font-size:16px; max-width:42ch; }
 
 @media (max-width:900px){
+  .scrollytell{ grid-template-columns:1fr; }
+  .scrollytell__visual{ position:static; margin-bottom:8px; }
   .machine-photo{ max-width:340px; }
-}
-@media (max-width:480px){
-  .machine__keypad{ grid-template-columns:repeat(2,1fr); }
+  .scroll-step{ min-height:auto; opacity:1; transform:none; padding:14px 0; }
+  .scroll-step:last-child{ min-height:auto; }
 }
 </style>
 </head>
@@ -681,31 +687,24 @@ img{ max-width:100%; display:block; }
     <div class="wrap">
       <div class="section__head reveal">
         <span class="section__kicker">Le distributeur</span>
-        <h2>Cliquez pour explorer le service</h2>
-        <p>Voici le type de machine installée sur vos sites. Cliquez sur un point ou un bouton pour voir comment chaque étape est gérée, directement sur le distributeur.</p>
+        <h2>Faites défiler pour découvrir le service</h2>
+        <p>Le distributeur reste sous vos yeux pendant que vous parcourez chaque étape, de l'emplacement à la maintenance.</p>
       </div>
-      <div class="machine-photo-wrap reveal">
-        <div class="machine-photo" id="machinePhoto">
-          <img src="images/distributeur.jpg" alt="Distributeur automatique CLTDistrib" class="machine-photo__img">
-          <div class="hotspot-ring" id="hsRing" aria-hidden="true"></div>
-          <button class="hotspot-dot" type="button" data-key="emplacement" style="top:96%;left:50%" aria-label="Emplacement"></button>
-          <button class="hotspot-dot" type="button" data-key="produits" style="top:30%;left:38%" aria-label="Produits"></button>
-          <button class="hotspot-dot" type="button" data-key="installation" style="top:8%;left:50%" aria-label="Installation"></button>
-          <button class="hotspot-dot" type="button" data-key="suivi" style="top:58%;left:65%" aria-label="Suivi des stocks"></button>
-          <button class="hotspot-dot" type="button" data-key="reappro" style="top:80%;left:35%" aria-label="Réapprovisionnement"></button>
-          <button class="hotspot-dot" type="button" data-key="maintenance" style="top:44%;left:78%" aria-label="Maintenance"></button>
-          <div class="machine-caption" id="machineCaption"></div>
-        </div>
-        <div class="machine__keypad-wrap">
-          <div class="machine__keypad" id="machineKeypad">
-            <button class="machine__btn" data-key="emplacement" type="button"><span class="machine__btn-code mono">A1</span>Emplacement</button>
-            <button class="machine__btn" data-key="produits" type="button"><span class="machine__btn-code mono">A2</span>Produits</button>
-            <button class="machine__btn" data-key="installation" type="button"><span class="machine__btn-code mono">B1</span>Installation</button>
-            <button class="machine__btn" data-key="suivi" type="button"><span class="machine__btn-code mono">B2</span>Stock en ligne</button>
-            <button class="machine__btn" data-key="reappro" type="button"><span class="machine__btn-code mono">C1</span>Réappro.</button>
-            <button class="machine__btn" data-key="maintenance" type="button"><span class="machine__btn-code mono">C2</span>Maintenance</button>
+      <div class="scrollytell">
+        <div class="scrollytell__visual reveal">
+          <div class="machine-photo" id="machinePhoto">
+            <img src="images/distributeur.jpg" alt="Distributeur automatique CLTDistrib" class="machine-photo__img">
+            <div class="hotspot-ring" id="hsRing" aria-hidden="true"></div>
+            <button class="hotspot-dot" type="button" data-key="emplacement" style="top:96%;left:50%" aria-label="Emplacement"></button>
+            <button class="hotspot-dot" type="button" data-key="produits" style="top:30%;left:38%" aria-label="Produits"></button>
+            <button class="hotspot-dot" type="button" data-key="installation" style="top:8%;left:50%" aria-label="Installation"></button>
+            <button class="hotspot-dot" type="button" data-key="suivi" style="top:58%;left:65%" aria-label="Suivi des stocks"></button>
+            <button class="hotspot-dot" type="button" data-key="reappro" style="top:80%;left:35%" aria-label="Réapprovisionnement"></button>
+            <button class="hotspot-dot" type="button" data-key="maintenance" style="top:44%;left:78%" aria-label="Maintenance"></button>
+            <div class="machine-caption" id="machineCaption"></div>
           </div>
         </div>
+        <div class="scrollytell__steps" id="scrollSteps"></div>
       </div>
     </div>
   </section>
@@ -1119,20 +1118,53 @@ var MACHINE_INFO = {
   }
 };
 
+var MACHINE_ORDER = ["emplacement","produits","installation","suivi","reappro","maintenance"];
+
 (function initMachine(){
-  var buttons = document.querySelectorAll(".machine__btn, .hotspot-dot");
-  buttons.forEach(function(btn){
-    btn.addEventListener("click", function(){ selectMachineFeature(btn.getAttribute("data-key")); });
+  var stepsWrap = document.getElementById("scrollSteps");
+  if(stepsWrap){
+    stepsWrap.innerHTML = MACHINE_ORDER.map(function(key){
+      var data = MACHINE_INFO[key];
+      return '<div class="scroll-step" data-key="' + key + '">' +
+        '<span class="scroll-step__code mono">Casier ' + data.code + '</span>' +
+        '<h3>' + data.title + '</h3>' +
+        '<p>' + data.caption + '</p>' +
+      '</div>';
+    }).join("");
+  }
+
+  document.querySelectorAll(".hotspot-dot").forEach(function(dot){
+    dot.addEventListener("click", function(){ selectMachineFeature(dot.getAttribute("data-key")); });
   });
+
   selectMachineFeature("emplacement");
+  initScrollytell();
 })();
+
+/* La photo affiche l'effet correspondant à l'étape la plus proche du centre de l'écran pendant le défilement */
+function initScrollytell(){
+  var steps = document.querySelectorAll(".scroll-step");
+  if(!steps.length) return;
+  if(!("IntersectionObserver" in window)){
+    if(steps[0]) steps[0].classList.add("is-active");
+    return;
+  }
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        selectMachineFeature(entry.target.getAttribute("data-key"));
+      }
+    });
+  }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
+  steps.forEach(function(s){ observer.observe(s); });
+}
 
 function selectMachineFeature(key){
   var data = MACHINE_INFO[key];
   if(!data) return;
 
-  document.querySelectorAll(".machine__btn").forEach(function(btn){
-    btn.classList.toggle("is-active", btn.getAttribute("data-key") === key);
+  document.querySelectorAll(".scroll-step").forEach(function(step){
+    step.classList.toggle("is-active", step.getAttribute("data-key") === key);
   });
   document.querySelectorAll(".hotspot-dot").forEach(function(dot){
     dot.classList.toggle("is-active", dot.getAttribute("data-key") === key);
@@ -1160,6 +1192,13 @@ function selectMachineFeature(key){
   if(caption){
     caption.innerHTML = '<strong>Casier ' + data.code + ' — ' + data.title + '</strong>' + data.caption;
     caption.classList.add("is-visible");
+  }
+
+  var photo = document.getElementById("machinePhoto");
+  if(photo){
+    photo.classList.remove("is-shifting");
+    void photo.offsetWidth;
+    photo.classList.add("is-shifting");
   }
 }
 
