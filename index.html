@@ -163,54 +163,23 @@ img{ max-width:100%; display:block; }
 .hero__meta strong{ display:block; font-size:22px; color:var(--ink); }
 .hero__meta small{ color:var(--ink-faint); font-size:12px; }
 
-.hero-machine{
-  position:relative; background:linear-gradient(180deg,#EEF0EA,#E2E5DE); border:1px solid #D6D9D0;
-  border-radius:24px; padding:16px; box-shadow:var(--shadow-m); max-width:340px; margin:0 auto;
-  animation:board-float 6s ease-in-out infinite;
+.hero-photo{
+  position:relative; max-width:360px; margin:0 auto; border-radius:24px; overflow:hidden;
+  box-shadow:var(--shadow-m); animation:board-float 6s ease-in-out infinite;
 }
-.hero-machine__body{ display:flex; gap:8px; background:#0D1518; border-radius:14px; padding:12px; }
-.hero-machine__glass{
-  flex:1; position:relative; overflow:hidden; border-radius:9px; min-height:300px;
-  background:linear-gradient(160deg,#0A1114 0%,#182831 55%,#0A1114 100%);
+.hero-photo__img{ width:100%; display:block; border-radius:24px; }
+.hero-photo__glow{
+  position:absolute; inset:0; border-radius:24px; pointer-events:none;
+  box-shadow:inset 0 0 60px rgba(47,143,91,.35); animation:photo-glow 4s ease-in-out infinite;
 }
-.hero-machine__glass::after{
-  content:''; position:absolute; top:0; left:-40%; width:35%; height:100%;
-  background:linear-gradient(100deg, transparent, rgba(255,255,255,.09), transparent);
-  transform:skewX(-12deg); animation:glass-shimmer 5s ease-in-out infinite;
-}
-@keyframes glass-shimmer{ 0%,100%{ left:-40%; } 50%{ left:110%; } }
-.hero-machine__cols{ position:relative; z-index:1; display:grid; grid-template-columns:repeat(4,1fr); gap:7px; padding:12px 10px; height:100%; }
-.hero-machine__col{ display:flex; flex-direction:column; gap:6px; }
-.hero-machine__panel{ width:50px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:9px; padding:10px 0; }
-.hero-machine__screen{
-  width:100%; background:#0F1E16; border:1px solid #1E3A2C; border-radius:4px; padding:7px 2px;
-  text-align:center; font-size:8px; color:var(--teal-light); letter-spacing:.03em;
-  box-shadow:inset 0 0 6px rgba(79,174,124,.5); animation:screen-pulse 2.4s ease-in-out infinite;
-}
-@keyframes screen-pulse{ 0%,100%{ opacity:.75; } 50%{ opacity:1; } }
-.hero-machine__coin{ width:17px; height:17px; border-radius:50%; background:#1A272D; border:1px solid #2C3F48; }
-.hero-machine__slotline{ width:60%; height:3px; background:#1A272D; border-radius:2px; }
-.hero-machine__legs{ display:flex; justify-content:space-between; padding:10px 22px 2px; }
-.hero-machine__legs span{ width:12px; height:12px; border-radius:50%; background:#B7BBB0; box-shadow:inset 0 -2px 0 rgba(0,0,0,.15); }
+@keyframes photo-glow{ 0%,100%{ opacity:.5; } 50%{ opacity:1; } }
 .hero-machine__badge{
-  position:absolute; top:-14px; right:18px; background:var(--amber); color:#3A2708; font-family:var(--font-mono);
+  position:absolute; top:14px; right:14px; background:var(--amber); color:#3A2708; font-family:var(--font-mono);
   font-size:11px; font-weight:600; padding:6px 12px; border-radius:999px; box-shadow:var(--shadow-s);
-  transform:rotate(4deg);
+  transform:rotate(4deg); z-index:2;
 }
 
-/* Produits réalistes : canette, bouteille, snack — réutilisés hero + section détail */
-.product{ position:relative; width:100%; }
-.product--can{ aspect-ratio:.58; border-radius:4px 4px 3px 3px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.1); }
-.product--can::before{ content:''; position:absolute; top:0; left:0; right:0; height:14%; background:rgba(255,255,255,.4); border-radius:4px 4px 0 0; }
-.product--can::after{ content:''; position:absolute; top:14%; left:50%; width:7px; height:7px; margin-left:-3.5px; border:1.4px solid rgba(0,0,0,.3); border-radius:50%; }
-.product--bottle{ aspect-ratio:.42; clip-path:polygon(30% 0%,70% 0%,70% 12%,100% 26%,100% 100%,0% 100%,0% 26%,30% 12%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
-.product--bottle::before{ content:''; position:absolute; top:0; left:35%; width:30%; height:8%; background:#DADFD9; border-radius:1px; }
-.product--bottle::after{ content:''; position:absolute; top:32%; left:8%; right:8%; height:22%; background:rgba(255,255,255,.28); border-radius:2px; }
-.product--bag{ aspect-ratio:.72; border-radius:9px 9px 5px 5px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
-.product--bag::before{ content:''; position:absolute; top:6%; left:8%; right:8%; height:2px; background:rgba(255,255,255,.35); }
-.product--bag::after{ content:''; position:absolute; top:0; left:0; right:0; height:16%; background:rgba(0,0,0,.18); border-radius:9px 9px 0 0; }
-
-@media (max-width:900px){ .hero-machine{ max-width:260px; } }
+@media (max-width:900px){ .hero-photo{ max-width:260px; } }
 
 /* ============================================================
    SECTIONS (generic)
@@ -522,74 +491,43 @@ img{ max-width:100%; display:block; }
 }
 
 /* ============================================================
-   DISTRIBUTEUR INTERACTIF — design réaliste
+   DISTRIBUTEUR INTERACTIF — vraie photo + effets
    ============================================================ */
-.machine-layout{ display:grid; grid-template-columns:340px 1fr; gap:40px; align-items:start; }
+.machine-photo-wrap{ display:flex; flex-direction:column; align-items:center; gap:26px; }
+.machine-photo{
+  position:relative; max-width:380px; width:100%; border-radius:22px; overflow:hidden;
+  box-shadow:var(--shadow-m); background:#0A1114;
+}
+.machine-photo__img{ width:100%; display:block; }
 
-.machine--v2{
-  position:relative; background:linear-gradient(180deg,#EEF0EA,#E2E5DE); border:1px solid #D6D9D0;
-  border-radius:22px; padding:14px; box-shadow:var(--shadow-m);
+.hotspot-dot{
+  position:absolute; width:16px; height:16px; margin:-8px 0 0 -8px; border-radius:50%;
+  background:var(--teal); border:2px solid #fff; box-shadow:0 0 0 0 rgba(47,143,91,.6);
+  cursor:pointer; padding:0; transition:transform .2s ease, background-color .2s ease; z-index:2;
+  animation:hotspot-pulse 2.2s ease-in-out infinite;
 }
-.machine__body{ display:flex; gap:8px; background:#0D1518; border-radius:12px; padding:10px; }
-.machine__glass{
-  flex:1; position:relative; overflow:hidden; border-radius:8px; min-height:280px;
-  background:linear-gradient(160deg,#0A1114 0%,#182831 55%,#0A1114 100%);
-}
-.machine__glass::after{
-  content:''; position:absolute; top:0; left:-30%; width:35%; height:100%;
-  background:linear-gradient(100deg, transparent, rgba(255,255,255,.07), transparent);
-  transform:skewX(-12deg); pointer-events:none;
-}
-.machine__columns{ position:relative; z-index:1; display:grid; grid-template-columns:repeat(5,1fr); gap:6px; padding:12px 10px; height:100%; }
-.machine__col{ display:flex; flex-direction:column; gap:5px; justify-content:flex-start; }
+.hotspot-dot:hover, .hotspot-dot:focus-visible{ transform:scale(1.3); }
+.hotspot-dot.is-active{ background:var(--amber); animation:none; transform:scale(1.35); box-shadow:0 0 0 8px rgba(201,138,43,.28); }
+@keyframes hotspot-pulse{ 0%,100%{ box-shadow:0 0 0 0 rgba(47,143,91,.55); } 50%{ box-shadow:0 0 0 10px rgba(47,143,91,0); } }
 
-.machine__panel{ width:60px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:10px; padding:10px 0; }
-.machine__screen{
-  width:100%; background:#0F1E16; border:1px solid #1E3A2C; border-radius:4px; padding:7px 3px;
-  text-align:center; font-size:9px; color:var(--teal-light); letter-spacing:.05em;
-  box-shadow:inset 0 0 6px rgba(79,174,124,.5);
+.hotspot-ring{
+  position:absolute; border:2px solid var(--teal-light); border-radius:16px; opacity:0; pointer-events:none;
+  transition:opacity .35s ease; box-shadow:0 0 24px rgba(79,174,124,.5); z-index:1;
 }
-.machine__coin{ width:20px; height:20px; border-radius:50%; background:#1A272D; border:1px solid #2C3F48; }
-.machine__slotline{ width:65%; height:3px; background:#1A272D; border-radius:2px; }
+.hotspot-ring.is-active{ opacity:1; animation:ring-pulse 1.8s ease-in-out infinite; }
+@keyframes ring-pulse{ 0%,100%{ box-shadow:0 0 18px rgba(79,174,124,.4); } 50%{ box-shadow:0 0 34px rgba(79,174,124,.75); } }
 
-.machine__footer{ display:flex; align-items:center; gap:12px; margin-top:12px; padding:0 4px; }
-.machine__tray{ flex:1; height:36px; background:#0D1518; border-radius:6px; box-shadow:inset 0 3px 8px rgba(0,0,0,.6); }
-.machine__push{
-  background:#fff; border:1px solid #D6D9D0; border-radius:10px; padding:10px 20px;
-  font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
-  color:var(--ink-soft); box-shadow:0 3px 0 #C7CABF; transition:all .15s ease; cursor:pointer;
+.machine-caption{
+  position:absolute; left:50%; bottom:14px; transform:translate(-50%,10px); max-width:88%;
+  background:rgba(13,21,24,.92); backdrop-filter:blur(6px); color:#fff; padding:12px 18px; border-radius:14px;
+  font-size:13.5px; line-height:1.4; text-align:center; opacity:0; transition:opacity .3s ease, transform .3s ease;
+  pointer-events:none; box-shadow:var(--shadow-m); z-index:3;
 }
-.machine__push:hover, .machine__push:focus-visible{
-  background:var(--teal-tint); color:var(--teal-dark); border-color:var(--teal);
-  transform:translateY(2px); box-shadow:0 1px 0 #C7CABF;
-}
-.machine__legs{ display:flex; justify-content:space-between; padding:10px 22px 2px; }
-.machine__legs span{ width:13px; height:13px; border-radius:50%; background:#B7BBB0; box-shadow:inset 0 -2px 0 rgba(0,0,0,.15); }
+.machine-caption.is-visible{ opacity:1; transform:translate(-50%,0); }
+.machine-caption strong{ color:var(--teal-light); display:block; font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; margin-bottom:4px; text-transform:uppercase; }
 
-.drop-can{
-  position:absolute; width:22px; aspect-ratio:.58; left:30%; top:10%; border-radius:4px 4px 3px 3px;
-  background:var(--amber); opacity:0; z-index:2; box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
-}
-.drop-can::before{ content:''; position:absolute; top:0; left:0; right:0; height:14%; background:rgba(255,255,255,.45); border-radius:4px 4px 0 0; }
-.drop-can::after{ content:''; position:absolute; top:14%; left:50%; width:6px; height:6px; margin-left:-3px; border:1.3px solid rgba(0,0,0,.3); border-radius:50%; }
-.drop-can.is-falling{ animation:can-fall .85s cubic-bezier(.5,0,.75,0) forwards; }
-@keyframes can-fall{
-  0%{ opacity:1; top:10%; transform:rotate(0deg); }
-  78%{ opacity:1; top:76%; transform:rotate(150deg); }
-  100%{ opacity:1; top:72%; transform:rotate(165deg); }
-}
-
-.machine-tagline{
-  position:absolute; left:50%; bottom:-16px; transform:translate(-50%,8px);
-  background:var(--ink); color:#fff; padding:10px 18px; border-radius:999px; font-size:13px; font-weight:600;
-  white-space:nowrap; opacity:0; transition:opacity .35s ease, transform .35s ease; pointer-events:none;
-  box-shadow:var(--shadow-m); z-index:3;
-}
-.machine-tagline.is-visible{ opacity:1; transform:translate(-50%,0); }
-.machine-tagline::after{ content:''; position:absolute; top:-5px; left:50%; transform:translateX(-50%); border:6px solid transparent; border-bottom-color:var(--ink); }
-
-.machine__keypad-wrap{ background:var(--ink); border-radius:var(--radius-m); padding:14px; margin-top:26px; }
-.machine__keypad{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.machine__keypad-wrap{ background:var(--ink); border-radius:var(--radius-m); padding:14px; width:100%; max-width:520px; }
+.machine__keypad{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
 .machine__btn{
   display:flex; flex-direction:column; align-items:flex-start; gap:3px; background:#1D2C34; border:1px solid #2C3F48;
   color:#D7E1E3; padding:11px 13px; border-radius:9px; font-size:12.5px; font-weight:600; text-align:left;
@@ -600,19 +538,11 @@ img{ max-width:100%; display:block; }
 .machine__btn.is-active{ background:var(--teal); border-color:var(--teal); color:#fff; }
 .machine__btn.is-active .machine__btn-code{ color:#EAF6F0; }
 
-.machine-info{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:30px; min-height:260px; display:flex; flex-direction:column; justify-content:center; }
-.machine-info__key{ font-family:var(--font-mono); font-size:12px; color:var(--teal); display:block; margin-bottom:8px; letter-spacing:.04em; }
-.machine-info__title{ font-size:21px; }
-.machine-info__text{ margin-top:12px; color:var(--ink-soft); font-size:15.5px; }
-.machine-info__body{ animation:info-in .4s cubic-bezier(.16,.8,.3,1); }
-@keyframes info-in{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
-
 @media (max-width:900px){
-  .machine-layout{ grid-template-columns:1fr; }
-  .machine--v2{ max-width:340px; margin:0 auto; }
+  .machine-photo{ max-width:340px; }
 }
 @media (max-width:480px){
-  .machine__keypad{ grid-template-columns:1fr; }
+  .machine__keypad{ grid-template-columns:repeat(2,1fr); }
 }
 </style>
 </head>
@@ -633,7 +563,6 @@ img{ max-width:100%; display:block; }
         <a class="nav__link" href="#assistant">Une question ?</a>
       </div>
       <div class="nav__actions">
-        <button class="btn btn--ghost btn--sm" id="openProBtn">Espace pro</button>
         <a href="#assistant" class="btn btn--primary btn--sm" id="navAssistantBtn"><span class="btn-label">Écrivez-moi</span></a>
         <button class="nav__burger" id="burgerBtn" aria-label="Ouvrir le menu">
           <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -645,7 +574,6 @@ img{ max-width:100%; display:block; }
       <a href="#avantages">Ce que je gère</a>
       <a href="#maintenance">Maintenance</a>
       <a href="#assistant">Une question ?</a>
-      <a href="#" id="mobileProBtn">Espace pro</a>
     </div>
   </nav>
 
@@ -666,20 +594,10 @@ img{ max-width:100%; display:block; }
         </div>
       </div>
       <div>
-        <div class="hero-machine" id="heroMachine">
+        <div class="hero-photo reveal-hero" style="--d:380ms">
           <span class="hero-machine__badge">Frais &amp; varié</span>
-          <div class="hero-machine__body">
-            <div class="hero-machine__glass">
-              <div class="hero-machine__cols" id="heroMachineCols"></div>
-            </div>
-            <div class="hero-machine__panel">
-              <div class="hero-machine__screen mono">EN SERVICE</div>
-              <div class="hero-machine__coin"></div>
-              <div class="hero-machine__slotline"></div>
-              <div class="hero-machine__slotline"></div>
-            </div>
-          </div>
-          <div class="hero-machine__legs"><span></span><span></span></div>
+          <img src="images/distributeur.jpg" alt="Distributeur automatique CLTDistrib rempli de boissons et snacks" class="hero-photo__img">
+          <div class="hero-photo__glow" aria-hidden="true"></div>
         </div>
       </div>
     </div>
@@ -763,43 +681,31 @@ img{ max-width:100%; display:block; }
     <div class="wrap">
       <div class="section__head reveal">
         <span class="section__kicker">Le distributeur</span>
-        <h2>Passez la souris sur PUSH</h2>
-        <p>Voici le type de machine installée sur vos sites. Les boutons ci-dessous détaillent chaque aspect du service, du premier emplacement à la maintenance.</p>
+        <h2>Cliquez pour explorer le service</h2>
+        <p>Voici le type de machine installée sur vos sites. Cliquez sur un point ou un bouton pour voir comment chaque étape est gérée, directement sur le distributeur.</p>
       </div>
-      <div class="machine-layout reveal">
-        <div>
-          <div class="machine machine--v2" id="machineViz">
-            <div class="machine__body">
-              <div class="machine__glass">
-                <div class="machine__columns" id="machineColumns"></div>
-                <div class="drop-can" id="dropCan"></div>
-              </div>
-              <div class="machine__panel">
-                <div class="machine__screen mono" id="machineScreen">PRÊT</div>
-                <div class="machine__coin"></div>
-                <div class="machine__slotline"></div>
-                <div class="machine__slotline"></div>
-              </div>
-            </div>
-            <div class="machine__footer">
-              <div class="machine__tray"></div>
-              <button class="machine__push" id="machinePush" type="button">Push</button>
-            </div>
-            <div class="machine__legs"><span></span><span></span></div>
-            <div class="machine-tagline" id="machineTagline">Voilà comment on reconnaît un bon service.</div>
-          </div>
-          <div class="machine__keypad-wrap">
-            <div class="machine__keypad" id="machineKeypad">
-              <button class="machine__btn" data-key="emplacement" type="button"><span class="machine__btn-code mono">A1</span>Emplacement</button>
-              <button class="machine__btn" data-key="produits" type="button"><span class="machine__btn-code mono">A2</span>Produits</button>
-              <button class="machine__btn" data-key="installation" type="button"><span class="machine__btn-code mono">B1</span>Installation</button>
-              <button class="machine__btn" data-key="suivi" type="button"><span class="machine__btn-code mono">B2</span>Stock en ligne</button>
-              <button class="machine__btn" data-key="reappro" type="button"><span class="machine__btn-code mono">C1</span>Réappro.</button>
-              <button class="machine__btn" data-key="maintenance" type="button"><span class="machine__btn-code mono">C2</span>Maintenance</button>
-            </div>
+      <div class="machine-photo-wrap reveal">
+        <div class="machine-photo" id="machinePhoto">
+          <img src="images/distributeur.jpg" alt="Distributeur automatique CLTDistrib" class="machine-photo__img">
+          <div class="hotspot-ring" id="hsRing" aria-hidden="true"></div>
+          <button class="hotspot-dot" type="button" data-key="emplacement" style="top:96%;left:50%" aria-label="Emplacement"></button>
+          <button class="hotspot-dot" type="button" data-key="produits" style="top:30%;left:38%" aria-label="Produits"></button>
+          <button class="hotspot-dot" type="button" data-key="installation" style="top:8%;left:50%" aria-label="Installation"></button>
+          <button class="hotspot-dot" type="button" data-key="suivi" style="top:58%;left:65%" aria-label="Suivi des stocks"></button>
+          <button class="hotspot-dot" type="button" data-key="reappro" style="top:80%;left:35%" aria-label="Réapprovisionnement"></button>
+          <button class="hotspot-dot" type="button" data-key="maintenance" style="top:44%;left:78%" aria-label="Maintenance"></button>
+          <div class="machine-caption" id="machineCaption"></div>
+        </div>
+        <div class="machine__keypad-wrap">
+          <div class="machine__keypad" id="machineKeypad">
+            <button class="machine__btn" data-key="emplacement" type="button"><span class="machine__btn-code mono">A1</span>Emplacement</button>
+            <button class="machine__btn" data-key="produits" type="button"><span class="machine__btn-code mono">A2</span>Produits</button>
+            <button class="machine__btn" data-key="installation" type="button"><span class="machine__btn-code mono">B1</span>Installation</button>
+            <button class="machine__btn" data-key="suivi" type="button"><span class="machine__btn-code mono">B2</span>Stock en ligne</button>
+            <button class="machine__btn" data-key="reappro" type="button"><span class="machine__btn-code mono">C1</span>Réappro.</button>
+            <button class="machine__btn" data-key="maintenance" type="button"><span class="machine__btn-code mono">C2</span>Maintenance</button>
           </div>
         </div>
-        <div class="machine-info" id="machineInfo"></div>
       </div>
     </div>
   </section>
@@ -865,7 +771,6 @@ img{ max-width:100%; display:block; }
       <div class="footer__links">
         <a class="nav__link" href="#comment">Comment ça marche</a>
         <a class="nav__link" href="#assistant">Une question ?</a>
-        <a class="nav__link" href="#" id="footerProBtn">Espace pro</a>
       </div>
       <small>© 2026 CLTDistrib. Tous droits réservés. · <a href="mentions-legales.html" style="color:inherit;text-decoration:underline">Mentions légales</a></small>
     </div>
@@ -1129,44 +1034,6 @@ function saveData(){
 }
 
 /* ============================================================
-   PRODUITS RÉALISTES — génère canettes, bouteilles, snacks
-   ============================================================ */
-var PRODUCT_KINDS = ["can","can","bottle","can","bag"];
-var PRODUCT_COLORS = ["var(--teal)","var(--amber)","var(--teal-dark)","var(--teal-light)","var(--ink-soft)","#8A5A3B","#C9524B"];
-
-function prefersReducedMotion(){
-  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
-
-function createProduct(seed){
-  var kind = PRODUCT_KINDS[seed % PRODUCT_KINDS.length];
-  var color = PRODUCT_COLORS[seed % PRODUCT_COLORS.length];
-  var el = document.createElement("div");
-  el.className = "product product--" + kind;
-  el.style.background = color;
-  return el;
-}
-
-function fillProductColumns(containerId, cols, rows, colClass){
-  var wrap = document.getElementById(containerId);
-  if(!wrap) return;
-  var seed = 0;
-  for(var c=0;c<cols;c++){
-    var col = document.createElement("div");
-    col.className = colClass;
-    for(var r=0;r<rows;r++){
-      col.appendChild(createProduct(seed));
-      seed++;
-    }
-    wrap.appendChild(col);
-  }
-}
-
-(function initHeroMachine(){
-  fillProductColumns("heroMachineCols", 4, 5, "hero-machine__col");
-})();
-
-/* ============================================================
    SCROLL PROGRESS BAR
    ============================================================ */
 (function initScrollProgress(){
@@ -1223,44 +1090,41 @@ mobileNav.querySelectorAll("a").forEach(function(a){
 });
 
 /* ============================================================
-   DISTRIBUTEUR INTERACTIF
+   DISTRIBUTEUR INTERACTIF — effets directement sur la photo
    ============================================================ */
 var MACHINE_INFO = {
   emplacement: {
     code: "A1", title: "L'emplacement",
-    text: "On étudie ensemble les emplacements possibles sur votre site pour choisir celui qui s'intègre le mieux à votre organisation. Le placement tient compte du passage réel des personnes et des horaires d'activité, pour un fonctionnement fluide."
+    caption: "Choisi selon le passage réel et les horaires du site."
   },
   produits: {
     code: "A2", title: "Les produits",
-    text: "La sélection s'adapte à l'environnement : pour une entreprise, des produits pensés pour les salariés et les clients ; pour un espace public, une offre de restauration rapide et d'hydratation qui anime le lieu."
+    caption: "Sélection adaptée : entreprise, espace public, restauration rapide."
   },
   installation: {
     code: "B1", title: "L'installation",
-    text: "Chaque installation tient compte des contraintes du site — extérieur ou intérieur — ainsi que de l'alimentation électrique nécessaire et de l'encombrement du distributeur, pour une intégration sans contrainte."
+    caption: "Raccordement électrique et intégration sans contrainte."
   },
   suivi: {
     code: "B2", title: "Le stock en ligne",
-    text: "Le niveau de stock de chaque machine est suivi en ligne, en temps réel, ce qui permet d'anticiper les besoins avant la rupture."
+    caption: "Niveau de chaque machine suivi en temps réel."
   },
   reappro: {
     code: "C1", title: "Le réapprovisionnement",
-    text: "Grâce au suivi en ligne, le réapprovisionnement est planifié au bon moment, avec les bons produits — ni trop tôt, ni trop tard."
+    caption: "Planifié au bon moment, avant la rupture de stock."
   },
   maintenance: {
     code: "C2", title: "La maintenance",
-    text: "L'entretien courant est assuré directement par mes soins. Pour une intervention plus importante, je m'appuie sur le constructeur de la machine, pour une remise en service rapide."
+    caption: "Entretien courant assuré directement par mes soins."
   }
 };
-(function initMachine(){
-  fillProductColumns("machineColumns", 5, 5, "machine__col");
 
-  var buttons = document.querySelectorAll(".machine__btn");
+(function initMachine(){
+  var buttons = document.querySelectorAll(".machine__btn, .hotspot-dot");
   buttons.forEach(function(btn){
     btn.addEventListener("click", function(){ selectMachineFeature(btn.getAttribute("data-key")); });
   });
   selectMachineFeature("emplacement");
-
-  initMachinePush();
 })();
 
 function selectMachineFeature(key){
@@ -1270,50 +1134,33 @@ function selectMachineFeature(key){
   document.querySelectorAll(".machine__btn").forEach(function(btn){
     btn.classList.toggle("is-active", btn.getAttribute("data-key") === key);
   });
+  document.querySelectorAll(".hotspot-dot").forEach(function(dot){
+    dot.classList.toggle("is-active", dot.getAttribute("data-key") === key);
+  });
 
-  var info = document.getElementById("machineInfo");
-  info.innerHTML = '<div class="machine-info__body">' +
-    '<span class="machine-info__key mono">Casier ' + data.code + '</span>' +
-    '<h3 class="machine-info__title">' + data.title + '</h3>' +
-    '<p class="machine-info__text">' + data.text + '</p>' +
-  '</div>';
-}
-
-/* Bouton PUSH : une canette tombe, un message apparaît */
-function initMachinePush(){
-  var pushBtn = document.getElementById("machinePush");
-  var dropCan = document.getElementById("dropCan");
-  var tagline = document.getElementById("machineTagline");
-  var screen = document.getElementById("machineScreen");
-  if(!pushBtn) return;
-
-  var busy = false;
-  var hideTimer = null;
-
-  function trigger(){
-    if(busy) return;
-    busy = true;
-    if(screen) screen.textContent = "MERCI !";
-
-    dropCan.classList.remove("is-falling");
-    void dropCan.offsetWidth;
-    dropCan.style.opacity = "1";
-    dropCan.classList.add("is-falling");
-
-    var fallDuration = prefersReducedMotion() ? 0 : 850;
-    setTimeout(function(){
-      tagline.classList.add("is-visible");
-      busy = false;
-      if(screen) screen.textContent = "PRÊT";
-    }, fallDuration);
-
-    clearTimeout(hideTimer);
-    hideTimer = setTimeout(function(){ tagline.classList.remove("is-visible"); }, fallDuration + 4200);
+  var activeDot = document.querySelector('.hotspot-dot[data-key="' + key + '"]');
+  var ring = document.getElementById("hsRing");
+  if(activeDot && ring){
+    var isWhole = key === "emplacement";
+    if(isWhole){
+      ring.style.top = "3%"; ring.style.left = "3%"; ring.style.right = "3%"; ring.style.bottom = "3%";
+      ring.style.width = "auto"; ring.style.height = "auto";
+    } else {
+      ring.style.top = (parseFloat(activeDot.style.top) - 10) + "%";
+      ring.style.left = (parseFloat(activeDot.style.left) - 12) + "%";
+      ring.style.right = "auto";
+      ring.style.width = "24%";
+      ring.style.height = "20%";
+      ring.style.bottom = "auto";
+    }
+    ring.classList.add("is-active");
   }
 
-  pushBtn.addEventListener("mouseenter", trigger);
-  pushBtn.addEventListener("click", trigger);
-  pushBtn.addEventListener("focus", trigger);
+  var caption = document.getElementById("machineCaption");
+  if(caption){
+    caption.innerHTML = '<strong>Casier ' + data.code + ' — ' + data.title + '</strong>' + data.caption;
+    caption.classList.add("is-visible");
+  }
 }
 
 /* ============================================================
@@ -1437,6 +1284,8 @@ var gatePassInput = document.getElementById("gatePassInput");
 var gateError = document.getElementById("gateError");
 var publicSite = document.getElementById("publicSite");
 var adminApp = document.getElementById("adminApp");
+var PRO_HASH = "#pro-clt78";
+var PRO_REMEMBER_KEY = "cltdistrib-pro-unlocked";
 
 function openGate(){
   gateOverlay.classList.remove("hidden");
@@ -1445,12 +1294,15 @@ function openGate(){
   setTimeout(function(){ gatePassInput.focus(); }, 50);
 }
 function closeGate(){ gateOverlay.classList.add("hidden"); }
+function clearProHash(){ history.replaceState(null, "", location.pathname + location.search); }
 
-["openProBtn","mobileProBtn","footerProBtn"].forEach(function(id){
-  var el = document.getElementById(id);
-  if(el) el.addEventListener("click", function(e){ e.preventDefault(); mobileNav.classList.remove("is-open"); openGate(); });
-});
-document.getElementById("gateCancel").addEventListener("click", closeGate);
+function enterAdmin(){
+  publicSite.classList.add("hidden");
+  adminApp.classList.remove("hidden");
+  loadData();
+}
+
+document.getElementById("gateCancel").addEventListener("click", function(){ closeGate(); clearProHash(); });
 
 document.getElementById("gateToggleVis").addEventListener("click", function(){
   var isPass = gatePassInput.type === "password";
@@ -1463,9 +1315,8 @@ document.getElementById("gateToggleVis").addEventListener("click", function(){
 function tryEnter(){
   if(gatePassInput.value === ACCESS_CODE){
     closeGate();
-    publicSite.classList.add("hidden");
-    adminApp.classList.remove("hidden");
-    loadData();
+    try{ localStorage.setItem(PRO_REMEMBER_KEY, "1"); }catch(e){}
+    enterAdmin();
   } else {
     gateError.classList.add("is-visible");
   }
@@ -1476,7 +1327,19 @@ gatePassInput.addEventListener("keydown", function(e){ if(e.key === "Enter") try
 document.getElementById("leaveAdminBtn").addEventListener("click", function(){
   adminApp.classList.add("hidden");
   publicSite.classList.remove("hidden");
+  clearProHash();
 });
+
+/* Aucun bouton public : l'Espace pro ne s'ouvre que via l'adresse secrète.
+   Une fois le code entré une fois sur cet appareil, il est mémorisé (plus besoin de le retaper). */
+function checkProAccess(){
+  if(location.hash !== PRO_HASH) return;
+  var remembered = false;
+  try{ remembered = localStorage.getItem(PRO_REMEMBER_KEY) === "1"; }catch(e){}
+  if(remembered){ enterAdmin(); } else { openGate(); }
+}
+checkProAccess();
+window.addEventListener("hashchange", checkProAccess);
 
 /* ============================================================
    ADMIN TABS
