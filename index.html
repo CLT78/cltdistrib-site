@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLTDistrib — Distributeurs automatiques clé en main</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+   ============================================================ */
+:root{
+  --bg:#F3F4F1;
+  --surface:#FFFFFF;
+  --surface-alt:#EBEEEA;
+  --ink:#16232B;
+  --ink-soft:#52616B;
+  --ink-faint:#8A969C;
+  --line:#DBE0DB;
+  --teal:#2F8F5B;
+  --teal-dark:#1F6B44;
+  --teal-tint:#E3F3E8;
+  --teal-light:#4FAE7C;
+  --amber:#C98A2B;
+  --amber-tint:#FBF0DE;
+  --red:#BE5340;
+  --red-tint:#FBEAE6;
+  --radius-s:6px;
+  --radius-m:12px;
+  --radius-l:22px;
+  --shadow-s:0 1px 2px rgba(22,35,43,.06), 0 1px 1px rgba(22,35,43,.04);
+  --shadow-m:0 8px 24px rgba(22,35,43,.08);
+  --font-display:'Space Grotesk', 'Arial Narrow', sans-serif;
+  --font-body:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+  --maxw:1320px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
+}
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  margin:0;
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(rgba(31,107,68,.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31,107,68,.07) 1px, transparent 1px),
+    linear-gradient(rgba(31,107,68,.10) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(31,107,68,.10) 1px, transparent 1px);
+  background-size:24px 24px, 24px 24px, 120px 120px, 120px 120px;
+  color:var(--ink);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{
+  font-family:var(--font-display);
+  font-weight:600;
+  line-height:1.12;
+  margin:0;
+  letter-spacing:-0.01em;
+  color:var(--teal-dark);
+}
+p{ margin:0; }
+a{ color:inherit; text-decoration:none; }
+button{ font-family:inherit; cursor:pointer; }
+ul{ margin:0; padding:0; list-style:none; }
+input,select,textarea{ font-family:inherit; font-size:15px; color:var(--ink); }
+:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; border-radius:4px; }
+img{ max-width:100%; display:block; }
+.wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+.mono{ font-family:var(--font-mono); }
+.hidden{ display:none !important; }
+.icon{ width:20px; height:20px; stroke:currentColor; stroke-width:1.6; fill:none; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+.icon--fill{ fill:currentColor; stroke:none; }
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  padding:13px 24px; border-radius:999px; border:1px solid transparent;
+  font-weight:600; font-size:15px; letter-spacing:-0.01em; transition:all .15s ease;
+  white-space:nowrap;
+}
+.btn--primary{ background:var(--ink); color:#fff; }
+.btn--primary:hover{ background:var(--teal-dark); }
+.btn--accent{ background:var(--teal); color:#fff; }
+.btn--accent:hover{ background:var(--teal-dark); }
+.btn--ghost{ background:transparent; color:var(--ink); border-color:var(--line); }
+.btn--ghost:hover{ border-color:var(--ink); }
+.btn--sm{ padding:8px 16px; font-size:13px; border-radius:999px; }
+.btn--icon{ padding:8px; border-radius:999px; }
+.btn--danger{ background:transparent; color:var(--red); border-color:var(--red-tint); }
+.btn--danger:hover{ background:var(--red-tint); }
+.btn:disabled{ opacity:.45; cursor:not-allowed; }
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav{
+  position:sticky; top:0; z-index:40; background:rgba(243,244,241,.88);
+  backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+}
+.nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:76px; }
+.brand{ display:flex; align-items:baseline; gap:2px; font-family:var(--font-display); font-size:22px; font-weight:700; }
+.brand span:first-child{ color:var(--ink); }
+.brand span:last-child{ color:var(--teal); font-weight:500; }
+.nav__links{ display:flex; align-items:center; gap:34px; }
+.nav__link{ font-size:14.5px; font-weight:500; color:var(--ink-soft); position:relative; }
+.nav__link:hover{ color:var(--ink); }
+.nav__actions{ display:flex; align-items:center; gap:12px; }
+.nav__burger{ display:none; background:none; border:none; padding:8px; color:var(--ink); }
+.nav__mobile{ display:none; position:fixed; inset:76px 0 0 0; background:var(--bg); z-index:39; padding:24px 28px; }
+.nav__mobile.is-open{ display:block; }
+.nav__mobile a{ display:block; padding:16px 0; font-size:19px; font-weight:600; border-bottom:1px solid var(--line); }
+
+@media (max-width:860px){
+  .nav__links{ display:none; }
+  .nav__burger{ display:block; }
+  .nav__actions .btn span.btn-label{ display:none; }
+}
+
+/* ============================================================
+   HERO + SIGNATURE SLOT GRID
+   ============================================================ */
+.hero{ padding:76px 0 40px; overflow:hidden; position:relative; }
+.hero::before{
+  content:''; position:absolute; top:-140px; right:-140px; width:460px; height:460px;
+  background:radial-gradient(circle, rgba(47,143,91,.28), transparent 70%);
+  filter:blur(10px); z-index:0; pointer-events:none;
+}
+.hero::after{
+  content:''; position:absolute; bottom:-160px; left:-160px; width:380px; height:380px;
+  background:radial-gradient(circle, rgba(201,138,43,.16), transparent 70%);
+  filter:blur(10px); z-index:0; pointer-events:none;
+}
+.hero .wrap{ position:relative; z-index:1; }
+.hero .wrap{ display:grid; grid-template-columns:1.05fr .95fr; gap:56px; align-items:center; }
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono);
+  font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--teal-dark);
+  background:var(--teal-tint); padding:6px 12px; border-radius:999px; margin-bottom:22px;
+}
+.eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--teal); }
+.hero h1{ font-size:clamp(34px,4.4vw,54px); color:var(--ink); }
+.hero h1 em{ font-style:normal; color:var(--teal-dark); }
+.hero p.lede{ margin-top:22px; font-size:18px; color:var(--ink-soft); max-width:46ch; }
+.hero__cta{ display:flex; gap:14px; margin-top:32px; flex-wrap:wrap; }
+.hero__meta{ display:flex; gap:28px; margin-top:40px; flex-wrap:wrap; }
+.hero__meta div{ font-family:var(--font-mono); }
+.hero__meta strong{ display:block; font-size:22px; color:var(--ink); }
+.hero__meta small{ color:var(--ink-faint); font-size:12px; }
+
+.hero-machine{
+  position:relative; background:linear-gradient(180deg,#EEF0EA,#E2E5DE); border:1px solid #D6D9D0;
+  border-radius:24px; padding:16px; box-shadow:var(--shadow-m); max-width:340px; margin:0 auto;
+  animation:board-float 6s ease-in-out infinite;
+}
+.hero-machine__body{ display:flex; gap:8px; background:#0D1518; border-radius:14px; padding:12px; }
+.hero-machine__glass{
+  flex:1; position:relative; overflow:hidden; border-radius:9px; min-height:300px;
+  background:linear-gradient(160deg,#0A1114 0%,#182831 55%,#0A1114 100%);
+}
+.hero-machine__glass::after{
+  content:''; position:absolute; top:0; left:-40%; width:35%; height:100%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.09), transparent);
+  transform:skewX(-12deg); animation:glass-shimmer 5s ease-in-out infinite;
+}
+@keyframes glass-shimmer{ 0%,100%{ left:-40%; } 50%{ left:110%; } }
+.hero-machine__cols{ position:relative; z-index:1; display:grid; grid-template-columns:repeat(4,1fr); gap:7px; padding:12px 10px; height:100%; }
+.hero-machine__col{ display:flex; flex-direction:column; gap:6px; }
+.hero-machine__panel{ width:50px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:9px; padding:10px 0; }
+.hero-machine__screen{
+  width:100%; background:#0F1E16; border:1px solid #1E3A2C; border-radius:4px; padding:7px 2px;
+  text-align:center; font-size:8px; color:var(--teal-light); letter-spacing:.03em;
+  box-shadow:inset 0 0 6px rgba(79,174,124,.5); animation:screen-pulse 2.4s ease-in-out infinite;
+}
+@keyframes screen-pulse{ 0%,100%{ opacity:.75; } 50%{ opacity:1; } }
+.hero-machine__coin{ width:17px; height:17px; border-radius:50%; background:#1A272D; border:1px solid #2C3F48; }
+.hero-machine__slotline{ width:60%; height:3px; background:#1A272D; border-radius:2px; }
+.hero-machine__legs{ display:flex; justify-content:space-between; padding:10px 22px 2px; }
+.hero-machine__legs span{ width:12px; height:12px; border-radius:50%; background:#B7BBB0; box-shadow:inset 0 -2px 0 rgba(0,0,0,.15); }
+.hero-machine__badge{
+  position:absolute; top:-14px; right:18px; background:var(--amber); color:#3A2708; font-family:var(--font-mono);
+  font-size:11px; font-weight:600; padding:6px 12px; border-radius:999px; box-shadow:var(--shadow-s);
+  transform:rotate(4deg);
+}
+
+/* Produits réalistes : canette, bouteille, snack — réutilisés hero + section détail */
+.product{ position:relative; width:100%; }
+.product--can{ aspect-ratio:.58; border-radius:4px 4px 3px 3px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.1); }
+.product--can::before{ content:''; position:absolute; top:0; left:0; right:0; height:14%; background:rgba(255,255,255,.4); border-radius:4px 4px 0 0; }
+.product--can::after{ content:''; position:absolute; top:14%; left:50%; width:7px; height:7px; margin-left:-3.5px; border:1.4px solid rgba(0,0,0,.3); border-radius:50%; }
+.product--bottle{ aspect-ratio:.42; clip-path:polygon(30% 0%,70% 0%,70% 12%,100% 26%,100% 100%,0% 100%,0% 26%,30% 12%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
+.product--bottle::before{ content:''; position:absolute; top:0; left:35%; width:30%; height:8%; background:#DADFD9; border-radius:1px; }
+.product--bottle::after{ content:''; position:absolute; top:32%; left:8%; right:8%; height:22%; background:rgba(255,255,255,.28); border-radius:2px; }
+.product--bag{ aspect-ratio:.72; border-radius:9px 9px 5px 5px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
+.product--bag::before{ content:''; position:absolute; top:6%; left:8%; right:8%; height:2px; background:rgba(255,255,255,.35); }
+.product--bag::after{ content:''; position:absolute; top:0; left:0; right:0; height:16%; background:rgba(0,0,0,.18); border-radius:9px 9px 0 0; }
+
+@media (max-width:900px){ .hero-machine{ max-width:260px; } }
+
+/* ============================================================
+   SECTIONS (generic)
+   ============================================================ */
+.section{ padding:88px 0; }
+.section--tint{ background:linear-gradient(180deg, rgba(227,243,232,.92) 0%, rgba(241,246,241,.92) 100%); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.section__head{ max-width:640px; margin-bottom:52px; }
+.section__kicker{ font-family:var(--font-mono); font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--teal-dark); margin-bottom:12px; display:block; }
+.section h2{ font-size:clamp(26px,3vw,36px); }
+.section__head p{ margin-top:14px; color:var(--ink-soft); font-size:16.5px; }
+
+/* Process */
+.steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:26px; }
+@media (max-width:1100px){ .steps{ grid-template-columns:repeat(2,1fr); } }
+.step{ position:relative; padding-top:8px; }
+.step__num{ font-family:var(--font-mono); font-size:14px; color:var(--teal); font-weight:600; }
+.step h3{ font-size:20px; margin-top:14px; }
+.step p{ margin-top:10px; color:var(--ink-soft); font-size:15px; }
+.step::before{ content:''; position:absolute; top:0; left:0; width:34px; height:2px; background:var(--line); }
+
+/* Benefits */
+.benefits{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden; }
+.benefit{ background:var(--surface); padding:32px 28px; }
+.benefit .icon{ width:26px; height:26px; color:var(--teal); margin-bottom:18px; transition:transform .35s cubic-bezier(.34,1.56,.64,1); }
+.benefit:hover .icon{ transform:scale(1.15) rotate(-6deg); }
+.benefit h3{ font-size:17px; }
+.benefit p{ margin-top:8px; color:var(--ink-soft); font-size:14.5px; }
+
+/* Maintenance / support */
+.support{ display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
+.support__card{ background:var(--ink); color:#fff; border-radius:var(--radius-l); padding:40px; }
+.support__card h3{ color:#fff; font-size:22px; }
+.support__card p{ color:#B9C4C8; margin-top:12px; font-size:15px; }
+.support__card .btn{ margin-top:24px; }
+.support ul li{ display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); }
+.support ul li .icon{ color:var(--teal); margin-top:2px; }
+.support ul li strong{ display:block; font-size:15px; }
+.support ul li span{ color:var(--ink-soft); font-size:14px; }
+
+/* Contact */
+.contact{ display:grid; grid-template-columns:.85fr 1.15fr; gap:56px; }
+.contact__info h2{ font-size:clamp(26px,3vw,34px); }
+.contact__info p{ margin-top:14px; color:var(--ink-soft); }
+.contact__info .contact-row{ display:flex; gap:12px; align-items:center; margin-top:22px; font-size:14.5px; }
+.contact__info .contact-row .icon{ color:var(--teal); }
+.form-card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:36px; box-shadow:var(--shadow-s); }
+.field{ margin-bottom:18px; }
+.field label{ display:block; font-size:13px; font-weight:600; margin-bottom:7px; color:var(--ink-soft); }
+.field input, .field select, .field textarea{
+  width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:var(--radius-s);
+  background:var(--bg); transition:border-color .15s ease;
+}
+.field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--teal); outline:none; }
+.field-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.form-note{ font-size:13px; color:var(--ink-faint); margin-top:14px; }
+.form-success{ background:var(--teal-tint); color:var(--teal-dark); padding:14px 16px; border-radius:var(--radius-s); font-size:14px; margin-top:16px; }
+
+/* Footer */
+.footer{ padding:48px 0 38px; background:var(--ink); background-image:none; }
+.cap-trim{
+  height:14px; background-color:var(--ink);
+  background-image:radial-gradient(circle, var(--bg) 5px, transparent 5.5px);
+  background-size:26px 26px; background-position:13px -6px; background-repeat:repeat-x;
+}
+.footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+.footer .brand span:first-child{ color:#fff; }
+.footer .brand span:last-child{ color:var(--teal-light); }
+.footer__links{ display:flex; gap:24px; }
+.footer__links a.nav__link{ color:#AEC0C4; }
+.footer__links a.nav__link:hover{ color:#fff; }
+.footer small{ color:#728089; font-size:13px; }
+
+@media (max-width:900px){
+  .hero .wrap{ grid-template-columns:1fr; }
+  .steps{ grid-template-columns:1fr; gap:36px; }
+  .benefits{ grid-template-columns:1fr; }
+  .support{ grid-template-columns:1fr; }
+  .contact{ grid-template-columns:1fr; }
+}
+
+/* ============================================================
+   PRO ACCESS OVERLAY
+   ============================================================ */
+.gate{
+  position:fixed; inset:0; z-index:100; background:rgba(22,35,43,.6); backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.gate__card{ background:var(--surface); border-radius:var(--radius-l); padding:40px; max-width:400px; width:100%; box-shadow:var(--shadow-m); }
+.gate__card h3{ font-size:22px; }
+.gate__card p{ color:var(--ink-soft); font-size:14.5px; margin-top:8px; }
+.gate__pass{ position:relative; margin-top:22px; }
+.gate__pass input{ width:100%; padding:13px 44px 13px 14px; border:1px solid var(--line); border-radius:var(--radius-s); background:var(--bg); font-family:var(--font-mono); }
+.gate__pass button{ position:absolute; right:6px; top:6px; bottom:6px; background:none; border:none; padding:0 10px; color:var(--ink-faint); }
+.gate__error{ color:var(--red); font-size:13px; margin-top:10px; display:none; }
+.gate__error.is-visible{ display:block; }
+.gate__actions{ display:flex; gap:10px; margin-top:20px; }
+.gate__actions .btn{ flex:1; }
+
+/* ============================================================
+   ADMIN
+   ============================================================ */
+.admin{ min-height:100vh; background:var(--bg); }
+.admin__bar{ background:var(--ink); color:#fff; }
+.admin__bar .wrap{ display:flex; align-items:center; justify-content:space-between; height:70px; gap:20px; flex-wrap:wrap; }
+.admin__brand{ display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:600; font-size:17px; }
+.admin__brand small{ font-family:var(--font-mono); color:#8CA0A8; font-size:11px; display:block; font-weight:400; }
+.admin__bar-actions{ display:flex; gap:8px; align-items:center; }
+.admin__bar .btn--ghost{ border-color:#33454E; color:#DCE4E6; }
+.admin__bar .btn--ghost:hover{ border-color:#fff; }
+
+.admin-tabs{ background:var(--surface); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10; }
+.admin-tabs .wrap{ display:flex; gap:4px; overflow-x:auto; }
+.admin-tabs__btn{
+  display:flex; align-items:center; gap:8px; padding:16px 18px; border:none; background:none;
+  font-weight:600; font-size:14px; color:var(--ink-faint); border-bottom:2px solid transparent; white-space:nowrap;
+}
+.admin-tabs__btn:hover{ color:var(--ink); }
+.admin-tabs__btn.is-active{ color:var(--teal-dark); border-bottom-color:var(--teal); }
+
+.admin-view{ display:none; padding:36px 0 80px; }
+.admin-view.is-active{ display:block; }
+.admin-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin-bottom:28px; flex-wrap:wrap; }
+.admin-head h2{ font-size:24px; }
+.admin-head p{ color:var(--ink-soft); font-size:14.5px; margin-top:6px; }
+
+/* Map */
+.map-layout{ display:grid; grid-template-columns:1.3fr .9fr; gap:24px; align-items:start; }
+.mapboard{
+  position:relative; aspect-ratio:4/3; border-radius:var(--radius-l); overflow:hidden; border:1px solid var(--line);
+  background-color:#E6EAE5;
+  background-image:
+    linear-gradient(rgba(22,35,43,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22,35,43,.05) 1px, transparent 1px),
+    linear-gradient(rgba(22,35,43,.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22,35,43,.09) 1px, transparent 1px);
+  background-size:20px 20px,20px 20px,100px 100px,100px 100px;
+  cursor:default;
+}
+.mapboard.is-placing{ cursor:crosshair; }
+.mapboard.is-placing::after{
+  content:'Cliquez sur la carte pour positionner le distributeur';
+  position:absolute; top:12px; left:50%; transform:translateX(-50%);
+  background:var(--ink); color:#fff; font-size:12.5px; padding:8px 14px; border-radius:999px;
+  font-family:var(--font-mono); white-space:nowrap; z-index:5;
+}
+.pin{
+  position:absolute; width:30px; height:30px; margin:-30px 0 0 -15px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; color:#fff; background:var(--ink);
+  border-radius:50% 50% 50% 0; transform:rotate(-45deg); box-shadow:var(--shadow-s);
+  transition:transform .12s ease;
+}
+.pin .icon{ transform:rotate(45deg); width:14px; height:14px; }
+.pin:hover{ transform:rotate(-45deg) scale(1.1); }
+.pin.is-selected{ background:var(--teal); }
+.pin-ghost{
+  position:absolute; width:26px; height:26px; margin:-26px 0 0 -13px; border-radius:50% 50% 50% 0;
+  background:var(--amber); transform:rotate(-45deg); opacity:.85; pointer-events:none;
+}
+.map-empty{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px; color:var(--ink-faint); font-size:13.5px; text-align:center; padding:20px; }
+
+.panel{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:26px; }
+.panel--empty{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:10px; padding:60px 26px; color:var(--ink-faint); font-size:14px; min-height:280px; }
+.panel__title{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+.panel__title h3{ font-size:19px; }
+.panel__title span{ font-family:var(--font-mono); font-size:12px; color:var(--ink-faint); }
+.panel__addr{ color:var(--ink-soft); font-size:14px; margin-top:6px; }
+.tag{ display:inline-block; font-family:var(--font-mono); font-size:11px; background:var(--teal-tint); color:var(--teal-dark); padding:3px 9px; border-radius:999px; margin-top:10px; }
+.panel__stats{ display:flex; gap:22px; margin-top:18px; padding-top:18px; border-top:1px solid var(--line); }
+.panel__stats div strong{ display:block; font-family:var(--font-mono); font-size:19px; }
+.panel__stats div span{ font-size:11.5px; color:var(--ink-faint); }
+
+.reviews{ margin-top:20px; display:flex; flex-direction:column; gap:12px; max-height:260px; overflow-y:auto; }
+.review{ border:1px solid var(--line); border-radius:var(--radius-s); padding:12px 14px; }
+.review__top{ display:flex; justify-content:space-between; align-items:center; }
+.review__top strong{ font-size:13.5px; }
+.review__stars{ display:flex; gap:2px; color:var(--amber); }
+.review__stars .icon{ width:13px; height:13px; }
+.review p{ font-size:13.5px; color:var(--ink-soft); margin-top:6px; }
+.review small{ color:var(--ink-faint); font-size:11px; }
+
+/* Forms inline (admin) */
+.inline-form{ background:var(--surface-alt); border-radius:var(--radius-m); padding:20px; margin-top:16px; }
+.inline-form .field-row{ grid-template-columns:1fr 1fr; }
+.inline-form .field{ margin-bottom:12px; }
+.inline-form__actions{ display:flex; gap:10px; margin-top:6px; }
+
+/* Stocks */
+.stock-select{ margin-bottom:22px; max-width:340px; }
+.table{ width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden; }
+.table th{ text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-faint); padding:12px 16px; background:var(--surface-alt); font-weight:600; }
+.table td{ padding:13px 16px; border-top:1px solid var(--line); font-size:14.5px; }
+.table tr.is-low td{ background:var(--amber-tint); }
+.table tr.is-out td{ background:var(--red-tint); }
+.table td.num{ font-family:var(--font-mono); }
+.status-dot{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; }
+.status-dot::before{ content:''; width:7px; height:7px; border-radius:50%; }
+.status-dot.ok{ color:var(--teal-dark); }
+.status-dot.ok::before{ background:var(--teal); }
+.status-dot.low{ color:var(--amber); }
+.status-dot.low::before{ background:var(--amber); }
+.status-dot.out{ color:var(--red); }
+.status-dot.out::before{ background:var(--red); }
+.table-empty{ padding:50px 16px; text-align:center; color:var(--ink-faint); font-size:14px; }
+
+/* Revenue */
+.revenue-layout{ display:grid; grid-template-columns:1fr 1.4fr; gap:24px; align-items:start; }
+.revenue-total{ font-family:var(--font-mono); font-size:34px; margin-top:4px; }
+.chart{ display:flex; align-items:flex-end; gap:14px; height:200px; padding:20px 10px 0; border-bottom:1px solid var(--line); }
+.chart__bar-wrap{ display:flex; flex-direction:column; align-items:center; flex:1; height:100%; justify-content:flex-end; gap:8px; }
+.chart__bar{ width:100%; max-width:38px; background:var(--teal); border-radius:5px 5px 0 0; min-height:3px; transition:height .3s ease; }
+.chart__val{ font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); }
+.chart__lbl{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); margin-top:8px; }
+.rev-list{ margin-top:18px; display:flex; flex-direction:column; gap:8px; }
+.rev-row{ display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-s); font-size:14px; }
+.rev-row span:first-child{ font-family:var(--font-mono); color:var(--ink-soft); }
+.rev-row span.amt{ font-family:var(--font-mono); font-weight:600; }
+
+/* Notes */
+.notes-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px; margin-top:24px; }
+.note-card{ background:#FBF6E4; border-radius:var(--radius-s); padding:18px; min-height:150px; display:flex; flex-direction:column; justify-content:space-between; box-shadow:var(--shadow-s); transform:rotate(var(--r,-1deg)); }
+.note-card:nth-child(2n){ --r:1deg; background:#EAF3E9; }
+.note-card:nth-child(3n){ --r:-0.6deg; background:#E7EEF2; }
+.note-card p{ font-size:14px; white-space:pre-wrap; }
+.note-card__foot{ display:flex; justify-content:space-between; align-items:center; margin-top:14px; }
+.note-card__foot small{ color:var(--ink-faint); font-family:var(--font-mono); font-size:11px; }
+
+/* small helpers */
+.field-inline{ display:flex; gap:10px; }
+.field-inline .field{ flex:1; margin-bottom:0; }
+.empty-icon{ width:34px; height:34px; color:var(--line); }
+.save-indicator{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); display:flex; align-items:center; gap:6px; }
+.save-indicator .dot{ width:6px; height:6px; border-radius:50%; background:var(--teal); }
+
+@media (max-width:900px){
+  .map-layout{ grid-template-columns:1fr; }
+  .revenue-layout{ grid-template-columns:1fr; }
+}
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+.scrollbar-progress{
+  position:fixed; top:0; left:0; height:3px; width:0%; z-index:60;
+  background:linear-gradient(90deg, var(--teal), var(--teal-light));
+  transition:width .1s linear;
+}
+
+/* ============================================================
+   SCROLL-REVEAL ANIMATIONS
+   ============================================================ */
+.reveal{ opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.16,.8,.3,1), transform .7s cubic-bezier(.16,.8,.3,1); }
+.reveal.is-visible{ opacity:1; transform:translateY(0); }
+.benefits .benefit.reveal{ transition-delay:calc(var(--i,0) * 70ms); }
+.steps .step.reveal{ transition-delay:calc(var(--i,0) * 90ms); }
+
+.reveal-hero{ opacity:0; transform:translateY(16px); animation:hero-in .7s cubic-bezier(.16,.8,.3,1) forwards; animation-delay:var(--d,0ms); }
+@keyframes hero-in{ to{ opacity:1; transform:translateY(0); } }
+
+/* card lift on hover, life on interaction */
+.benefit{ transition:transform .25s ease, box-shadow .25s ease, background-color .25s ease; }
+.benefit:hover{ transform:translateY(-4px); box-shadow:var(--shadow-s); background:var(--teal-tint); z-index:1; position:relative; }
+.step{ transition:transform .25s ease; }
+.step:hover{ transform:translateY(-3px); }
+.step:hover .step__num{ color:var(--teal-light); }
+
+.btn{ transform:translateY(0); }
+.btn:hover{ transform:translateY(-2px); box-shadow:0 6px 16px rgba(22,35,43,.14); }
+.btn:active{ transform:translateY(0); box-shadow:none; }
+
+.pin{ transition:transform .18s cubic-bezier(.34,1.56,.64,1), background-color .2s ease; }
+.nav__link{ position:relative; }
+.nav__link::after{ content:''; position:absolute; left:0; right:100%; bottom:-4px; height:2px; background:var(--teal); transition:right .25s ease; }
+.nav__link:hover::after{ right:0; }
+
+@keyframes board-float{ 0%,100%{ transform:rotate(-2deg) translateY(0); } 50%{ transform:rotate(-2deg) translateY(-8px); } }
+
+/* ============================================================
+   CHAT / ASSISTANT IA
+   ============================================================ */
+.chatpanel{ max-width:760px; margin:0 auto; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:24px; box-shadow:var(--shadow-s); }
+.chatpanel__messages{ display:flex; flex-direction:column; gap:14px; max-height:420px; overflow-y:auto; padding:4px 4px 14px; scroll-behavior:smooth; }
+.msg{ max-width:80%; padding:12px 16px; border-radius:16px; font-size:14.5px; line-height:1.5; opacity:0; transform:translateY(10px); animation:msg-in .35s ease forwards; }
+@keyframes msg-in{ to{ opacity:1; transform:translateY(0); } }
+.msg--assistant{ align-self:flex-start; background:var(--teal-tint); color:var(--ink); border-bottom-left-radius:4px; }
+.msg--user{ align-self:flex-end; background:var(--ink); color:#fff; border-bottom-right-radius:4px; }
+.msg--error{ align-self:flex-start; background:var(--red-tint); color:var(--red); border-bottom-left-radius:4px; }
+.typing{ align-self:flex-start; display:flex; gap:4px; padding:14px 16px; background:var(--teal-tint); border-radius:16px; border-bottom-left-radius:4px; }
+.typing span{ width:6px; height:6px; border-radius:50%; background:var(--teal-dark); opacity:.5; animation:typing-bounce 1s ease-in-out infinite; }
+.typing span:nth-child(2){ animation-delay:.15s; }
+.typing span:nth-child(3){ animation-delay:.3s; }
+@keyframes typing-bounce{ 0%,60%,100%{ transform:translateY(0); opacity:.5; } 30%{ transform:translateY(-5px); opacity:1; } }
+.chatpanel__inputrow{ display:flex; gap:10px; align-items:flex-end; border-top:1px solid var(--line); padding-top:16px; }
+.chatpanel__inputrow textarea{ flex:1; resize:none; border:1px solid var(--line); border-radius:var(--radius-s); padding:12px 14px; background:var(--bg); max-height:120px; }
+.chatpanel__inputrow textarea:focus{ border-color:var(--teal); outline:none; }
+.chatpanel__inputrow .btn--icon{ width:44px; height:44px; flex-shrink:0; }
+
+.chatfab{
+  position:fixed; right:24px; bottom:24px; z-index:50; width:56px; height:56px; border-radius:50%;
+  background:var(--teal); border:none; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 24px rgba(31,107,68,.35); animation:fab-pulse 2.6s ease-in-out infinite;
+  transition:transform .2s ease;
+}
+.chatfab:hover{ transform:scale(1.08); }
+@keyframes fab-pulse{ 0%,100%{ box-shadow:0 10px 24px rgba(31,107,68,.35); } 50%{ box-shadow:0 10px 30px rgba(31,107,68,.55); } }
+
+@media (max-width:640px){
+  .chatpanel__messages{ max-height:340px; }
+  .msg{ max-width:90%; }
+}
+
+/* ============================================================
+   DISTRIBUTEUR INTERACTIF — design réaliste
+   ============================================================ */
+.machine-layout{ display:grid; grid-template-columns:340px 1fr; gap:40px; align-items:start; }
+
+.machine--v2{
+  position:relative; background:linear-gradient(180deg,#EEF0EA,#E2E5DE); border:1px solid #D6D9D0;
+  border-radius:22px; padding:14px; box-shadow:var(--shadow-m);
+}
+.machine__body{ display:flex; gap:8px; background:#0D1518; border-radius:12px; padding:10px; }
+.machine__glass{
+  flex:1; position:relative; overflow:hidden; border-radius:8px; min-height:280px;
+  background:linear-gradient(160deg,#0A1114 0%,#182831 55%,#0A1114 100%);
+}
+.machine__glass::after{
+  content:''; position:absolute; top:0; left:-30%; width:35%; height:100%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.07), transparent);
+  transform:skewX(-12deg); pointer-events:none;
+}
+.machine__columns{ position:relative; z-index:1; display:grid; grid-template-columns:repeat(5,1fr); gap:6px; padding:12px 10px; height:100%; }
+.machine__col{ display:flex; flex-direction:column; gap:5px; justify-content:flex-start; }
+
+.machine__panel{ width:60px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:10px; padding:10px 0; }
+.machine__screen{
+  width:100%; background:#0F1E16; border:1px solid #1E3A2C; border-radius:4px; padding:7px 3px;
+  text-align:center; font-size:9px; color:var(--teal-light); letter-spacing:.05em;
+  box-shadow:inset 0 0 6px rgba(79,174,124,.5);
+}
+.machine__coin{ width:20px; height:20px; border-radius:50%; background:#1A272D; border:1px solid #2C3F48; }
+.machine__slotline{ width:65%; height:3px; background:#1A272D; border-radius:2px; }
+
+.machine__footer{ display:flex; align-items:center; gap:12px; margin-top:12px; padding:0 4px; }
+.machine__tray{ flex:1; height:36px; background:#0D1518; border-radius:6px; box-shadow:inset 0 3px 8px rgba(0,0,0,.6); }
+.machine__push{
+  background:#fff; border:1px solid #D6D9D0; border-radius:10px; padding:10px 20px;
+  font-family:var(--font-mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600;
+  color:var(--ink-soft); box-shadow:0 3px 0 #C7CABF; transition:all .15s ease; cursor:pointer;
+}
+.machine__push:hover, .machine__push:focus-visible{
+  background:var(--teal-tint); color:var(--teal-dark); border-color:var(--teal);
+  transform:translateY(2px); box-shadow:0 1px 0 #C7CABF;
+}
+.machine__legs{ display:flex; justify-content:space-between; padding:10px 22px 2px; }
+.machine__legs span{ width:13px; height:13px; border-radius:50%; background:#B7BBB0; box-shadow:inset 0 -2px 0 rgba(0,0,0,.15); }
+
+.drop-can{
+  position:absolute; width:22px; aspect-ratio:.58; left:30%; top:10%; border-radius:4px 4px 3px 3px;
+  background:var(--amber); opacity:0; z-index:2; box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);
+}
+.drop-can::before{ content:''; position:absolute; top:0; left:0; right:0; height:14%; background:rgba(255,255,255,.45); border-radius:4px 4px 0 0; }
+.drop-can::after{ content:''; position:absolute; top:14%; left:50%; width:6px; height:6px; margin-left:-3px; border:1.3px solid rgba(0,0,0,.3); border-radius:50%; }
+.drop-can.is-falling{ animation:can-fall .85s cubic-bezier(.5,0,.75,0) forwards; }
+@keyframes can-fall{
+  0%{ opacity:1; top:10%; transform:rotate(0deg); }
+  78%{ opacity:1; top:76%; transform:rotate(150deg); }
+  100%{ opacity:1; top:72%; transform:rotate(165deg); }
+}
+
+.machine-tagline{
+  position:absolute; left:50%; bottom:-16px; transform:translate(-50%,8px);
+  background:var(--ink); color:#fff; padding:10px 18px; border-radius:999px; font-size:13px; font-weight:600;
+  white-space:nowrap; opacity:0; transition:opacity .35s ease, transform .35s ease; pointer-events:none;
+  box-shadow:var(--shadow-m); z-index:3;
+}
+.machine-tagline.is-visible{ opacity:1; transform:translate(-50%,0); }
+.machine-tagline::after{ content:''; position:absolute; top:-5px; left:50%; transform:translateX(-50%); border:6px solid transparent; border-bottom-color:var(--ink); }
+
+.machine__keypad-wrap{ background:var(--ink); border-radius:var(--radius-m); padding:14px; margin-top:26px; }
+.machine__keypad{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.machine__btn{
+  display:flex; flex-direction:column; align-items:flex-start; gap:3px; background:#1D2C34; border:1px solid #2C3F48;
+  color:#D7E1E3; padding:11px 13px; border-radius:9px; font-size:12.5px; font-weight:600; text-align:left;
+  transition:transform .2s ease, background-color .2s ease, border-color .2s ease; font-family:var(--font-body);
+}
+.machine__btn-code{ font-size:10px; color:var(--teal-light); letter-spacing:.03em; }
+.machine__btn:hover{ border-color:var(--teal-light); transform:translateY(-2px); }
+.machine__btn.is-active{ background:var(--teal); border-color:var(--teal); color:#fff; }
+.machine__btn.is-active .machine__btn-code{ color:#EAF6F0; }
+
+.machine-info{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:30px; min-height:260px; display:flex; flex-direction:column; justify-content:center; }
+.machine-info__key{ font-family:var(--font-mono); font-size:12px; color:var(--teal); display:block; margin-bottom:8px; letter-spacing:.04em; }
+.machine-info__title{ font-size:21px; }
+.machine-info__text{ margin-top:12px; color:var(--ink-soft); font-size:15.5px; }
+.machine-info__body{ animation:info-in .4s cubic-bezier(.16,.8,.3,1); }
+@keyframes info-in{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+
+@media (max-width:900px){
+  .machine-layout{ grid-template-columns:1fr; }
+  .machine--v2{ max-width:340px; margin:0 auto; }
+}
+@media (max-width:480px){
+  .machine__keypad{ grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     SITE PUBLIC
+     ============================================================ -->
+<div id="publicSite">
+
+  <nav class="nav">
+    <div class="wrap">
+      <a href="#top" class="brand"><span>CLT</span><span>Distrib</span></a>
+      <div class="nav__links">
+        <a class="nav__link" href="#comment">Comment ça marche</a>
+        <a class="nav__link" href="#avantages">Ce que je gère</a>
+        <a class="nav__link" href="#maintenance">Maintenance</a>
+        <a class="nav__link" href="#assistant">Une question ?</a>
+      </div>
+      <div class="nav__actions">
+        <button class="btn btn--ghost btn--sm" id="openProBtn">Espace pro</button>
+        <a href="#assistant" class="btn btn--primary btn--sm" id="navAssistantBtn"><span class="btn-label">Écrivez-moi</span></a>
+        <button class="nav__burger" id="burgerBtn" aria-label="Ouvrir le menu">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="nav__mobile" id="mobileNav">
+      <a href="#comment">Comment ça marche</a>
+      <a href="#avantages">Ce que je gère</a>
+      <a href="#maintenance">Maintenance</a>
+      <a href="#assistant">Une question ?</a>
+      <a href="#" id="mobileProBtn">Espace pro</a>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow reveal-hero" style="--d:0ms">Un site pour comprendre le service</span>
+        <h1 class="reveal-hero" style="--d:60ms">Un distributeur automatique installé, approvisionné,<br> <em>géré de bout en bout</em>.</h1>
+        <p class="lede reveal-hero" style="--d:140ms">CLTDistrib installe et gère des distributeurs automatiques dans les entreprises et sites à forte affluence. Ce site vous explique comment fonctionne le service — et comment je le gère au quotidien.</p>
+        <div class="hero__cta reveal-hero" style="--d:220ms">
+          <a href="#assistant" class="btn btn--accent" id="heroAssistantBtn">Poser une question</a>
+          <a href="#comment" class="btn btn--ghost">Voir comment ça marche</a>
+        </div>
+        <div class="hero__meta reveal-hero" style="--d:300ms">
+          <div><strong>0 €</strong><small>d'investissement pour vous</small></div>
+          <div><strong>&lt; 15 jours</strong><small>délai moyen d'installation</small></div>
+          <div><strong>100%</strong><small>maintenance assurée</small></div>
+        </div>
+      </div>
+      <div>
+        <div class="hero-machine" id="heroMachine">
+          <span class="hero-machine__badge">Frais &amp; varié</span>
+          <div class="hero-machine__body">
+            <div class="hero-machine__glass">
+              <div class="hero-machine__cols" id="heroMachineCols"></div>
+            </div>
+            <div class="hero-machine__panel">
+              <div class="hero-machine__screen mono">EN SERVICE</div>
+              <div class="hero-machine__coin"></div>
+              <div class="hero-machine__slotline"></div>
+              <div class="hero-machine__slotline"></div>
+            </div>
+          </div>
+          <div class="hero-machine__legs"><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section class="section" id="comment">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <span class="section__kicker">Le processus</span>
+        <h2>Comment se déroule la mise en place, en quatre étapes</h2>
+        <p>Voici comment je procède, du premier échange au suivi quotidien.</p>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step__num">01</div>
+          <h3>L'échange initial</h3>
+          <p>On regarde ensemble les emplacements proposés sur votre site, pour choisir celui qui s'intègre le mieux à votre organisation et à son bon fonctionnement — selon le passage des personnes et les horaires.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step__num">02</div>
+          <h3>L'étude du besoin</h3>
+          <p>La sélection se définit selon l'environnement : pour les salariés et les clients d'une entreprise, ou pour un espace public, où le distributeur crée de la vie avec une offre de restauration rapide et d'hydratation.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step__num">03</div>
+          <h3>L'installation</h3>
+          <p>Elle prend en compte les contraintes du site, extérieur ou intérieur, ainsi que l'alimentation électrique nécessaire et l'encombrement du distributeur.</p>
+        </div>
+        <div class="step reveal">
+          <div class="step__num">04</div>
+          <h3>Suivi &amp; maintenance</h3>
+          <p>Le stock de chaque machine est suivi en ligne pour un réapprovisionnement optimal. La maintenance courante est assurée par mes soins, avec l'appui du constructeur pour les interventions plus importantes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint" id="avantages">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <span class="section__kicker">Ce que je gère pour vous</span>
+        <h2>Un service pensé pour être invisible pour vous</h2>
+        <p>Vous profitez du distributeur, je gère tout le reste.</p>
+      </div>
+      <div class="benefits">
+        <div class="benefit reveal">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          <h3>Sans investissement</h3>
+          <p>La machine, l'installation et la maintenance sont entièrement à ma charge : aucun frais, aucune gestion de votre côté.</p>
+        </div>
+        <div class="benefit reveal">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+          <h3>Adapté à votre environnement</h3>
+          <p>Pour les salariés et les clients d'une entreprise, ou pour dynamiser un espace public avec une offre de restauration rapide et d'hydratation.</p>
+        </div>
+        <div class="benefit reveal">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-6h6v6"/></svg>
+          <h3>Intégration sur mesure</h3>
+          <p>Extérieur ou intérieur, alimentation électrique, encombrement : chaque installation est pensée selon les contraintes réelles du site.</p>
+        </div>
+        <div class="benefit reveal">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+          <h3>Stock suivi en ligne</h3>
+          <p>Le niveau de chaque machine est suivi à distance, en temps réel, pour anticiper les besoins avant la rupture.</p>
+        </div>
+        <div class="benefit reveal">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg>
+          <h3>Réapprovisionnement optimal</h3>
+          <p>Grâce à ce suivi en ligne, les visites sont planifiées au bon moment, avec les bons produits, sans excès ni rupture.</p>
+        </div>
+        <div class="benefit reveal">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg>
+          <h3>Maintenance directe</h3>
+          <p>J'assure moi-même l'entretien courant. Pour une intervention plus importante, je m'appuie sur le constructeur de la machine.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="decouvrir">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <span class="section__kicker">Le distributeur</span>
+        <h2>Passez la souris sur PUSH</h2>
+        <p>Voici le type de machine installée sur vos sites. Les boutons ci-dessous détaillent chaque aspect du service, du premier emplacement à la maintenance.</p>
+      </div>
+      <div class="machine-layout reveal">
+        <div>
+          <div class="machine machine--v2" id="machineViz">
+            <div class="machine__body">
+              <div class="machine__glass">
+                <div class="machine__columns" id="machineColumns"></div>
+                <div class="drop-can" id="dropCan"></div>
+              </div>
+              <div class="machine__panel">
+                <div class="machine__screen mono" id="machineScreen">PRÊT</div>
+                <div class="machine__coin"></div>
+                <div class="machine__slotline"></div>
+                <div class="machine__slotline"></div>
+              </div>
+            </div>
+            <div class="machine__footer">
+              <div class="machine__tray"></div>
+              <button class="machine__push" id="machinePush" type="button">Push</button>
+            </div>
+            <div class="machine__legs"><span></span><span></span></div>
+            <div class="machine-tagline" id="machineTagline">Voilà comment on reconnaît un bon service.</div>
+          </div>
+          <div class="machine__keypad-wrap">
+            <div class="machine__keypad" id="machineKeypad">
+              <button class="machine__btn" data-key="emplacement" type="button"><span class="machine__btn-code mono">A1</span>Emplacement</button>
+              <button class="machine__btn" data-key="produits" type="button"><span class="machine__btn-code mono">A2</span>Produits</button>
+              <button class="machine__btn" data-key="installation" type="button"><span class="machine__btn-code mono">B1</span>Installation</button>
+              <button class="machine__btn" data-key="suivi" type="button"><span class="machine__btn-code mono">B2</span>Stock en ligne</button>
+              <button class="machine__btn" data-key="reappro" type="button"><span class="machine__btn-code mono">C1</span>Réappro.</button>
+              <button class="machine__btn" data-key="maintenance" type="button"><span class="machine__btn-code mono">C2</span>Maintenance</button>
+            </div>
+          </div>
+        </div>
+        <div class="machine-info" id="machineInfo"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="maintenance">
+    <div class="wrap">
+      <div class="support reveal">
+        <div class="support__card">
+          <h3>Déjà équipé chez CLTDistrib ?</h3>
+          <p>Panne, réapprovisionnement, question sur votre contrat : contactez-moi directement, un seul canal pour tout.</p>
+          <a href="mailto:contact@cltdistrib.fr?subject=Support%20—%20Distributeur%20installé" class="btn btn--accent">
+            <svg class="icon" viewBox="0 0 24 24" style="color:#fff"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+            Signaler un besoin
+          </a>
+        </div>
+        <div>
+          <ul>
+            <li>
+              <svg class="icon" viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+              <div><strong>Intervention rapide</strong><span>J'interviens dès qu'un incident est signalé.</span></div>
+            </li>
+            <li>
+              <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+              <div><strong>Réapprovisionnement planifié</strong><span>Fréquence ajustée selon la fréquentation réelle du site.</span></div>
+            </li>
+            <li>
+              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2.5 3-2.5s3 1.1 3 2.5-1.3 2-3 2.5-3 1.1-3 2.5 1.3 2.5 3 2.5 3-1.1 3-2.5"/></svg>
+              <div><strong>Un contact direct</strong><span>Pas de standard, pas de ticket perdu : une réponse personnelle.</span></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tint" id="assistant">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <span class="section__kicker">Écrivez-moi</span>
+        <h2>Une question sur le service ?</h2>
+        <p>Ce site sert à expliquer ce que je fais et comment je gère les distributeurs — pas à passer commande. Écrivez votre question sur l'installation, les produits, la maintenance ou le suivi, vous aurez une réponse immédiate.</p>
+      </div>
+      <div class="chatpanel reveal">
+        <div class="chatpanel__messages" id="chatMessages"></div>
+        <div class="chatpanel__inputrow">
+          <textarea id="chatInput" rows="1" placeholder="Ex : comment gérez-vous le réapprovisionnement ?"></textarea>
+          <button class="btn btn--accent btn--icon" id="chatSend" aria-label="Envoyer">
+            <svg class="icon" viewBox="0 0 24 24" style="color:#fff"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
+          </button>
+        </div>
+        <p class="form-note">Réponse automatique instantanée. Pour toute demande précise, contactez-moi directement.</p>
+      </div>
+      <div class="contact-row" style="margin-top:22px;justify-content:center">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg> contact@cltdistrib.fr
+        <span style="width:18px"></span>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg> 01 23 45 67 89
+      </div>
+    </div>
+  </section>
+
+  <div class="cap-trim" aria-hidden="true"></div>
+  <footer class="footer">
+    <div class="wrap">
+      <div class="brand" style="font-size:17px"><span>CLT</span><span>Distrib</span></div>
+      <div class="footer__links">
+        <a class="nav__link" href="#comment">Comment ça marche</a>
+        <a class="nav__link" href="#assistant">Une question ?</a>
+        <a class="nav__link" href="#" id="footerProBtn">Espace pro</a>
+      </div>
+      <small>© 2026 CLTDistrib. Tous droits réservés.</small>
+    </div>
+  </footer>
+
+</div>
+
+<button class="chatfab" id="chatFab" aria-label="Poser une question">
+  <svg class="icon" viewBox="0 0 24 24" style="color:#fff;width:24px;height:24px"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>
+</button>
+<div class="scrollbar-progress" id="scrollProgress"></div>
+
+<!-- ============================================================
+     ESPACE PRO — PORTE D'ACCÈS
+     ============================================================ -->
+<div class="gate hidden" id="gateOverlay">
+  <div class="gate__card">
+    <h3>Espace pro</h3>
+    <p>Réservé à l'équipe CLTDistrib. Saisissez votre code d'accès.</p>
+    <div class="gate__pass">
+      <input type="password" id="gatePassInput" placeholder="Code d'accès" autocomplete="off">
+      <button type="button" id="gateToggleVis" aria-label="Afficher le code">
+        <svg class="icon" id="gateEyeIcon" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <p class="gate__error" id="gateError">Code incorrect. Réessayez.</p>
+    <div class="gate__actions">
+      <button class="btn btn--ghost" id="gateCancel">Annuler</button>
+      <button class="btn btn--primary" id="gateSubmit">Accéder</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     ESPACE PRO — TABLEAU DE BORD
+     ============================================================ -->
+<div class="admin hidden" id="adminApp">
+  <div class="admin__bar">
+    <div class="wrap">
+      <div class="admin__brand">
+        <svg class="icon" viewBox="0 0 24 24" style="color:var(--teal)"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+        <div>CLTDistrib<small>Espace pro</small></div>
+      </div>
+      <div class="admin__bar-actions">
+        <span class="save-indicator" id="saveIndicator" style="color:#8CA0A8"><span class="dot"></span> Enregistré</span>
+        <button class="btn btn--ghost btn--sm" id="exportBtn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 21h16"/></svg>
+          Exporter
+        </button>
+        <button class="btn btn--ghost btn--sm" id="importBtn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 3h16"/></svg>
+          Importer
+        </button>
+        <input type="file" id="importFile" accept="application/json" class="hidden">
+        <button class="btn btn--ghost btn--sm" id="leaveAdminBtn">Quitter</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-tabs">
+    <div class="wrap">
+      <button class="admin-tabs__btn is-active" data-tab="map">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+        Carte &amp; avis
+      </button>
+      <button class="admin-tabs__btn" data-tab="stocks">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+        Stocks
+      </button>
+      <button class="admin-tabs__btn" data-tab="revenue">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+        Chiffre d'affaires
+      </button>
+      <button class="admin-tabs__btn" data-tab="notes">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h5"/></svg>
+        Notes
+      </button>
+    </div>
+  </div>
+
+  <div class="wrap">
+
+    <!-- TAB: CARTE & AVIS -->
+    <div class="admin-view is-active" data-view="map">
+      <div class="admin-head">
+        <div>
+          <h2>Carte des distributeurs</h2>
+          <p>Positionnez vos distributeurs et consultez les avis laissés pour chacun.</p>
+        </div>
+        <button class="btn btn--accent btn--sm" id="addDistribBtn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;color:#fff"><path d="M12 5v14M5 12h14"/></svg>
+          Ajouter un distributeur
+        </button>
+      </div>
+
+      <div class="inline-form hidden" id="addDistribForm">
+        <div class="field-row">
+          <div class="field"><label for="dNom">Nom du distributeur *</label><input id="dNom" placeholder="ex : Site Nord — accueil"></div>
+          <div class="field"><label for="dSecteur">Secteur</label>
+            <select id="dSecteur">
+              <option>Bureaux</option>
+              <option>Site industriel</option>
+              <option>Entrepôt / logistique</option>
+              <option>Zone commerciale</option>
+              <option>Établissement de santé</option>
+              <option>Autre</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="dAdresse">Adresse *</label><input id="dAdresse" placeholder="ex : 14 rue de l'Industrie, Bonnières-sur-Seine"></div>
+        <p class="form-note" id="addDistribHint">Renseignez les champs, puis cliquez sur la carte pour choisir l'emplacement.</p>
+        <div class="inline-form__actions">
+          <button class="btn btn--ghost btn--sm" id="cancelAddDistrib">Annuler</button>
+          <button class="btn btn--primary btn--sm" id="confirmAddDistrib" disabled>Valider l'emplacement</button>
+        </div>
+      </div>
+
+      <div class="map-layout" style="margin-top:20px">
+        <div class="mapboard" id="mapboard">
+          <div class="map-empty hidden" id="mapEmpty">
+            <svg class="icon empty-icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            Aucun distributeur pour le moment.<br>Cliquez sur « Ajouter un distributeur ».
+          </div>
+        </div>
+        <div id="distribPanel">
+          <div class="panel panel--empty">
+            <svg class="icon empty-icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            Sélectionnez un point sur la carte pour voir son détail et ses avis.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB: STOCKS -->
+    <div class="admin-view" data-view="stocks">
+      <div class="admin-head">
+        <div>
+          <h2>Gestion des stocks</h2>
+          <p>Suivez les quantités disponibles pour chaque distributeur.</p>
+        </div>
+      </div>
+      <div class="field stock-select">
+        <label for="stockDistribSelect">Distributeur</label>
+        <select id="stockDistribSelect"></select>
+      </div>
+      <div id="stocksContent"></div>
+    </div>
+
+    <!-- TAB: CHIFFRE D'AFFAIRES -->
+    <div class="admin-view" data-view="revenue">
+      <div class="admin-head">
+        <div>
+          <h2>Chiffre d'affaires</h2>
+          <p>Suivez les revenus mensuels générés par chaque distributeur.</p>
+        </div>
+      </div>
+      <div class="field stock-select">
+        <label for="revenueDistribSelect">Distributeur</label>
+        <select id="revenueDistribSelect"></select>
+      </div>
+      <div id="revenueContent"></div>
+    </div>
+
+    <!-- TAB: NOTES -->
+    <div class="admin-view" data-view="notes">
+      <div class="admin-head">
+        <div>
+          <h2>Notes administratives</h2>
+          <p>Un pense-bête libre pour votre gestion au quotidien.</p>
+        </div>
+      </div>
+      <div class="form-card" style="padding:20px">
+        <div class="field" style="margin-bottom:12px"><textarea id="noteInput" rows="2" placeholder="Écrire une note..."></textarea></div>
+        <button class="btn btn--primary btn--sm" id="addNoteBtn">Ajouter la note</button>
+      </div>
+      <div class="notes-grid" id="notesGrid"></div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   CONFIG
+   ============================================================ */
+var ACCESS_CODE = "1246Aaa78!";
+var STORAGE_KEY = "cltdistrib-data";
+
+/* ============================================================
+   STATE
+   ============================================================ */
+var appData = { distributeurs: [], notes: [] };
+var ui = {
+  selectedDistribId: null,
+  placingMode: false,
+  pendingPos: null,
+  activeTab: "map",
+  stockDistribId: null,
+  revenueDistribId: null
+};
+var saveTimer = null;
+
+function uid(prefix){
+  return prefix + "-" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+}
+
+/* ============================================================
+   STORAGE (window.storage when available, else in-memory only —
+   use Exporter/Importer to keep data when used outside claude.ai)
+   ============================================================ */
+function hasStorage(){
+  return typeof window.storage !== "undefined" && window.storage;
+}
+
+function loadData(){
+  if(!hasStorage()){ renderAll(); return; }
+  window.storage.get(STORAGE_KEY, false).then(function(res){
+    if(res && res.value){
+      try{ appData = JSON.parse(res.value); }catch(e){ /* keep default */ }
+    }
+    renderAll();
+  }).catch(function(){ renderAll(); });
+}
+
+function saveData(){
+  var indicator = document.getElementById("saveIndicator");
+  if(indicator){ indicator.querySelector("span.dot"); indicator.textContent = ""; indicator.innerHTML = '<span class="dot" style="background:#C98A2B"></span> Enregistrement...'; }
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    if(hasStorage()){
+      window.storage.set(STORAGE_KEY, JSON.stringify(appData), false).then(function(){
+        if(indicator){ indicator.innerHTML = '<span class="dot"></span> Enregistré'; }
+      }).catch(function(){
+        if(indicator){ indicator.innerHTML = '<span class="dot" style="background:#BE5340"></span> Non sauvegardé — pensez à exporter'; }
+      });
+    } else {
+      if(indicator){ indicator.innerHTML = '<span class="dot" style="background:#C98A2B"></span> Session uniquement — pensez à exporter'; }
+    }
+  }, 400);
+}
+
+/* ============================================================
+   PRODUITS RÉALISTES — génère canettes, bouteilles, snacks
+   ============================================================ */
+var PRODUCT_KINDS = ["can","can","bottle","can","bag"];
+var PRODUCT_COLORS = ["var(--teal)","var(--amber)","var(--teal-dark)","var(--teal-light)","var(--ink-soft)","#8A5A3B","#C9524B"];
+
+function prefersReducedMotion(){
+  return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
+function createProduct(seed){
+  var kind = PRODUCT_KINDS[seed % PRODUCT_KINDS.length];
+  var color = PRODUCT_COLORS[seed % PRODUCT_COLORS.length];
+  var el = document.createElement("div");
+  el.className = "product product--" + kind;
+  el.style.background = color;
+  return el;
+}
+
+function fillProductColumns(containerId, cols, rows, colClass){
+  var wrap = document.getElementById(containerId);
+  if(!wrap) return;
+  var seed = 0;
+  for(var c=0;c<cols;c++){
+    var col = document.createElement("div");
+    col.className = colClass;
+    for(var r=0;r<rows;r++){
+      col.appendChild(createProduct(seed));
+      seed++;
+    }
+    wrap.appendChild(col);
+  }
+}
+
+(function initHeroMachine(){
+  fillProductColumns("heroMachineCols", 4, 5, "hero-machine__col");
+})();
+
+/* ============================================================
+   SCROLL PROGRESS BAR
+   ============================================================ */
+(function initScrollProgress(){
+  var bar = document.getElementById("scrollProgress");
+  var ticking = false;
+  function update(){
+    var h = document.documentElement;
+    var scrolled = h.scrollTop;
+    var max = h.scrollHeight - h.clientHeight;
+    var pct = max > 0 ? (scrolled / max) * 100 : 0;
+    bar.style.width = pct + "%";
+    ticking = false;
+  }
+  window.addEventListener("scroll", function(){
+    if(!ticking){ requestAnimationFrame(update); ticking = true; }
+  });
+  update();
+})();
+
+/* ============================================================
+   SCROLL-REVEAL
+   ============================================================ */
+(function initReveal(){
+  var groups = [document.querySelectorAll(".benefits .benefit"), document.querySelectorAll(".steps .step")];
+  groups.forEach(function(list){
+    list.forEach(function(el, i){ el.style.setProperty("--i", i); });
+  });
+  var items = document.querySelectorAll(".reveal");
+  if(!("IntersectionObserver" in window)){
+    items.forEach(function(el){ el.classList.add("is-visible"); });
+    return;
+  }
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add("is-visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+  items.forEach(function(el){ observer.observe(el); });
+})();
+
+/* ============================================================
+   PUBLIC NAV (menu mobile)
+   ============================================================ */
+var burgerBtn = document.getElementById("burgerBtn");
+var mobileNav = document.getElementById("mobileNav");
+burgerBtn.addEventListener("click", function(){
+  mobileNav.classList.toggle("is-open");
+});
+mobileNav.querySelectorAll("a").forEach(function(a){
+  a.addEventListener("click", function(){ mobileNav.classList.remove("is-open"); });
+});
+
+/* ============================================================
+   DISTRIBUTEUR INTERACTIF
+   ============================================================ */
+var MACHINE_INFO = {
+  emplacement: {
+    code: "A1", title: "L'emplacement",
+    text: "On étudie ensemble les emplacements possibles sur votre site pour choisir celui qui s'intègre le mieux à votre organisation. Le placement tient compte du passage réel des personnes et des horaires d'activité, pour un fonctionnement fluide."
+  },
+  produits: {
+    code: "A2", title: "Les produits",
+    text: "La sélection s'adapte à l'environnement : pour une entreprise, des produits pensés pour les salariés et les clients ; pour un espace public, une offre de restauration rapide et d'hydratation qui anime le lieu."
+  },
+  installation: {
+    code: "B1", title: "L'installation",
+    text: "Chaque installation tient compte des contraintes du site — extérieur ou intérieur — ainsi que de l'alimentation électrique nécessaire et de l'encombrement du distributeur, pour une intégration sans contrainte."
+  },
+  suivi: {
+    code: "B2", title: "Le stock en ligne",
+    text: "Le niveau de stock de chaque machine est suivi en ligne, en temps réel, ce qui permet d'anticiper les besoins avant la rupture."
+  },
+  reappro: {
+    code: "C1", title: "Le réapprovisionnement",
+    text: "Grâce au suivi en ligne, le réapprovisionnement est planifié au bon moment, avec les bons produits — ni trop tôt, ni trop tard."
+  },
+  maintenance: {
+    code: "C2", title: "La maintenance",
+    text: "L'entretien courant est assuré directement par mes soins. Pour une intervention plus importante, je m'appuie sur le constructeur de la machine, pour une remise en service rapide."
+  }
+};
+(function initMachine(){
+  fillProductColumns("machineColumns", 5, 5, "machine__col");
+
+  var buttons = document.querySelectorAll(".machine__btn");
+  buttons.forEach(function(btn){
+    btn.addEventListener("click", function(){ selectMachineFeature(btn.getAttribute("data-key")); });
+  });
+  selectMachineFeature("emplacement");
+
+  initMachinePush();
+})();
+
+function selectMachineFeature(key){
+  var data = MACHINE_INFO[key];
+  if(!data) return;
+
+  document.querySelectorAll(".machine__btn").forEach(function(btn){
+    btn.classList.toggle("is-active", btn.getAttribute("data-key") === key);
+  });
+
+  var info = document.getElementById("machineInfo");
+  info.innerHTML = '<div class="machine-info__body">' +
+    '<span class="machine-info__key mono">Casier ' + data.code + '</span>' +
+    '<h3 class="machine-info__title">' + data.title + '</h3>' +
+    '<p class="machine-info__text">' + data.text + '</p>' +
+  '</div>';
+}
+
+/* Bouton PUSH : une canette tombe, un message apparaît */
+function initMachinePush(){
+  var pushBtn = document.getElementById("machinePush");
+  var dropCan = document.getElementById("dropCan");
+  var tagline = document.getElementById("machineTagline");
+  var screen = document.getElementById("machineScreen");
+  if(!pushBtn) return;
+
+  var busy = false;
+  var hideTimer = null;
+
+  function trigger(){
+    if(busy) return;
+    busy = true;
+    if(screen) screen.textContent = "MERCI !";
+
+    dropCan.classList.remove("is-falling");
+    void dropCan.offsetWidth;
+    dropCan.style.opacity = "1";
+    dropCan.classList.add("is-falling");
+
+    var fallDuration = prefersReducedMotion() ? 0 : 850;
+    setTimeout(function(){
+      tagline.classList.add("is-visible");
+      busy = false;
+      if(screen) screen.textContent = "PRÊT";
+    }, fallDuration);
+
+    clearTimeout(hideTimer);
+    hideTimer = setTimeout(function(){ tagline.classList.remove("is-visible"); }, fallDuration + 4200);
+  }
+
+  pushBtn.addEventListener("mouseenter", trigger);
+  pushBtn.addEventListener("click", trigger);
+  pushBtn.addEventListener("focus", trigger);
+}
+
+/* ============================================================
+   ÉCHANGE (chat automatique — sans mention "IA" côté visiteur)
+   ============================================================ */
+var CHAT_SYSTEM_PROMPT = "Tu es l'assistant virtuel du site de CLTDistrib, une entreprise individuelle de mise à disposition et de gestion de distributeurs automatiques (boissons, snacks) dans des entreprises et sites à forte fréquentation : bureaux, sites industriels, entrepôts/logistique, zones commerciales. L'entrepreneur gère seul l'installation, le choix des produits, le réapprovisionnement, la maintenance et le suivi (stocks, avis, chiffre d'affaires) de chaque distributeur. Ton rôle est d'expliquer aux visiteurs du site ce que fait l'entreprise et comment le service est géré au quotidien : installation, sélection des produits, réapprovisionnement, maintenance, suivi. Réponds en français, de façon claire, chaleureuse et concise (3 à 5 phrases maximum). Ce site n'est pas destiné à passer commande : si on te demande de commander ou réserver un distributeur, invite la personne à contacter directement l'entreprise par email (contact@cltdistrib.fr) ou téléphone (01 23 45 67 89). N'invente jamais de tarifs précis ; reste général et invite à contacter directement pour un devis.";
+
+var chatHistory = [];
+var chatMessagesEl = document.getElementById("chatMessages");
+var chatInput = document.getElementById("chatInput");
+var chatSendBtn = document.getElementById("chatSend");
+
+function addMessage(role, text){
+  var div = document.createElement("div");
+  div.className = "msg msg--" + role;
+  div.textContent = text;
+  chatMessagesEl.appendChild(div);
+  chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+  return div;
+}
+
+function addTyping(){
+  var div = document.createElement("div");
+  div.className = "typing";
+  div.id = "typingIndicator";
+  div.innerHTML = "<span></span><span></span><span></span>";
+  chatMessagesEl.appendChild(div);
+  chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+}
+function removeTyping(){
+  var el = document.getElementById("typingIndicator");
+  if(el) el.remove();
+}
+
+var CHAT_GREETING = "Bonjour ! Posez-moi vos questions sur le service CLTDistrib : emplacement, produits, installation, suivi des stocks ou maintenance. Que voulez-vous savoir ?";
+addMessage("assistant", CHAT_GREETING);
+chatHistory.push({ role:"assistant", content:CHAT_GREETING });
+
+function autoResize(){
+  chatInput.style.height = "auto";
+  chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + "px";
+}
+chatInput.addEventListener("input", autoResize);
+chatInput.addEventListener("keydown", function(e){
+  if(e.key === "Enter" && !e.shiftKey){
+    e.preventDefault();
+    sendChatMessage();
+  }
+});
+chatSendBtn.addEventListener("click", sendChatMessage);
+
+var chatBusy = false;
+function sendChatMessage(){
+  var text = chatInput.value.trim();
+  if(!text || chatBusy) return;
+  addMessage("user", text);
+  chatHistory.push({ role:"user", content:text });
+  chatInput.value = "";
+  autoResize();
+  chatBusy = true;
+  chatSendBtn.disabled = true;
+  addTyping();
+
+  fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 1000,
+      system: CHAT_SYSTEM_PROMPT,
+      messages: chatHistory
+    })
+  }).then(function(res){ return res.json(); })
+    .then(function(data){
+      removeTyping();
+      chatBusy = false;
+      chatSendBtn.disabled = false;
+      var textOut = "";
+      if(data && data.content){
+        textOut = data.content.map(function(block){ return block.type === "text" ? block.text : ""; }).join("\n").trim();
+      }
+      if(!textOut){ textOut = "Désolé, je n'ai pas pu générer de réponse. Contactez-moi directement à contact@cltdistrib.fr."; }
+      addMessage("assistant", textOut);
+      chatHistory.push({ role:"assistant", content:textOut });
+    })
+    .catch(function(){
+      removeTyping();
+      chatBusy = false;
+      chatSendBtn.disabled = false;
+      addMessage("error", "Une erreur est survenue. Réessayez, ou contactez-moi directement à contact@cltdistrib.fr.");
+    });
+}
+
+/* Bouton flottant + CTA : ouvrent et amènent le focus sur l'assistant */
+function focusAssistant(){
+  setTimeout(function(){ chatInput.focus(); }, 450);
+}
+["chatFab","heroAssistantBtn","navAssistantBtn"].forEach(function(id){
+  var el = document.getElementById(id);
+  if(el) el.addEventListener("click", focusAssistant);
+});
+
+
+
+/* ============================================================
+   ACCESS GATE
+   ============================================================ */
+var gateOverlay = document.getElementById("gateOverlay");
+var gatePassInput = document.getElementById("gatePassInput");
+var gateError = document.getElementById("gateError");
+var publicSite = document.getElementById("publicSite");
+var adminApp = document.getElementById("adminApp");
+
+function openGate(){
+  gateOverlay.classList.remove("hidden");
+  gateError.classList.remove("is-visible");
+  gatePassInput.value = "";
+  setTimeout(function(){ gatePassInput.focus(); }, 50);
+}
+function closeGate(){ gateOverlay.classList.add("hidden"); }
+
+["openProBtn","mobileProBtn","footerProBtn"].forEach(function(id){
+  var el = document.getElementById(id);
+  if(el) el.addEventListener("click", function(e){ e.preventDefault(); mobileNav.classList.remove("is-open"); openGate(); });
+});
+document.getElementById("gateCancel").addEventListener("click", closeGate);
+
+document.getElementById("gateToggleVis").addEventListener("click", function(){
+  var isPass = gatePassInput.type === "password";
+  gatePassInput.type = isPass ? "text" : "password";
+  document.getElementById("gateEyeIcon").innerHTML = isPass
+    ? '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/>'
+    : '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>';
+});
+
+function tryEnter(){
+  if(gatePassInput.value === ACCESS_CODE){
+    closeGate();
+    publicSite.classList.add("hidden");
+    adminApp.classList.remove("hidden");
+    loadData();
+  } else {
+    gateError.classList.add("is-visible");
+  }
+}
+document.getElementById("gateSubmit").addEventListener("click", tryEnter);
+gatePassInput.addEventListener("keydown", function(e){ if(e.key === "Enter") tryEnter(); });
+
+document.getElementById("leaveAdminBtn").addEventListener("click", function(){
+  adminApp.classList.add("hidden");
+  publicSite.classList.remove("hidden");
+});
+
+/* ============================================================
+   ADMIN TABS
+   ============================================================ */
+document.querySelectorAll(".admin-tabs__btn").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    document.querySelectorAll(".admin-tabs__btn").forEach(function(b){ b.classList.remove("is-active"); });
+    document.querySelectorAll(".admin-view").forEach(function(v){ v.classList.remove("is-active"); });
+    btn.classList.add("is-active");
+    var tab = btn.getAttribute("data-tab");
+    document.querySelector('.admin-view[data-view="' + tab + '"]').classList.add("is-active");
+    ui.activeTab = tab;
+    if(tab === "stocks") renderStocks();
+    if(tab === "revenue") renderRevenue();
+    if(tab === "notes") renderNotes();
+  });
+});
+
+/* ============================================================
+   EXPORT / IMPORT
+   ============================================================ */
+document.getElementById("exportBtn").addEventListener("click", function(){
+  var blob = new Blob([JSON.stringify(appData, null, 2)], {type:"application/json"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "cltdistrib-donnees-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+});
+document.getElementById("importBtn").addEventListener("click", function(){
+  document.getElementById("importFile").click();
+});
+document.getElementById("importFile").addEventListener("change", function(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(evt){
+    try{
+      var parsed = JSON.parse(evt.target.result);
+      if(parsed && typeof parsed === "object"){
+        appData = { distributeurs: parsed.distributeurs || [], notes: parsed.notes || [] };
+        ui.selectedDistribId = null;
+        saveData();
+        renderAll();
+      }
+    }catch(err){ alert("Fichier invalide."); }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
+/* ============================================================
+   MAP + DISTRIBUTEURS
+   ============================================================ */
+var mapboard = document.getElementById("mapboard");
+var mapEmpty = document.getElementById("mapEmpty");
+var addDistribBtn = document.getElementById("addDistribBtn");
+var addDistribForm = document.getElementById("addDistribForm");
+var confirmAddDistrib = document.getElementById("confirmAddDistrib");
+var addDistribHint = document.getElementById("addDistribHint");
+
+addDistribBtn.addEventListener("click", function(){
+  addDistribForm.classList.remove("hidden");
+  ui.placingMode = true;
+  ui.pendingPos = null;
+  mapboard.classList.add("is-placing");
+  confirmAddDistrib.disabled = true;
+  document.getElementById("dNom").value = "";
+  document.getElementById("dAdresse").value = "";
+});
+document.getElementById("cancelAddDistrib").addEventListener("click", cancelAdd);
+function cancelAdd(){
+  addDistribForm.classList.add("hidden");
+  ui.placingMode = false;
+  ui.pendingPos = null;
+  mapboard.classList.remove("is-placing");
+  var ghost = mapboard.querySelector(".pin-ghost");
+  if(ghost) ghost.remove();
+}
+
+mapboard.addEventListener("click", function(e){
+  if(!ui.placingMode) return;
+  if(e.target.closest(".pin")) return;
+  var rect = mapboard.getBoundingClientRect();
+  var x = ((e.clientX - rect.left) / rect.width) * 100;
+  var y = ((e.clientY - rect.top) / rect.height) * 100;
+  ui.pendingPos = {x: x, y: y};
+  var ghost = mapboard.querySelector(".pin-ghost");
+  if(!ghost){
+    ghost = document.createElement("div");
+    ghost.className = "pin-ghost";
+    mapboard.appendChild(ghost);
+  }
+  ghost.style.left = x + "%";
+  ghost.style.top = y + "%";
+  confirmAddDistrib.disabled = !(document.getElementById("dNom").value.trim() && document.getElementById("dAdresse").value.trim());
+});
+
+["dNom","dAdresse"].forEach(function(id){
+  document.getElementById(id).addEventListener("input", function(){
+    confirmAddDistrib.disabled = !(ui.pendingPos && document.getElementById("dNom").value.trim() && document.getElementById("dAdresse").value.trim());
+  });
+});
+
+confirmAddDistrib.addEventListener("click", function(){
+  if(!ui.pendingPos) return;
+  var nom = document.getElementById("dNom").value.trim();
+  var adresse = document.getElementById("dAdresse").value.trim();
+  var secteur = document.getElementById("dSecteur").value;
+  if(!nom || !adresse) return;
+  var d = {
+    id: uid("dist"), nom: nom, adresse: adresse, secteur: secteur,
+    x: ui.pendingPos.x, y: ui.pendingPos.y,
+    avis: [], stocks: [], revenus: []
+  };
+  appData.distributeurs.push(d);
+  ui.selectedDistribId = d.id;
+  cancelAdd();
+  saveData();
+  renderAll();
+});
+
+function getDistrib(id){
+  return appData.distributeurs.find(function(d){ return d.id === id; });
+}
+
+function renderMap(){
+  mapboard.querySelectorAll(".pin").forEach(function(p){ p.remove(); });
+  if(appData.distributeurs.length === 0){
+    mapEmpty.classList.remove("hidden");
+  } else {
+    mapEmpty.classList.add("hidden");
+  }
+  appData.distributeurs.forEach(function(d){
+    var pin = document.createElement("div");
+    pin.className = "pin" + (d.id === ui.selectedDistribId ? " is-selected" : "");
+    pin.style.left = d.x + "%";
+    pin.style.top = d.y + "%";
+    pin.title = d.nom;
+    pin.innerHTML = '<svg class="icon" viewBox="0 0 24 24" style="stroke:#fff"><circle cx="12" cy="12" r="5"/></svg>';
+    pin.addEventListener("click", function(e){
+      e.stopPropagation();
+      ui.selectedDistribId = d.id;
+      renderMap();
+      renderDistribPanel();
+    });
+    mapboard.appendChild(pin);
+  });
+}
+
+function avgRating(d){
+  if(!d.avis.length) return null;
+  var sum = d.avis.reduce(function(a,r){ return a + r.note; }, 0);
+  return (sum / d.avis.length).toFixed(1);
+}
+
+function starsHtml(n){
+  var full = Math.round(n);
+  var html = "";
+  for(var i=1;i<=5;i++){
+    html += '<svg class="icon icon--fill" viewBox="0 0 24 24" style="' + (i<=full ? '' : 'color:#DBE0DB') + '"><path d="M12 2l2.9 6.4 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 20l1.7-7L2 9l7.1-.6L12 2z"/></svg>';
+  }
+  return html;
+}
+
+function renderDistribPanel(){
+  var panel = document.getElementById("distribPanel");
+  var d = getDistrib(ui.selectedDistribId);
+  if(!d){
+    panel.innerHTML = '<div class="panel panel--empty"><svg class="icon empty-icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>Sélectionnez un point sur la carte pour voir son détail et ses avis.</div>';
+    return;
+  }
+  var avg = avgRating(d);
+  var totalStock = d.stocks.reduce(function(a,s){ return a + Number(s.quantite||0); }, 0);
+  var totalRev = d.revenus.reduce(function(a,r){ return a + Number(r.montant||0); }, 0);
+
+  var html = '<div class="panel">' +
+    '<div class="panel__title"><div><h3>' + escapeHtml(d.nom) + '</h3><span class="tag">' + escapeHtml(d.secteur) + '</span></div>' +
+    '<button class="btn btn--danger btn--icon" data-remove-distrib="' + d.id + '" aria-label="Supprimer"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>' +
+    '<p class="panel__addr">' + escapeHtml(d.adresse) + '</p>' +
+    '<div class="panel__stats">' +
+      '<div><strong>' + (avg ? avg : "—") + '</strong><span>' + d.avis.length + ' avis</span></div>' +
+      '<div><strong class="mono">' + totalStock + '</strong><span>unités en stock</span></div>' +
+      '<div><strong class="mono">' + totalRev.toFixed(0) + ' €</strong><span>revenu cumulé</span></div>' +
+    '</div>' +
+    '<div class="reviews">';
+
+  if(d.avis.length === 0){
+    html += '<p style="color:var(--ink-faint);font-size:13.5px">Aucun avis pour ce distributeur.</p>';
+  } else {
+    d.avis.slice().reverse().forEach(function(r){
+      html += '<div class="review"><div class="review__top"><strong>' + escapeHtml(r.auteur) + '</strong><div class="review__stars">' + starsHtml(r.note) + '</div></div>' +
+        (r.commentaire ? '<p>' + escapeHtml(r.commentaire) + '</p>' : '') +
+        '<small>' + r.date + '</small></div>';
+    });
+  }
+  html += '</div>' +
+    '<div class="inline-form" style="margin-top:16px;padding:16px">' +
+      '<div class="field-row"><div class="field"><label>Auteur</label><input id="avisAuteur" placeholder="ex : Manager de site"></div>' +
+      '<div class="field"><label>Note</label><select id="avisNote"><option value="5">5 — Excellent</option><option value="4">4 — Bien</option><option value="3">3 — Correct</option><option value="2">2 — Décevant</option><option value="1">1 — Mauvais</option></select></div></div>' +
+      '<div class="field"><label>Commentaire</label><textarea id="avisCommentaire" rows="2"></textarea></div>' +
+      '<button class="btn btn--primary btn--sm" id="addAvisBtn">Ajouter l\'avis</button>' +
+    '</div>' +
+  '</div>';
+
+  panel.innerHTML = html;
+
+  panel.querySelector("[data-remove-distrib]").addEventListener("click", function(){
+    if(!confirm("Supprimer ce distributeur et toutes ses données ?")) return;
+    appData.distributeurs = appData.distributeurs.filter(function(x){ return x.id !== d.id; });
+    ui.selectedDistribId = null;
+    saveData();
+    renderAll();
+  });
+  document.getElementById("addAvisBtn").addEventListener("click", function(){
+    var auteur = document.getElementById("avisAuteur").value.trim() || "Anonyme";
+    var note = Number(document.getElementById("avisNote").value);
+    var commentaire = document.getElementById("avisCommentaire").value.trim();
+    d.avis.push({ id: uid("avis"), auteur: auteur, note: note, commentaire: commentaire, date: new Date().toLocaleDateString("fr-FR") });
+    saveData();
+    renderDistribPanel();
+    renderMap();
+  });
+}
+
+function escapeHtml(s){
+  var div = document.createElement("div");
+  div.textContent = s == null ? "" : String(s);
+  return div.innerHTML;
+}
+
+/* ============================================================
+   STOCKS
+   ============================================================ */
+var stockDistribSelect = document.getElementById("stockDistribSelect");
+stockDistribSelect.addEventListener("change", function(){
+  ui.stockDistribId = stockDistribSelect.value;
+  renderStocksContent();
+});
+
+function renderStocks(){
+  var opts = appData.distributeurs.map(function(d){ return '<option value="' + d.id + '">' + escapeHtml(d.nom) + '</option>'; }).join("");
+  stockDistribSelect.innerHTML = opts || '<option value="">Aucun distributeur</option>';
+  if(!ui.stockDistribId || !getDistrib(ui.stockDistribId)){
+    ui.stockDistribId = appData.distributeurs.length ? appData.distributeurs[0].id : null;
+  }
+  if(ui.stockDistribId) stockDistribSelect.value = ui.stockDistribId;
+  renderStocksContent();
+}
+
+function renderStocksContent(){
+  var el = document.getElementById("stocksContent");
+  var d = getDistrib(ui.stockDistribId);
+  if(!d){
+    el.innerHTML = '<div class="panel panel--empty"><svg class="icon empty-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>Ajoutez d\'abord un distributeur depuis l\'onglet « Carte &amp; avis ».</div>';
+    return;
+  }
+  var rows = d.stocks.map(function(s){
+    var q = Number(s.quantite), seuil = Number(s.seuil);
+    var cls = q <= 0 ? "is-out" : (q <= seuil ? "is-low" : "");
+    var statusHtml = q <= 0 ? '<span class="status-dot out">Rupture</span>' : (q <= seuil ? '<span class="status-dot low">Stock bas</span>' : '<span class="status-dot ok">OK</span>');
+    return '<tr class="' + cls + '"><td>' + escapeHtml(s.produit) + '</td><td class="num">' + q + '</td><td class="num">' + seuil + '</td><td>' + statusHtml + '</td>' +
+      '<td><button class="btn btn--danger btn--icon" data-remove-stock="' + s.id + '" aria-label="Supprimer"><svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 6l12 12M18 6 6 18"/></svg></button></td></tr>';
+  }).join("");
+
+  el.innerHTML =
+    '<table class="table">' +
+      '<thead><tr><th>Produit</th><th>Quantité</th><th>Seuil d\'alerte</th><th>Statut</th><th></th></tr></thead>' +
+      '<tbody>' + (rows || '<tr><td colspan="5" class="table-empty">Aucun produit enregistré.</td></tr>') + '</tbody>' +
+    '</table>' +
+    '<div class="inline-form">' +
+      '<div class="field-row" style="grid-template-columns:1.4fr 1fr 1fr">' +
+        '<div class="field"><label>Produit</label><input id="stockProduit" placeholder="ex : Café gobelet"></div>' +
+        '<div class="field"><label>Quantité</label><input id="stockQuantite" type="number" min="0" value="0"></div>' +
+        '<div class="field"><label>Seuil d\'alerte</label><input id="stockSeuil" type="number" min="0" value="5"></div>' +
+      '</div>' +
+      '<button class="btn btn--primary btn--sm" id="addStockBtn">Ajouter le produit</button>' +
+    '</div>';
+
+  el.querySelectorAll("[data-remove-stock]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      d.stocks = d.stocks.filter(function(s){ return s.id !== btn.getAttribute("data-remove-stock"); });
+      saveData();
+      renderStocksContent();
+      if(ui.selectedDistribId === d.id) renderDistribPanel();
+    });
+  });
+  document.getElementById("addStockBtn").addEventListener("click", function(){
+    var produit = document.getElementById("stockProduit").value.trim();
+    if(!produit) return;
+    d.stocks.push({
+      id: uid("stock"), produit: produit,
+      quantite: Number(document.getElementById("stockQuantite").value) || 0,
+      seuil: Number(document.getElementById("stockSeuil").value) || 0
+    });
+    saveData();
+    renderStocksContent();
+    if(ui.selectedDistribId === d.id) renderDistribPanel();
+  });
+}
+
+/* ============================================================
+   REVENUS
+   ============================================================ */
+var revenueDistribSelect = document.getElementById("revenueDistribSelect");
+revenueDistribSelect.addEventListener("change", function(){
+  ui.revenueDistribId = revenueDistribSelect.value;
+  renderRevenueContent();
+});
+
+function renderRevenue(){
+  var opts = appData.distributeurs.map(function(d){ return '<option value="' + d.id + '">' + escapeHtml(d.nom) + '</option>'; }).join("");
+  revenueDistribSelect.innerHTML = opts || '<option value="">Aucun distributeur</option>';
+  if(!ui.revenueDistribId || !getDistrib(ui.revenueDistribId)){
+    ui.revenueDistribId = appData.distributeurs.length ? appData.distributeurs[0].id : null;
+  }
+  if(ui.revenueDistribId) revenueDistribSelect.value = ui.revenueDistribId;
+  renderRevenueContent();
+}
+
+function renderRevenueContent(){
+  var el = document.getElementById("revenueContent");
+  var d = getDistrib(ui.revenueDistribId);
+  if(!d){
+    el.innerHTML = '<div class="panel panel--empty"><svg class="icon empty-icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>Ajoutez d\'abord un distributeur depuis l\'onglet « Carte &amp; avis ».</div>';
+    return;
+  }
+  var entries = d.revenus.slice().sort(function(a,b){ return a.mois.localeCompare(b.mois); });
+  var total = entries.reduce(function(a,r){ return a + Number(r.montant||0); }, 0);
+  var max = entries.reduce(function(a,r){ return Math.max(a, Number(r.montant||0)); }, 0) || 1;
+
+  var bars = entries.map(function(r){
+    var h = Math.max(4, (Number(r.montant)/max) * 160);
+    return '<div class="chart__bar-wrap"><span class="chart__val">' + Number(r.montant).toFixed(0) + '€</span><div class="chart__bar" style="height:' + h + 'px"></div><span class="chart__lbl">' + formatMois(r.mois) + '</span></div>';
+  }).join("");
+
+  var rows = entries.slice().reverse().map(function(r){
+    return '<div class="rev-row"><span>' + formatMois(r.mois) + '</span><span class="amt">' + Number(r.montant).toFixed(2) + ' €</span>' +
+      '<button class="btn btn--danger btn--icon" data-remove-rev="' + r.id + '" aria-label="Supprimer" style="margin-left:auto"><svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>';
+  }).join("");
+
+  el.innerHTML =
+    '<div class="revenue-layout">' +
+      '<div class="panel">' +
+        '<span class="section__kicker">Total cumulé</span>' +
+        '<div class="revenue-total">' + total.toFixed(2) + ' €</div>' +
+        '<div class="inline-form" style="margin-top:20px">' +
+          '<div class="field-row">' +
+            '<div class="field"><label>Mois</label><input type="month" id="revMois" value="' + new Date().toISOString().slice(0,7) + '"></div>' +
+            '<div class="field"><label>Montant (€)</label><input type="number" id="revMontant" min="0" step="0.01" placeholder="0.00"></div>' +
+          '</div>' +
+          '<button class="btn btn--primary btn--sm" id="addRevBtn">Ajouter</button>' +
+        '</div>' +
+        '<div class="rev-list">' + (rows || '<p style="color:var(--ink-faint);font-size:13.5px">Aucune entrée.</p>') + '</div>' +
+      '</div>' +
+      '<div class="panel">' +
+        '<span class="section__kicker">Évolution mensuelle</span>' +
+        (entries.length ? '<div class="chart">' + bars + '</div>' : '<p style="color:var(--ink-faint);font-size:13.5px;margin-top:14px">Ajoutez des entrées pour voir le graphique.</p>') +
+      '</div>' +
+    '</div>';
+
+  el.querySelectorAll("[data-remove-rev]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      d.revenus = d.revenus.filter(function(r){ return r.id !== btn.getAttribute("data-remove-rev"); });
+      saveData();
+      renderRevenueContent();
+      if(ui.selectedDistribId === d.id) renderDistribPanel();
+    });
+  });
+  document.getElementById("addRevBtn").addEventListener("click", function(){
+    var mois = document.getElementById("revMois").value;
+    var montant = Number(document.getElementById("revMontant").value);
+    if(!mois || !montant) return;
+    var existing = d.revenus.find(function(r){ return r.mois === mois; });
+    if(existing){ existing.montant = montant; }
+    else{ d.revenus.push({ id: uid("rev"), mois: mois, montant: montant }); }
+    saveData();
+    renderRevenueContent();
+    if(ui.selectedDistribId === d.id) renderDistribPanel();
+  });
+}
+
+function formatMois(m){
+  var parts = m.split("-");
+  var noms = ["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"];
+  return noms[Number(parts[1])-1] + " " + parts[0];
+}
+
+/* ============================================================
+   NOTES
+   ============================================================ */
+document.getElementById("addNoteBtn").addEventListener("click", function(){
+  var input = document.getElementById("noteInput");
+  var texte = input.value.trim();
+  if(!texte) return;
+  appData.notes.push({ id: uid("note"), texte: texte, date: new Date().toLocaleString("fr-FR") });
+  input.value = "";
+  saveData();
+  renderNotes();
+});
+
+function renderNotes(){
+  var grid = document.getElementById("notesGrid");
+  if(!appData.notes.length){
+    grid.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;grid-column:1/-1">Aucune note pour le moment.</p>';
+    return;
+  }
+  grid.innerHTML = appData.notes.slice().reverse().map(function(n){
+    return '<div class="note-card"><p>' + escapeHtml(n.texte) + '</p><div class="note-card__foot"><small>' + n.date + '</small>' +
+      '<button class="btn btn--danger btn--icon" data-remove-note="' + n.id + '" aria-label="Supprimer"><svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div></div>';
+  }).join("");
+  grid.querySelectorAll("[data-remove-note]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      appData.notes = appData.notes.filter(function(n){ return n.id !== btn.getAttribute("data-remove-note"); });
+      saveData();
+      renderNotes();
+    });
+  });
+}
+
+/* ============================================================
+   MASTER RENDER
+   ============================================================ */
+function renderAll(){
+  renderMap();
+  renderDistribPanel();
+  renderStocks();
+  renderRevenue();
+  renderNotes();
+}
+
+})();
+</script>
+</body>
+</html>
