@@ -491,18 +491,20 @@ img{ max-width:100%; display:block; }
 }
 
 /* ============================================================
-   DISTRIBUTEUR INTERACTIF — scroll-driven, photo au premier plan
+   DISTRIBUTEUR INTERACTIF — scroll-driven, moitié écran, alterné
    ============================================================ */
-.scrollytell{ display:grid; grid-template-columns:1.1fr 1fr; gap:60px; align-items:start; }
-.scrollytell__visual{ position:sticky; top:100px; z-index:2; }
+.scrollytell{ display:flex; flex-direction:row; gap:64px; align-items:flex-start; transition:flex-direction 0s; }
+.scrollytell.is-flipped{ flex-direction:row-reverse; }
+.scrollytell__visual{ flex:1 1 50%; position:sticky; top:90px; z-index:2; }
+.scrollytell__steps{ flex:1 1 50%; display:flex; flex-direction:column; min-width:0; }
 
 .machine-photo{
-  position:relative; max-width:520px; width:100%; margin:0 auto; border-radius:26px; overflow:hidden;
+  position:relative; max-width:600px; width:100%; margin:0 auto; border-radius:26px; overflow:hidden;
   box-shadow:0 30px 70px rgba(22,35,43,.28), 0 8px 20px rgba(22,35,43,.18); background:#0A1114;
   animation:board-float 7s ease-in-out infinite;
 }
 .machine-photo.is-shifting{ animation:board-float 7s ease-in-out infinite, feature-shift .5s ease; }
-@keyframes feature-shift{ 0%{ transform:scale(1); } 40%{ transform:scale(1.025); } 100%{ transform:scale(1); } }
+@keyframes feature-shift{ 0%{ transform:scale(1); } 40%{ transform:scale(1.03); } 100%{ transform:scale(1); } }
 .machine-photo__img{ width:100%; display:block; }
 
 .hotspot-dot{
@@ -523,32 +525,41 @@ img{ max-width:100%; display:block; }
 .hotspot-ring.is-active{ opacity:1; animation:ring-pulse 1.8s ease-in-out infinite; }
 @keyframes ring-pulse{ 0%,100%{ box-shadow:0 0 18px rgba(79,174,124,.4); } 50%{ box-shadow:0 0 34px rgba(79,174,124,.75); } }
 
-.machine-caption{
-  position:absolute; left:50%; bottom:14px; transform:translate(-50%,10px); max-width:88%;
-  background:rgba(13,21,24,.92); backdrop-filter:blur(6px); color:#fff; padding:12px 18px; border-radius:14px;
-  font-size:13.5px; line-height:1.4; text-align:center; opacity:0; transition:opacity .3s ease, transform .3s ease;
-  pointer-events:none; box-shadow:var(--shadow-m); z-index:3;
-}
-.machine-caption.is-visible{ opacity:1; transform:translate(-50%,0); }
-.machine-caption strong{ color:var(--teal-light); display:block; font-family:var(--font-mono); font-size:11px; letter-spacing:.04em; margin-bottom:4px; text-transform:uppercase; }
-
-.scrollytell__steps{ display:flex; flex-direction:column; }
 .scroll-step{
-  min-height:64vh; display:flex; flex-direction:column; justify-content:center;
-  padding:20px 0; opacity:.3; transform:translateX(10px); transition:opacity .4s ease, transform .4s ease;
+  min-height:64vh; display:flex; flex-direction:column; justify-content:center; padding:20px 0;
 }
 .scroll-step:last-child{ min-height:40vh; }
-.scroll-step.is-active{ opacity:1; transform:translateX(0); }
-.scroll-step__code{ font-family:var(--font-mono); font-size:13px; color:var(--teal); font-weight:600; }
-.scroll-step h3{ font-size:26px; margin-top:10px; }
-.scroll-step p{ margin-top:12px; color:var(--ink-soft); font-size:16px; max-width:42ch; }
+.scroll-step__meta{ display:flex; align-items:center; gap:12px; }
+.scroll-step__num{
+  font-family:var(--font-mono); font-size:13px; font-weight:700; color:#fff; background:var(--line);
+  width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  transition:background-color .4s ease, transform .4s ease;
+}
+.scroll-step.is-active .scroll-step__num{ background:var(--teal); transform:scale(1.1); }
+.scroll-step__code{ font-family:var(--font-mono); font-size:12.5px; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase; transition:color .4s ease; }
+.scroll-step.is-active .scroll-step__code{ color:var(--teal); }
+.scroll-step__track{ height:2px; flex:1; background:var(--line); border-radius:2px; overflow:hidden; max-width:60px; }
+.scroll-step__track span{ display:block; height:100%; width:0; background:var(--teal); transition:width .5s ease; }
+.scroll-step.is-active .scroll-step__track span{ width:100%; }
+
+.scroll-step h3{
+  font-size:28px; margin-top:16px; opacity:.25; transform:translateY(14px);
+  transition:opacity .5s ease, transform .5s ease;
+}
+.scroll-step p{
+  margin-top:12px; color:var(--ink-soft); font-size:16px; max-width:42ch; opacity:0; transform:translateY(14px);
+  transition:opacity .5s ease .08s, transform .5s ease .08s;
+}
+.scroll-step.is-active h3{ opacity:1; transform:translateY(0); color:var(--teal-dark); }
+.scroll-step.is-active p{ opacity:1; transform:translateY(0); }
 
 @media (max-width:900px){
-  .scrollytell{ grid-template-columns:1fr; }
-  .scrollytell__visual{ position:static; margin-bottom:8px; }
+  .scrollytell, .scrollytell.is-flipped{ flex-direction:column; gap:8px; }
+  .scrollytell__visual{ position:static; }
   .machine-photo{ max-width:340px; }
-  .scroll-step{ min-height:auto; opacity:1; transform:none; padding:14px 0; }
+  .scroll-step{ min-height:auto; padding:14px 0; }
   .scroll-step:last-child{ min-height:auto; }
+  .scroll-step h3, .scroll-step p{ opacity:1; transform:none; }
 }
 </style>
 </head>
@@ -690,7 +701,7 @@ img{ max-width:100%; display:block; }
         <h2>Faites défiler pour découvrir le service</h2>
         <p>Le distributeur reste sous vos yeux pendant que vous parcourez chaque étape, de l'emplacement à la maintenance.</p>
       </div>
-      <div class="scrollytell">
+      <div class="scrollytell" id="scrollytell">
         <div class="scrollytell__visual reveal">
           <div class="machine-photo" id="machinePhoto">
             <img src="images/distributeur.jpg" alt="Distributeur automatique CLTDistrib" class="machine-photo__img">
@@ -701,7 +712,6 @@ img{ max-width:100%; display:block; }
             <button class="hotspot-dot" type="button" data-key="suivi" style="top:58%;left:65%" aria-label="Suivi des stocks"></button>
             <button class="hotspot-dot" type="button" data-key="reappro" style="top:80%;left:35%" aria-label="Réapprovisionnement"></button>
             <button class="hotspot-dot" type="button" data-key="maintenance" style="top:44%;left:78%" aria-label="Maintenance"></button>
-            <div class="machine-caption" id="machineCaption"></div>
           </div>
         </div>
         <div class="scrollytell__steps" id="scrollSteps"></div>
@@ -1123,10 +1133,14 @@ var MACHINE_ORDER = ["emplacement","produits","installation","suivi","reappro","
 (function initMachine(){
   var stepsWrap = document.getElementById("scrollSteps");
   if(stepsWrap){
-    stepsWrap.innerHTML = MACHINE_ORDER.map(function(key){
+    stepsWrap.innerHTML = MACHINE_ORDER.map(function(key, i){
       var data = MACHINE_INFO[key];
       return '<div class="scroll-step" data-key="' + key + '">' +
-        '<span class="scroll-step__code mono">Casier ' + data.code + '</span>' +
+        '<div class="scroll-step__meta">' +
+          '<span class="scroll-step__num mono">' + (i+1) + '</span>' +
+          '<span class="scroll-step__code mono">Casier ' + data.code + '</span>' +
+          '<span class="scroll-step__track"><span></span></span>' +
+        '</div>' +
         '<h3>' + data.title + '</h3>' +
         '<p>' + data.caption + '</p>' +
       '</div>';
@@ -1188,10 +1202,11 @@ function selectMachineFeature(key){
     ring.classList.add("is-active");
   }
 
-  var caption = document.getElementById("machineCaption");
-  if(caption){
-    caption.innerHTML = '<strong>Casier ' + data.code + ' — ' + data.title + '</strong>' + data.caption;
-    caption.classList.add("is-visible");
+  /* La photo bascule à droite ou à gauche selon l'étape (1 étape sur 2) */
+  var scrollytell = document.getElementById("scrollytell");
+  if(scrollytell){
+    var idx = MACHINE_ORDER.indexOf(key);
+    scrollytell.classList.toggle("is-flipped", idx % 2 === 1);
   }
 
   var photo = document.getElementById("machinePhoto");
