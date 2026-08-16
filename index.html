@@ -149,32 +149,30 @@ img{ max-width:100%; display:block; }
   display:flex; align-items:center; padding:120px 0 80px;
 }
 .hero__bg{ position:absolute; inset:0; z-index:0; }
-.hero__bg img{ width:100%; height:100%; object-fit:cover; opacity:.6; }
+.hero__bg img{ width:100%; height:100%; object-fit:cover; object-position:25% center; opacity:.7; }
 .hero__scrim{
   position:absolute; inset:0;
-  background:linear-gradient(100deg, rgba(5,9,11,.95) 0%, rgba(5,9,11,.84) 36%, rgba(5,9,11,.5) 64%, rgba(5,9,11,.15) 100%);
+  background:linear-gradient(260deg, rgba(5,9,11,.95) 0%, rgba(5,9,11,.84) 36%, rgba(5,9,11,.5) 64%, rgba(5,9,11,.15) 100%);
 }
 .hero__glow{
   position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.5;
-  background:radial-gradient(circle at 76% 55%, rgba(79,174,124,.5), transparent 45%);
+  background:radial-gradient(circle at 24% 55%, rgba(79,174,124,.5), transparent 45%);
 }
-.hero .wrap{ position:relative; z-index:1; }
-.eyebrow{
-  display:inline-flex; align-items:center; gap:8px; font-family:var(--font-mono);
-  font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--teal-light);
-  background:rgba(79,174,124,.16); padding:6px 12px; border-radius:999px; margin-bottom:22px;
-}
-.eyebrow::before{ content:''; width:6px; height:6px; border-radius:50%; background:var(--teal-light); }
-.hero h1{ font-size:clamp(34px,4.4vw,54px); color:#fff; max-width:19ch; }
+.hero .wrap{ position:relative; z-index:1; display:flex; justify-content:flex-end; }
+.hero__text{ max-width:560px; text-align:right; margin-left:auto; }
+.hero h1{ font-size:clamp(34px,4.4vw,54px); color:#fff; }
 .hero h1 em{ font-style:normal; color:var(--teal-light); }
-.hero p.lede{ margin-top:22px; font-size:18px; color:#C7D2D5; max-width:46ch; }
-.hero__cta{ display:flex; gap:14px; margin-top:32px; flex-wrap:wrap; }
+.hero p.lede{ margin-top:22px; font-size:18px; color:#C7D2D5; margin-left:auto; }
+.hero__cta{ display:flex; gap:14px; margin-top:32px; flex-wrap:wrap; justify-content:flex-end; }
 .hero__cta .btn--ghost{ background:transparent; color:#fff; border-color:rgba(255,255,255,.3); }
 .hero__cta .btn--ghost:hover{ border-color:#fff; }
-.hero__meta{ display:flex; gap:28px; margin-top:40px; flex-wrap:wrap; }
-.hero__meta div{ font-family:var(--font-mono); }
-.hero__meta strong{ display:block; font-size:22px; color:#fff; }
-.hero__meta small{ color:#8CA0A8; font-size:12px; }
+
+@media (max-width:640px){
+  .hero .wrap{ justify-content:flex-start; }
+  .hero__text{ text-align:left; margin-left:0; }
+  .hero__cta{ justify-content:flex-start; }
+  .hero p.lede{ margin-left:0; }
+}
 
 /* ============================================================
    SECTIONS (generic)
@@ -740,18 +738,12 @@ img{ max-width:100%; display:block; }
     <div class="hero__glow" aria-hidden="true"></div>
     <div class="hero__scrim" aria-hidden="true"></div>
     <div class="wrap">
-      <div>
-        <span class="eyebrow reveal-hero" style="--d:0ms">Un site pour comprendre le service</span>
+      <div class="hero__text">
         <h1 class="reveal-hero" style="--d:60ms">Un distributeur automatique installé, approvisionné,<br> <em>géré de bout en bout</em>.</h1>
         <p class="lede reveal-hero" style="--d:140ms">CLTDistrib installe et gère des distributeurs automatiques dans les entreprises et sites à forte affluence. Ce site vous explique comment fonctionne le service — et comment je le gère au quotidien.</p>
         <div class="hero__cta reveal-hero" style="--d:220ms">
           <a href="#assistant" class="btn btn--accent" id="heroAssistantBtn">Poser une question</a>
           <a href="#comment" class="btn btn--ghost">Voir comment ça marche</a>
-        </div>
-        <div class="hero__meta reveal-hero" style="--d:300ms">
-          <div><strong>0 €</strong><small>d'investissement pour vous</small></div>
-          <div><strong>&lt; 15 jours</strong><small>délai moyen d'installation</small></div>
-          <div><strong>100%</strong><small>maintenance assurée</small></div>
         </div>
       </div>
     </div>
@@ -826,6 +818,33 @@ img{ max-width:100%; display:block; }
           <svg class="icon" viewBox="0 0 24 24"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg>
           <h3>Maintenance directe</h3>
           <p>J'assure moi-même l'entretien courant. Pour une intervention plus importante, je m'appuie sur le constructeur de la machine.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark" id="paiement">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <span class="section__kicker">Moyens de paiement</span>
+        <h2>Un distributeur accessible à tous les modes de paiement</h2>
+        <p>Chaque distributeur est équipé pour accepter la carte bancaire, le paiement sans contact et la monnaie — pas de billets.</p>
+      </div>
+      <div class="benefits reveal" style="grid-template-columns:repeat(3,1fr)">
+        <div class="benefit">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+          <h3>Carte bancaire</h3>
+          <p>Paiement classique par carte, avec ou sans code selon le montant.</p>
+        </div>
+        <div class="benefit">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="2" width="12" height="20" rx="2"/><path d="M15 8a6.5 6.5 0 0 1 0 8"/><path d="M18 5a11 11 0 0 1 0 14"/><path d="M21 2a15 15 0 0 1 0 20"/></svg>
+          <h3>Sans contact</h3>
+          <p>Carte, mobile ou montre — paiement rapide en un geste, sans code.</p>
+        </div>
+        <div class="benefit">
+          <svg class="icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12a7 3 0 0 0 14 0V6"/><path d="M5 10a7 3 0 0 0 14 0"/><path d="M5 14a7 3 0 0 0 14 0"/></svg>
+          <h3>Monnaie</h3>
+          <p>Pièces acceptées avec rendu de monnaie — pas de billets.</p>
         </div>
       </div>
     </div>
