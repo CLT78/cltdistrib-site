@@ -126,6 +126,15 @@ img{ max-width:100%; display:block; }
 .nav__mobile.is-open{ display:block; }
 .nav__mobile a{ display:block; padding:16px 0; font-size:19px; font-weight:600; border-bottom:1px solid var(--line); }
 
+.view-toggle{ display:flex; align-items:center; gap:2px; background:var(--surface-alt); border-radius:999px; padding:3px; }
+.view-toggle__btn{
+  display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:999px;
+  background:transparent; border:none; color:var(--ink-faint); transition:background-color .2s ease, color .2s ease;
+}
+.view-toggle__btn .icon{ width:17px; height:17px; }
+.view-toggle__btn:hover{ color:var(--ink); }
+.view-toggle__btn.is-active{ background:var(--surface); color:var(--teal-dark); box-shadow:var(--shadow-s); }
+
 @media (max-width:860px){
   .nav__links{ display:none; }
   .nav__burger{ display:block; }
@@ -259,6 +268,21 @@ img{ max-width:100%; display:block; }
   .support{ grid-template-columns:1fr; }
   .contact{ grid-template-columns:1fr; }
 }
+
+/* ============================================================
+   APERÇU MOBILE (depuis un écran PC)
+   ============================================================ */
+.device-preview{
+  position:fixed; inset:0; z-index:120; background:rgba(5,9,11,.78); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center; padding:40px 20px;
+}
+.device-preview.hidden{ display:none; }
+.device-preview__frame{
+  position:relative; width:390px; max-width:100%; height:min(844px, 88vh);
+  background:#0A1114; border-radius:38px; padding:12px; box-shadow:0 30px 80px rgba(0,0,0,.5);
+}
+.device-preview__frame iframe{ width:100%; height:100%; border:none; border-radius:26px; background:#fff; display:block; }
+.device-preview__close{ position:absolute; top:-52px; right:0; }
 
 /* ============================================================
    PRO ACCESS OVERLAY
@@ -566,6 +590,14 @@ img{ max-width:100%; display:block; }
         <a class="nav__link" href="#assistant">Une question ?</a>
       </div>
       <div class="nav__actions">
+        <div class="view-toggle">
+          <button class="view-toggle__btn is-active" id="viewDesktopBtn" type="button" aria-label="Voir la version PC" title="Version PC">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>
+          </button>
+          <button class="view-toggle__btn" id="viewMobileBtn" type="button" aria-label="Voir la version mobile" title="Version mobile">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
+          </button>
+        </div>
         <a href="#assistant" class="btn btn--primary btn--sm" id="navAssistantBtn"><span class="btn-label">Écrivez-moi</span></a>
         <button class="nav__burger" id="burgerBtn" aria-label="Ouvrir le menu">
           <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
@@ -766,6 +798,16 @@ img{ max-width:100%; display:block; }
   <svg class="icon" viewBox="0 0 24 24" style="color:#fff;width:24px;height:24px"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>
 </button>
 <div class="scrollbar-progress" id="scrollProgress"></div>
+
+<!-- ============================================================
+     APERÇU MOBILE (bouton "Version mobile" depuis un écran PC)
+     ============================================================ -->
+<div class="device-preview hidden" id="devicePreview">
+  <div class="device-preview__frame">
+    <button class="btn btn--ghost btn--sm device-preview__close" id="closeDevicePreview">Fermer</button>
+    <iframe id="devicePreviewFrame" title="Aperçu mobile du site"></iframe>
+  </div>
+</div>
 
 <!-- ============================================================
      ESPACE PRO — PORTE D'ACCÈS
@@ -1072,6 +1114,59 @@ burgerBtn.addEventListener("click", function(){
 mobileNav.querySelectorAll("a").forEach(function(a){
   a.addEventListener("click", function(){ mobileNav.classList.remove("is-open"); });
 });
+
+/* ============================================================
+   BASCULE VUE PC / VUE MOBILE
+   Sur PC : "mobile" ouvre un aperçu dans un cadre de téléphone.
+   Sur téléphone : "PC" force une largeur de page fixe (comme "Voir la version ordinateur").
+   ============================================================ */
+(function initViewToggle(){
+  var viewDesktopBtn = document.getElementById("viewDesktopBtn");
+  var viewMobileBtn = document.getElementById("viewMobileBtn");
+  var preview = document.getElementById("devicePreview");
+  var frame = document.getElementById("devicePreviewFrame");
+  var closeBtn = document.getElementById("closeDevicePreview");
+  var viewportMeta = document.querySelector('meta[name="viewport"]');
+  var DEFAULT_VIEWPORT = "width=device-width, initial-scale=1.0";
+  var WIDE_VIEWPORT = "width=1280";
+  var IS_SMALL_SCREEN = window.innerWidth <= 860;
+
+  function setActive(key){
+    viewDesktopBtn.classList.toggle("is-active", key === "desktop");
+    viewMobileBtn.classList.toggle("is-active", key === "mobile");
+  }
+
+  function openMobilePreview(){
+    frame.src = location.pathname + location.search;
+    preview.classList.remove("hidden");
+  }
+  function closeMobilePreview(){
+    preview.classList.add("hidden");
+    frame.src = "about:blank";
+  }
+
+  viewMobileBtn.addEventListener("click", function(){
+    setActive("mobile");
+    if(IS_SMALL_SCREEN){
+      if(viewportMeta) viewportMeta.setAttribute("content", DEFAULT_VIEWPORT);
+    } else {
+      openMobilePreview();
+    }
+  });
+
+  viewDesktopBtn.addEventListener("click", function(){
+    setActive("desktop");
+    closeMobilePreview();
+    if(IS_SMALL_SCREEN && viewportMeta){
+      viewportMeta.setAttribute("content", WIDE_VIEWPORT);
+    }
+  });
+
+  closeBtn.addEventListener("click", function(){ closeMobilePreview(); setActive("desktop"); });
+  preview.addEventListener("click", function(e){
+    if(e.target === preview){ closeMobilePreview(); setActive("desktop"); }
+  });
+})();
 
 /* ============================================================
    DISTRIBUTEUR INTERACTIF — effets directement sur la photo
