@@ -80,7 +80,6 @@ body{
   line-height:1.65;
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
-  overflow-x:hidden;
 }
 h1,h2,h3,h4{
   font-family:var(--font-display);
@@ -670,9 +669,7 @@ img{ max-width:100%; display:block; }
     justify-content:flex-end; padding:0 0 4vh;
   }
   .scroll-step:first-child{ min-height:82vh; padding-top:0; }
-  /* Marge basse : le texte de la dernière étape doit rester lisible
-     pendant que la machine est encore épinglée à l'écran */
-  .scroll-step:last-child{ min-height:94vh; padding-bottom:26vh; }
+  .scroll-step:last-child{ min-height:94vh; }
   .scroll-step__icon-wrap{ width:46px; height:46px; border-radius:11px; margin-bottom:14px; }
   .scroll-step__icon{ width:23px; height:23px; }
   .scroll-step h3{ font-size:27px; opacity:.06; }
@@ -880,6 +877,186 @@ img{ max-width:100%; display:block; }
   .cta__lede{ font-size:16px; }
   .footer__top{ gap:16px; padding-bottom:20px; }
   .footer__links{ gap:14px 22px; }
+}
+
+/* ============================================================
+   19c. DÉFILEMENT PAR DIAPOSITIVES
+   Un coup de molette (ou un balayage) fait passer à l'information
+   suivante : chaque bloc occupe un écran et le défilement se cale
+   sur son début. Les blocs plus hauts qu'un écran restent
+   librement défilables et se calent seulement à leur entrée.
+   ============================================================ */
+:root{
+  --navh:78px;
+  --slideh:calc(100vh - var(--navh));
+  --bgh:100vh;
+}
+@supports (height:100svh){
+  :root{ --slideh:calc(100svh - var(--navh)); --bgh:100svh; }
+}
+
+html{
+  scroll-snap-type:y proximity;
+  scroll-padding-top:var(--navh);
+}
+/* Au doigt, l'élan du balayage atteint la diapositive suivante :
+   le calage strict natif suffit. À la molette, c'est le script qui pilote. */
+@media (hover:none) and (pointer:coarse){
+  html{ scroll-snap-type:y mandatory; }
+}
+
+.slide, .section{ scroll-snap-align:start; scroll-snap-stop:always; }
+.slide{ min-height:var(--slideh); display:flex; flex-direction:column; }
+.slide .section{ scroll-snap-align:none; scroll-snap-stop:normal; min-height:0; }
+.slide--hero .hero{ flex:1; }
+.slide--end .cta{ flex:1; }
+
+.section{ min-height:var(--slideh); display:flex; align-items:center; }
+.section > .wrap{ width:100%; }
+.hero{ display:flex; align-items:center; }
+
+/* Section immersive : c'est chaque étape qui devient une diapositive */
+.parallax-decouvrir{ scroll-snap-align:none; }
+.parallax-decouvrir__bg{ height:var(--bgh); }
+.parallax-decouvrir__steps{ margin-top:calc(-1 * var(--bgh)); }
+.scroll-step,
+.scroll-step.is-right,
+.scroll-step:first-child,
+.scroll-step:last-child{
+  min-height:var(--slideh); scroll-snap-align:start; scroll-snap-stop:always;
+}
+.scroll-step:last-child{ padding-bottom:16px; }
+@media (max-width:900px){ .scroll-step:last-child{ padding-bottom:4vh; } }
+
+/* Le calage gêne la lecture d'un bloc plus haut que l'écran :
+   on le désactive quand l'écran est trop court (paysage sur téléphone) */
+@media (max-height:520px){
+  html{ scroll-snap-type:none; }
+  .section, .slide, .scroll-step{ min-height:0; }
+}
+
+/* ============================================================
+   19d. TENIR EN UN ÉCRAN SUR TÉLÉPHONE
+   Sur petit écran tout s'empile : on resserre encore la typographie
+   et les espacements pour qu'une section = une diapositive.
+   ============================================================ */
+@media (max-width:640px){
+  :root{ --pad-y:38px; }
+  body{ font-size:15.5px; line-height:1.55; }
+  h2{ font-size:22px; }
+  .eyebrow{ font-size:11px; letter-spacing:.09em; }
+  .eyebrow::before{ width:16px; }
+  .section__head h2{ margin-top:10px; }
+  .section__head p{ font-size:14.5px; margin-top:9px; line-height:1.5; }
+  .section__head + *{ margin-top:20px; }
+
+  /* Hero */
+  h1{ font-size:25.5px; line-height:1.1; }
+  .hero .lede{ font-size:15px; margin-top:14px; line-height:1.5; }
+  .hero__cta{ margin-top:18px; gap:9px; }
+  .hero__cta .btn{ padding:12px 18px; font-size:14.5px; }
+  .hero__note{ margin-top:12px; font-size:13px; }
+  .hero__frame{ aspect-ratio:4/1.9; border-radius:12px; }
+  .hero__caption{ display:none; }
+  /* L'encart reprend mot pour mot le premier élément du bandeau juste dessous */
+  .hero__badge{ display:none; }
+  .hero .wrap{ gap:18px; }
+  .trust__item{ padding:11px 12px 11px 0; }
+  .trust__item + .trust__item{ padding-left:12px; }
+  .trust__item .icon{ width:16px; height:16px; }
+  .trust__item strong{ font-size:12.5px; }
+  .trust__item span{ font-size:11.5px; line-height:1.35; }
+
+  /* Le besoin */
+  .need__lead{ font-size:15.5px; }
+  .need__lead + p{ margin-top:10px; font-size:14.5px; }
+  .need__item{ padding:12px 14px; }
+  .need__item h3{ font-size:15.5px; }
+  .need__item p{ font-size:13.5px; margin-top:5px; line-height:1.45; }
+  .need__item .icon{ width:18px; height:18px; }
+
+  /* Service : deux colonnes, sans les étiquettes */
+  .service-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0; }
+  .service-card{ padding:13px 12px 15px; display:block; border-top:1px solid var(--line); }
+  .service-card:nth-child(2n){ border-left:1px solid var(--line); }
+  .service-card:nth-child(-n+2){ border-top:none; }
+  .service-card + .service-card{ border-top:1px solid var(--line); }
+  .service-card__icon{ width:28px; height:28px; margin-bottom:8px; border-radius:8px; }
+  .service-card__icon .icon{ width:16px; height:16px; }
+  .service-card h3{ font-size:14.5px; }
+  .service-card p{ font-size:12px; line-height:1.42; margin-top:5px; }
+  .service-card__tag{ display:none; }
+  .service-note{ padding:10px 12px; margin-top:10px; gap:9px; }
+  .service-note p{ font-size:12.5px; line-height:1.45; }
+  .service-note .icon{ width:16px; height:16px; margin-top:2px; }
+
+  /* Emplacements */
+  .place{ padding:12px 11px 13px; }
+  .place .icon{ width:19px; height:19px; }
+  .place h3{ font-size:13.5px; margin-top:7px; }
+  .place p{ font-size:12px; line-height:1.35; margin-top:4px; }
+  .places-foot{ margin-top:12px; font-size:13px; }
+
+  /* Étapes */
+  .step, .step:not(:last-child){ padding:14px 0 4px; }
+  .step__num{ font-size:11px; }
+  .step__num em{ width:22px; height:22px; font-size:10.5px; }
+  .step h3{ font-size:17px; margin-top:8px; }
+  .step p{ font-size:13.5px; margin-top:6px; line-height:1.45; }
+
+  /* Avantages */
+  .adv{ padding:12px 12px 14px; }
+  .adv__n{ font-size:11px; }
+  .adv h3{ font-size:14px; margin-top:6px; }
+  .adv p{ font-size:12.5px; line-height:1.4; margin-top:5px; }
+
+  /* Produits */
+  .prod{ padding:13px 14px 15px; }
+  .prod h3{ font-size:15.5px; }
+  .prod p{ font-size:13px; margin-top:5px; }
+  .prod__head .icon{ width:19px; height:19px; }
+  .chips{ gap:5px; margin-top:9px; }
+  .chip{ font-size:11.5px; padding:3px 8px; }
+  .prod-foot{ margin-top:12px; font-size:12.5px; }
+
+  /* À propos */
+  .about__quote{ font-size:17.5px; line-height:1.3; }
+  .about__facts{ margin-top:14px; }
+  .about__fact{ padding:10px 13px; }
+  .about__fact .icon{ width:17px; height:17px; }
+  .about__fact strong{ font-size:13.5px; }
+  .about__fact span{ font-size:12.5px; line-height:1.4; }
+  .about__body p{ font-size:13.5px; line-height:1.5; }
+  .about__body p + p{ margin-top:9px; }
+  .about__sign{ margin-top:12px; padding-top:12px; }
+  .about__avatar{ width:38px; height:38px; font-size:14px; }
+
+  /* FAQ + question */
+  .faq__q{ font-size:14.5px; padding:11px 34px 11px 0; }
+  .faq__a-inner{ font-size:13.5px; padding-bottom:13px; }
+  .chatpanel{ padding:14px; }
+  .chatpanel__messages{ max-height:44vh; }
+  .msg{ font-size:14px; padding:10px 13px; }
+
+  /* Contact */
+  .cta__lede{ font-size:14.5px; margin-top:12px; }
+  .cta__list{ margin-top:14px; gap:8px; }
+  .cta__list li{ font-size:13.5px; }
+  .cta__direct{ margin-top:16px; padding-top:14px; }
+  .cta__direct a{ font-size:14.5px; }
+  .form-card{ padding:16px; }
+  .form-card h3{ font-size:17px; }
+  .form-card > p{ font-size:13px; }
+  .form-grid{ margin-top:12px; }
+  .field{ margin-bottom:9px; }
+  .field label{ font-size:11.5px; margin-bottom:4px; }
+  .field input, .field select{ padding:9px 11px; font-size:14px; }
+  .field textarea{ min-height:56px; font-size:14px; padding:9px 11px; }
+  .form-note{ font-size:11.5px; margin-top:9px; }
+  .footer{ padding:22px 0 18px; }
+  .footer__tag{ font-size:13px; margin-top:8px; }
+  .footer__top{ padding-bottom:14px; gap:12px; }
+  .footer__bottom{ padding-top:12px; }
 }
 
 /* ============================================================
@@ -1124,6 +1301,7 @@ img{ max-width:100%; display:block; }
   </nav>
 
   <!-- 1 — HERO ------------------------------------------------ -->
+  <div class="slide slide--hero">
   <header class="hero" id="top">
     <div class="wrap">
       <div class="hero__text">
@@ -1180,6 +1358,8 @@ img{ max-width:100%; display:block; }
         <div><strong>Paiements gérés</strong><span>Carte, sans contact et pièces, encaissement inclus.</span></div>
       </div>
     </div>
+  </div>
+
   </div>
 
   <!-- 2 — LE BESOIN ------------------------------------------- -->
@@ -1584,15 +1764,18 @@ img{ max-width:100%; display:block; }
           <div class="faq__a"><div class="faq__a-inner">Oui. Si le distributeur ne correspond pas à vos attentes ou ne trouve pas son public, nous venons le récupérer. Vous n'êtes pas immobilisé par un matériel qui vous appartiendrait.</div></div>
         </div>
       </div>
+    </div>
+  </section>
 
-      <div class="chatpanel reveal" style="margin-top:32px" id="chatBlock">
-        <div class="chatpanel__head">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>
-          <div>
-            <strong>Vous ne trouvez pas votre réponse ?</strong>
-            <span>Posez votre question ici — réponse immédiate sur les sujets courants.</span>
-          </div>
-        </div>
+  <!-- 9b — POSER UNE QUESTION ---------------------------------- -->
+  <section class="section section--alt" id="question">
+    <div class="wrap">
+      <div class="section__head section__head--center reveal">
+        <span class="eyebrow">Une autre question</span>
+        <h2>Posez-la, la réponse est immédiate.</h2>
+        <p>Emplacement, produits, installation, stocks, maintenance, paiements : demandez ce que vous voulez savoir.</p>
+      </div>
+      <div class="chatpanel reveal" id="chatBlock">
         <div class="chatpanel__messages" id="chatMessages"></div>
         <div class="chatpanel__inputrow">
           <textarea id="chatInput" rows="1" placeholder="Ex : comment gérez-vous le réapprovisionnement ?" aria-label="Votre question"></textarea>
@@ -1606,6 +1789,7 @@ img{ max-width:100%; display:block; }
   </section>
 
   <!-- 10 — CTA FINALE ------------------------------------------ -->
+  <div class="slide slide--end">
   <section class="section cta" id="contact">
     <div class="wrap">
       <div class="reveal">
@@ -1697,6 +1881,7 @@ img{ max-width:100%; display:block; }
           <a href="#emplacements">Emplacements</a>
           <a href="#etapes">Comment ça marche</a>
           <a href="#faq">FAQ</a>
+          <a href="#question">Poser une question</a>
           <a href="#contact">Contact</a>
         </div>
       </div>
@@ -1706,6 +1891,7 @@ img{ max-width:100%; display:block; }
       </div>
     </div>
   </footer>
+  </div>
 
 </div>
 
@@ -2100,6 +2286,84 @@ if(burgerBtn && mobileNav){
   closeBtn.addEventListener("click", function(){ closeMobilePreview(); setActive("desktop"); });
   preview.addEventListener("click", function(e){
     if(e.target === preview){ closeMobilePreview(); setActive("desktop"); }
+  });
+})();
+
+/* ============================================================
+   DÉFILEMENT PAR DIAPOSITIVES (molette et clavier)
+   Un cran de molette = l'information suivante. Si un bloc est plus
+   haut que l'écran, on le parcourt normalement jusqu'au bout avant
+   de passer au suivant.
+   ============================================================ */
+(function initSlideScroll(){
+  var publicSite = document.getElementById("publicSite");
+  if(!publicSite) return;
+  if(!window.matchMedia || !window.matchMedia("(pointer:fine)").matches) return;
+
+  var NAV = 78;
+  var SMOOTH = !(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  var locked = false, lockTimer = null;
+
+  function slides(){
+    return [].slice.call(document.querySelectorAll(".slide, .section, .scroll-step"))
+      .filter(function(el){ return getComputedStyle(el).scrollSnapAlign !== "none"; });
+  }
+  function targetOf(el){
+    return Math.round(el.getBoundingClientRect().top + window.scrollY - NAV);
+  }
+  function currentIndex(list){
+    var y = window.scrollY, best = 0, bestD = Infinity;
+    for(var i=0;i<list.length;i++){
+      var d = Math.abs(targetOf(list[i]) - y);
+      if(d < bestD){ bestD = d; best = i; }
+    }
+    return best;
+  }
+  function lock(){
+    locked = true;
+    clearTimeout(lockTimer);
+    lockTimer = setTimeout(function(){ locked = false; }, SMOOTH ? 780 : 120);
+  }
+  function goTo(el){
+    lock();
+    var top = Math.max(0, targetOf(el));
+    window.scrollTo({ top: top, behavior: SMOOTH ? "smooth" : "auto" });
+  }
+
+  function step(dir){
+    var list = slides();
+    if(!list.length) return false;
+    var i = currentIndex(list);
+    var rect = list[i].getBoundingClientRect();
+    /* Bloc plus haut que l'écran : on laisse le défilement normal
+       tant qu'il reste du contenu à lire dans ce bloc. */
+    if(dir > 0 && rect.bottom - window.innerHeight > 4) return false;
+    if(dir < 0 && rect.top - NAV < -4) return false;
+    var next = i + dir;
+    if(next < 0 || next >= list.length) return false;
+    goTo(list[next]);
+    return true;
+  }
+
+  window.addEventListener("wheel", function(e){
+    if(publicSite.classList.contains("hidden")) return;
+    if(e.ctrlKey) return;                                   /* zoom navigateur */
+    if(e.target.closest && e.target.closest(".chatpanel__messages, .nav__mobile, textarea, select")) return;
+    if(Math.abs(e.deltaY) < 6) return;
+    if(locked){ e.preventDefault(); return; }
+    if(step(e.deltaY > 0 ? 1 : -1)) e.preventDefault();
+  }, { passive:false });
+
+  window.addEventListener("keydown", function(e){
+    if(publicSite.classList.contains("hidden")) return;
+    var t = e.target;
+    if(t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT")) return;
+    var dir = 0;
+    if(e.key === "PageDown" || e.key === "ArrowDown") dir = 1;
+    else if(e.key === "PageUp" || e.key === "ArrowUp") dir = -1;
+    else return;
+    if(locked){ e.preventDefault(); return; }
+    if(step(dir)) e.preventDefault();
   });
 })();
 
