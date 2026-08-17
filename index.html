@@ -3,275 +3,826 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLTDistrib — Distributeurs automatiques clé en main</title>
-<meta name="description" content="CLTDistrib installe et gère des distributeurs automatiques (boissons, snacks) dans les entreprises et sites à forte affluence : installation, produits, réapprovisionnement et maintenance, sans investissement pour vous.">
-<meta property="og:title" content="CLTDistrib — Distributeurs automatiques clé en main">
-<meta property="og:description" content="Un distributeur automatique installé, approvisionné et géré de bout en bout — sans investissement pour vous.">
+<title>CLTDistrib — Distributeurs automatiques installés et gérés pour les entreprises</title>
+<meta name="description" content="CLTDistrib installe et exploite des distributeurs de boissons et snacks dans les entreprises, bureaux, entrepôts, salles de sport et lieux publics. Machine, produits, réassort, entretien et paiements pris en charge : vous fournissez l'emplacement, nous gérons le reste.">
+<meta name="theme-color" content="#123D28">
+<meta property="og:title" content="CLTDistrib — Distributeurs automatiques clé en main pour les entreprises">
+<meta property="og:description" content="Vous fournissez l'emplacement, nous fournissons et gérons le distributeur : installation, produits, réassort, entretien et paiements inclus.">
 <meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%231F6B44'/%3E%3Crect x='5' y='5' width='6' height='6' rx='1' fill='%23fff'/%3E%3Crect x='13' y='5' width='6' height='6' rx='1' fill='%23fff'/%3E%3Crect x='5' y='13' width='6' height='6' rx='1' fill='%23fff'/%3E%3Crect x='13' y='13' width='6' height='6' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
-   TOKENS
+   1. TOKENS
    ============================================================ */
 :root{
-  --bg:#F3F4F1;
+  --bg:#FFFFFF;
   --surface:#FFFFFF;
-  --surface-alt:#EBEEEA;
-  --ink:#16232B;
-  --ink-soft:#52616B;
-  --ink-faint:#8A969C;
-  --line:#DBE0DB;
-  --teal:#2F8F5B;
-  --teal-dark:#1F6B44;
-  --teal-tint:#E3F3E8;
-  --teal-light:#4FAE7C;
-  --amber:#C98A2B;
-  --amber-tint:#FBF0DE;
-  --red:#BE5340;
-  --red-tint:#FBEAE6;
+  --surface-alt:#F4F6F3;
+  --surface-sunk:#EDF0EB;
+  --ink:#141F1A;
+  --ink-soft:#4C5A53;
+  --ink-faint:#89948E;
+  --line:#E2E7E0;
+  --line-soft:#EEF1EC;
+
+  --teal:#1F6B44;
+  --teal-dark:#123D28;
+  --teal-light:#3E9C6B;
+  --teal-tint:#EBF3EE;
+  --gold:#A8813F;
+  --gold-tint:#F7F1E5;
+
+  --amber:#B5822F;
+  --amber-tint:#F9F1E1;
+  --red:#B14A38;
+  --red-tint:#FAEBE7;
+
+  --deep:#0C1611;
+  --deep-2:#101E17;
+  --deep-line:#22322A;
+  --deep-ink:#B9C7BF;
+
   --radius-s:6px;
-  --radius-m:12px;
-  --radius-l:22px;
-  --shadow-s:0 1px 2px rgba(22,35,43,.06), 0 1px 1px rgba(22,35,43,.04);
-  --shadow-m:0 8px 24px rgba(22,35,43,.08);
-  --font-display:'Space Grotesk', 'Arial Narrow', sans-serif;
-  --font-body:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --radius-m:10px;
+  --radius-l:18px;
+  --shadow-s:0 1px 2px rgba(20,31,26,.05), 0 2px 6px rgba(20,31,26,.04);
+  --shadow-m:0 12px 32px rgba(20,31,26,.09), 0 2px 8px rgba(20,31,26,.04);
+  --shadow-l:0 30px 70px rgba(12,22,17,.16), 0 8px 24px rgba(12,22,17,.08);
+
+  --font-display:'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono:'IBM Plex Mono', 'Courier New', monospace;
-  --maxw:1320px;
+
+  --maxw:1240px;
+  --pad-y:clamp(78px, 8.5vw, 130px);
+  --ease:cubic-bezier(.22,.61,.36,1);
 }
 
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important; }
 }
 
+/* ============================================================
+   2. BASE
+   ============================================================ */
 *,*::before,*::after{ box-sizing:border-box; }
-html{ scroll-behavior:smooth; }
+html{ scroll-behavior:smooth; -webkit-text-size-adjust:100%; }
 body{
   margin:0;
-  background-color:var(--bg);
-  background-image:
-    linear-gradient(rgba(31,107,68,.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(31,107,68,.07) 1px, transparent 1px),
-    linear-gradient(rgba(31,107,68,.10) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(31,107,68,.10) 1px, transparent 1px);
-  background-size:24px 24px, 24px 24px, 120px 120px, 120px 120px;
+  background:var(--bg);
   color:var(--ink);
   font-family:var(--font-body);
-  font-size:16px;
-  line-height:1.55;
+  font-size:16.5px;
+  line-height:1.65;
   -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
 }
 h1,h2,h3,h4{
   font-family:var(--font-display);
   font-weight:600;
-  line-height:1.12;
+  line-height:1.1;
   margin:0;
-  letter-spacing:-0.01em;
+  letter-spacing:-0.025em;
   color:var(--teal-dark);
+  text-wrap:balance;
 }
+h1{ font-size:clamp(30px,4.1vw,52px); letter-spacing:-0.033em; line-height:1.06; }
+h2{ font-size:clamp(27px,3.3vw,42px); }
+h3{ font-size:19px; letter-spacing:-0.018em; }
 p{ margin:0; }
 a{ color:inherit; text-decoration:none; }
 button{ font-family:inherit; cursor:pointer; }
 ul{ margin:0; padding:0; list-style:none; }
-input,select,textarea{ font-family:inherit; font-size:15px; color:var(--ink); }
-:focus-visible{ outline:2px solid var(--teal); outline-offset:2px; border-radius:4px; }
+input,select,textarea{ font-family:inherit; font-size:15.5px; color:var(--ink); }
+:focus-visible{ outline:2px solid var(--teal); outline-offset:3px; border-radius:3px; }
 img{ max-width:100%; display:block; }
-.wrap{ max-width:var(--maxw); margin:0 auto; padding:0 28px; }
+::selection{ background:var(--teal-dark); color:#fff; }
+
+.wrap{ max-width:var(--maxw); margin:0 auto; padding:0 clamp(20px,4vw,40px); }
 .mono{ font-family:var(--font-mono); }
 .hidden{ display:none !important; }
-.icon{ width:20px; height:20px; stroke:currentColor; stroke-width:1.6; fill:none; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+.icon{ width:20px; height:20px; stroke:currentColor; stroke-width:1.55; fill:none; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
 .icon--fill{ fill:currentColor; stroke:none; }
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 
 /* ============================================================
-   BUTTONS
+   3. BUTTONS
    ============================================================ */
 .btn{
-  display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  padding:13px 24px; border-radius:999px; border:1px solid transparent;
-  font-weight:600; font-size:15px; letter-spacing:-0.01em; transition:all .15s ease;
-  white-space:nowrap;
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  padding:15px 26px; border-radius:var(--radius-s); border:1px solid transparent;
+  font-family:var(--font-display); font-weight:600; font-size:15.5px; letter-spacing:-0.012em;
+  transition:background-color .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease), box-shadow .25s var(--ease);
+  text-align:center; line-height:1.25;
 }
-.btn--primary{ background:var(--ink); color:#fff; }
-.btn--primary:hover{ background:var(--teal-dark); }
+.btn--primary{ background:var(--teal-dark); color:#fff; box-shadow:0 1px 2px rgba(18,61,40,.2); }
+.btn--primary:hover{ background:#0C2C1D; box-shadow:0 10px 24px rgba(18,61,40,.22); transform:translateY(-2px); }
 .btn--accent{ background:var(--teal); color:#fff; }
-.btn--accent:hover{ background:var(--teal-dark); }
-.btn--ghost{ background:transparent; color:var(--ink); border-color:var(--line); }
-.btn--ghost:hover{ border-color:var(--ink); }
-.btn--sm{ padding:8px 16px; font-size:13px; border-radius:999px; }
-.btn--icon{ padding:8px; border-radius:999px; }
+.btn--accent:hover{ background:var(--teal-dark); box-shadow:0 10px 24px rgba(31,107,68,.25); transform:translateY(-2px); }
+.btn--ghost{ background:transparent; color:var(--teal-dark); border-color:var(--line); }
+.btn--ghost:hover{ border-color:var(--teal-dark); background:var(--surface-alt); transform:translateY(-2px); }
+.btn--onDark{ background:#fff; color:var(--teal-dark); }
+.btn--onDark:hover{ background:#EFF3EF; transform:translateY(-2px); }
+.btn--onDarkGhost{ background:transparent; color:#fff; border-color:rgba(255,255,255,.34); }
+.btn--onDarkGhost:hover{ border-color:#fff; background:rgba(255,255,255,.07); transform:translateY(-2px); }
+.btn--sm{ padding:9px 17px; font-size:14px; }
+.btn--icon{ padding:10px; }
 .btn--danger{ background:transparent; color:var(--red); border-color:var(--red-tint); }
 .btn--danger:hover{ background:var(--red-tint); }
-.btn:disabled{ opacity:.45; cursor:not-allowed; }
+.btn--wide{ width:100%; }
+.btn:active{ transform:translateY(0); box-shadow:none; }
+.btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+.btn .icon{ width:18px; height:18px; }
 
 /* ============================================================
-   NAV
+   4. NAV
    ============================================================ */
 .nav{
-  position:sticky; top:0; z-index:40; background:rgba(243,244,241,.88);
-  backdrop-filter:blur(10px); border-bottom:1px solid var(--line);
+  position:sticky; top:0; z-index:40; background:rgba(255,255,255,.86);
+  backdrop-filter:saturate(150%) blur(12px); -webkit-backdrop-filter:saturate(150%) blur(12px);
+  border-bottom:1px solid transparent; transition:border-color .3s ease, box-shadow .3s ease;
 }
-.nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:76px; }
-.brand{ display:flex; align-items:baseline; gap:2px; font-family:var(--font-display); font-size:22px; font-weight:700; }
-.brand span:first-child{ color:var(--ink); }
-.brand span:last-child{ color:var(--teal); font-weight:500; }
-.nav__links{ display:flex; align-items:center; gap:34px; }
-.nav__link{ font-size:14.5px; font-weight:500; color:var(--ink-soft); position:relative; }
-.nav__link:hover{ color:var(--ink); }
+.nav.is-stuck{ border-bottom-color:var(--line); box-shadow:0 1px 20px rgba(20,31,26,.05); }
+.nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:78px; gap:24px; }
+.brand{ display:flex; align-items:center; gap:9px; font-family:var(--font-display); font-size:20px; font-weight:700; letter-spacing:-0.03em; flex-shrink:0; }
+.brand__mark{
+  width:30px; height:30px; border-radius:7px; background:var(--teal-dark);
+  display:grid; grid-template-columns:1fr 1fr; gap:3px; padding:6px; flex-shrink:0;
+}
+.brand__mark span{ background:#fff; border-radius:1.5px; opacity:.92; }
+.brand__mark span:nth-child(2){ opacity:.6; }
+.brand__mark span:nth-child(3){ opacity:.72; }
+.brand__name span:first-child{ color:var(--ink); }
+.brand__name span:last-child{ color:var(--teal); font-weight:500; }
+.nav__links{ display:flex; align-items:center; gap:30px; }
+.nav__link{ font-size:14.5px; font-weight:500; color:var(--ink-soft); position:relative; padding:4px 0; }
+.nav__link:hover{ color:var(--teal-dark); }
+.nav__link::after{ content:''; position:absolute; left:0; right:100%; bottom:-2px; height:1.5px; background:var(--teal); transition:right .28s var(--ease); }
+.nav__link:hover::after{ right:0; }
 .nav__actions{ display:flex; align-items:center; gap:12px; }
-.nav__burger{ display:none; background:none; border:none; padding:8px; color:var(--ink); }
-.nav__mobile{ display:none; position:fixed; inset:76px 0 0 0; background:var(--bg); z-index:39; padding:24px 28px; }
+.nav__burger{ display:none; background:none; border:1px solid var(--line); border-radius:var(--radius-s); padding:9px; color:var(--ink); }
+.nav__mobile{ display:none; position:fixed; inset:78px 0 0 0; background:#fff; z-index:39; padding:14px clamp(20px,4vw,40px) 40px; overflow-y:auto; }
 .nav__mobile.is-open{ display:block; }
-.nav__mobile a{ display:block; padding:16px 0; font-size:19px; font-weight:600; border-bottom:1px solid var(--line); }
+.nav__mobile a{ display:block; padding:17px 0; font-family:var(--font-display); font-size:19px; font-weight:600; color:var(--teal-dark); border-bottom:1px solid var(--line-soft); }
+.nav__mobile .btn{ margin-top:24px; width:100%; }
 
-.view-toggle{ display:flex; align-items:center; gap:2px; background:var(--surface-alt); border-radius:999px; padding:3px; }
+.view-toggle{ display:flex; align-items:center; gap:2px; background:var(--surface-alt); border-radius:var(--radius-s); padding:3px; border:1px solid var(--line-soft); }
 .view-toggle__btn{
-  display:flex; align-items:center; justify-content:center; width:32px; height:32px; border-radius:999px;
+  display:flex; align-items:center; justify-content:center; width:30px; height:28px; border-radius:4px;
   background:transparent; border:none; color:var(--ink-faint); transition:background-color .2s ease, color .2s ease;
 }
-.view-toggle__btn .icon{ width:17px; height:17px; }
+.view-toggle__btn .icon{ width:16px; height:16px; }
 .view-toggle__btn:hover{ color:var(--ink); }
-.view-toggle__btn.is-active{ background:var(--surface); color:var(--teal-dark); box-shadow:var(--shadow-s); }
+.view-toggle__btn.is-active{ background:#fff; color:var(--teal-dark); box-shadow:var(--shadow-s); }
 
-@media (max-width:860px){
-  .nav__links{ display:none; }
-  .nav__burger{ display:block; }
-  .nav__actions .btn span.btn-label{ display:none; }
-}
+@media (max-width:1000px){ .nav__links{ display:none; } .nav__burger{ display:block; } }
+@media (max-width:640px){ .nav__actions .btn--primary{ display:none; } .view-toggle{ display:none; } }
 
 /* ============================================================
-   HERO — photo en arrière-plan, thème sombre
+   5. HERO
    ============================================================ */
 .hero{
-  position:relative; overflow:hidden; background:#05090b; min-height:88vh;
-  display:flex; align-items:center; padding:120px 0 80px;
+  position:relative; padding:clamp(56px,7vw,96px) 0 clamp(64px,7vw,104px);
+  background:linear-gradient(180deg,#FBFCFA 0%, #FFFFFF 62%);
+  overflow:hidden;
 }
-.hero__bg{ position:absolute; inset:0; z-index:0; }
-.hero__bg img{ width:100%; height:100%; object-fit:cover; object-position:25% center; opacity:.7; }
-.hero__scrim{
-  position:absolute; inset:0;
-  background:linear-gradient(260deg, rgba(5,9,11,.95) 0%, rgba(5,9,11,.84) 36%, rgba(5,9,11,.5) 64%, rgba(5,9,11,.15) 100%);
+.hero::before{
+  content:''; position:absolute; top:-340px; right:-220px; width:820px; height:820px; border-radius:50%;
+  background:radial-gradient(circle, rgba(62,156,107,.10), transparent 68%); pointer-events:none;
 }
-.hero__glow{
-  position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.5;
-  background:radial-gradient(circle at 24% 55%, rgba(79,174,124,.5), transparent 45%);
+.hero .wrap{ position:relative; z-index:1; display:grid; grid-template-columns:1.16fr .84fr; gap:clamp(36px,4.2vw,64px); align-items:center; }
+.hero__text{ max-width:610px; }
+.eyebrow{
+  display:inline-flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:12px;
+  letter-spacing:.11em; text-transform:uppercase; color:var(--teal); font-weight:500;
 }
-.hero .wrap{ position:relative; z-index:1; display:flex; justify-content:flex-end; }
-.hero__text{ max-width:560px; text-align:right; margin-left:auto; }
-.hero h1{ font-size:clamp(34px,4.4vw,54px); color:#fff; }
-.hero h1 em{ font-style:normal; color:var(--teal-light); }
-.hero p.lede{ margin-top:22px; font-size:18px; color:#C7D2D5; margin-left:auto; }
-.hero__cta{ display:flex; gap:14px; margin-top:32px; flex-wrap:wrap; justify-content:flex-end; }
-.hero__cta .btn--ghost{ background:transparent; color:#fff; border-color:rgba(255,255,255,.3); }
-.hero__cta .btn--ghost:hover{ border-color:#fff; }
+.eyebrow::before{ content:''; width:22px; height:1px; background:var(--teal-light); }
+.hero h1{ margin-top:20px; color:var(--teal-dark); }
+.hero h1 em{ font-style:normal; color:var(--teal); }
+.hero .lede{ margin-top:22px; font-size:18.5px; color:var(--ink-soft); max-width:53ch; line-height:1.6; }
+.hero__cta{ display:flex; gap:13px; margin-top:34px; flex-wrap:wrap; }
+.hero__note{ margin-top:20px; font-size:14px; color:var(--ink-faint); display:flex; align-items:center; gap:8px; }
+.hero__note .icon{ width:16px; height:16px; color:var(--teal); }
 
-@media (max-width:640px){
-  .hero .wrap{ justify-content:flex-start; }
-  .hero__text{ text-align:left; margin-left:0; }
-  .hero__cta{ justify-content:flex-start; }
-  .hero p.lede{ margin-left:0; }
+.hero__visual{ position:relative; }
+.hero__frame{
+  position:relative; border-radius:var(--radius-l); overflow:hidden; background:var(--deep);
+  box-shadow:var(--shadow-l); aspect-ratio:4/4.35;
+}
+.hero__frame img{
+  width:100%; height:100%; object-fit:cover; object-position:center 42%; transform:scale(1.02);
+  filter:brightness(1.16) saturate(1.06) contrast(1.02); transition:transform 1.4s var(--ease);
+}
+.hero__visual:hover .hero__frame img{ transform:scale(1.05); }
+.hero__frame::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(180deg, rgba(12,22,17,0) 0%, rgba(12,22,17,0) 52%, rgba(12,22,17,.48) 100%);
+}
+.hero__badge{
+  position:absolute; z-index:2; left:-18px; bottom:34px; background:#fff; border:1px solid var(--line);
+  border-radius:var(--radius-m); padding:16px 20px; box-shadow:var(--shadow-m); max-width:262px;
+}
+.hero__badge strong{ display:block; font-family:var(--font-display); font-size:15px; color:var(--teal-dark); }
+.hero__badge span{ display:block; font-size:13.5px; color:var(--ink-soft); margin-top:3px; line-height:1.45; }
+.hero__badge-row{ display:flex; align-items:center; gap:11px; }
+.hero__badge-icon{
+  width:34px; height:34px; border-radius:8px; background:var(--teal-tint); color:var(--teal-dark);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.hero__caption{
+  position:absolute; z-index:2; right:20px; bottom:20px; color:#fff; font-family:var(--font-mono);
+  font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; opacity:.82;
+}
+
+@media (max-width:980px){
+  .hero .wrap{ grid-template-columns:1fr; gap:44px; }
+  .hero__text{ max-width:none; }
+  .hero__visual{ max-width:520px; }
+  .hero__badge{ left:auto; right:-8px; bottom:22px; }
+}
+@media (max-width:560px){
+  .hero{ padding-top:40px; }
+  .hero__frame{ aspect-ratio:4/4; }
+  .hero__badge{ position:static; margin-top:16px; max-width:none; box-shadow:none; }
+  .hero__cta .btn{ width:100%; }
+  .hero .lede{ font-size:16.5px; margin-top:18px; }
+  .hero__cta{ margin-top:26px; }
+  h1{ font-size:28.5px; }
 }
 
 /* ============================================================
-   SECTIONS (generic)
+   6. BANDEAU DE CONFIANCE
    ============================================================ */
-.section{ padding:88px 0; }
-.section--tint{ background:linear-gradient(180deg, rgba(227,243,232,.92) 0%, rgba(241,246,241,.92) 100%); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
-.section--dark{ background:#0d1417; border-top:1px solid #1c262b; border-bottom:1px solid #1c262b; }
-.section__head{ max-width:640px; margin-bottom:52px; }
-.section__kicker{ font-family:var(--font-mono); font-size:12.5px; letter-spacing:.06em; text-transform:uppercase; color:var(--teal-dark); margin-bottom:12px; display:block; }
-.section h2{ font-size:clamp(26px,3vw,36px); }
-.section__head p{ margin-top:14px; color:var(--ink-soft); font-size:16.5px; }
-.section--dark .section__kicker{ color:var(--teal-light); }
-.section--dark h2{ color:#fff; }
-.section--dark .section__head p{ color:#AEC0C4; }
+.trust{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--surface-alt); }
+.trust .wrap{ display:grid; grid-template-columns:repeat(4,1fr); }
+.trust__item{ padding:26px 26px 26px 0; display:flex; gap:13px; align-items:flex-start; }
+.trust__item + .trust__item{ border-left:1px solid var(--line); padding-left:26px; }
+.trust__item .icon{ color:var(--teal); margin-top:2px; width:19px; height:19px; }
+.trust__item strong{ display:block; font-family:var(--font-display); font-size:14.5px; color:var(--teal-dark); letter-spacing:-0.015em; }
+.trust__item span{ display:block; font-size:13.5px; color:var(--ink-soft); margin-top:2px; line-height:1.45; }
+@media (max-width:900px){
+  .trust .wrap{ grid-template-columns:1fr 1fr; }
+  .trust__item{ padding:22px 20px 22px 0; }
+  .trust__item + .trust__item{ padding-left:20px; }
+  .trust__item:nth-child(3){ border-left:none; padding-left:0; }
+  .trust__item:nth-child(n+3){ border-top:1px solid var(--line); }
+}
+@media (max-width:520px){
+  .trust .wrap{ grid-template-columns:1fr; }
+  .trust__item{ padding:18px 0; }
+  .trust__item + .trust__item{ border-left:none; border-top:1px solid var(--line); padding-left:0; }
+}
 
-/* Process */
-.steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:26px; }
-@media (max-width:1100px){ .steps{ grid-template-columns:repeat(2,1fr); } }
-.step{ position:relative; padding-top:8px; }
-.step__num{ font-family:var(--font-mono); font-size:14px; color:var(--teal); font-weight:600; }
-.step h3{ font-size:20px; margin-top:14px; }
-.step p{ margin-top:10px; color:var(--ink-soft); font-size:15px; }
-.step::before{ content:''; position:absolute; top:0; left:0; width:34px; height:2px; background:var(--line); }
+/* ============================================================
+   7. SECTIONS — GÉNÉRIQUE
+   ============================================================ */
+.section{ padding:var(--pad-y) 0; position:relative; }
+.section--alt{ background:var(--surface-alt); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+.section--dark{ background:var(--deep-2); }
+.section__head{ max-width:660px; }
+.section__head--center{ margin:0 auto; text-align:center; }
+.section__head--center .eyebrow{ justify-content:center; }
+.section__head--center .eyebrow::before{ display:none; }
+.section__head h2{ margin-top:18px; }
+.section__head p{ margin-top:18px; color:var(--ink-soft); font-size:17.5px; line-height:1.6; }
+.section__head + *{ margin-top:clamp(40px,4.5vw,64px); }
+.section--dark .eyebrow{ color:var(--teal-light); }
+.section--dark .eyebrow::before{ background:var(--teal-light); }
+.section--dark h2, .section--dark h3{ color:#fff; }
+.section--dark .section__head p{ color:var(--deep-ink); }
+
+.split{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.05fr); gap:clamp(36px,5.5vw,84px); align-items:start; }
+@media (max-width:940px){ .split{ grid-template-columns:1fr; gap:40px; } }
+
+/* ============================================================
+   8. LE BESOIN (problème)
+   ============================================================ */
+.need__lead{ font-size:19px; color:var(--ink); line-height:1.62; font-weight:500; }
+.need__lead + p{ margin-top:16px; color:var(--ink-soft); }
+.need__list{ display:grid; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden; }
+.need__item{ background:#fff; padding:26px 28px; transition:background-color .25s ease; }
+.need__item:hover{ background:var(--teal-tint); }
+.need__item-top{ display:flex; align-items:center; gap:12px; }
+.need__item .icon{ color:var(--teal); width:21px; height:21px; }
+.need__item h3{ font-size:17px; }
+.need__item p{ margin-top:9px; color:var(--ink-soft); font-size:15px; line-height:1.6; }
+.section--alt .need__item{ background:#fff; }
+
+/* ============================================================
+   9. SERVICE CLÉ EN MAIN
+   ============================================================ */
+.service-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.service-card{
+  position:relative; background:#fff; border:1px solid var(--line); border-radius:var(--radius-m);
+  padding:30px 28px 32px; overflow:hidden;
+  transition:transform .3s var(--ease), box-shadow .3s var(--ease), border-color .3s var(--ease);
+}
+.service-card::after{
+  content:''; position:absolute; left:0; right:0; top:0; height:2px; background:var(--teal);
+  transform:scaleX(0); transform-origin:left; transition:transform .45s var(--ease);
+}
+.service-card:hover{ transform:translateY(-4px); box-shadow:var(--shadow-m); border-color:var(--line-soft); }
+.service-card:hover::after{ transform:scaleX(1); }
+.service-card__icon{
+  width:46px; height:46px; border-radius:11px; background:var(--teal-tint); color:var(--teal-dark);
+  display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+  transition:background-color .3s ease, transform .35s cubic-bezier(.34,1.4,.64,1);
+}
+.service-card__icon .icon{ width:23px; height:23px; }
+.service-card:hover .service-card__icon{ background:var(--teal-dark); color:#fff; transform:translateY(-2px); }
+.service-card h3{ font-size:18.5px; }
+.service-card p{ margin-top:11px; color:var(--ink-soft); font-size:15px; line-height:1.62; }
+.service-card__tag{
+  display:inline-block; margin-top:16px; font-family:var(--font-mono); font-size:11px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--teal-dark); background:var(--teal-tint); padding:4px 10px; border-radius:4px;
+}
+.service-note{
+  margin-top:26px; display:flex; gap:14px; align-items:flex-start; padding:22px 26px;
+  border:1px solid var(--line); border-left:3px solid var(--teal); border-radius:var(--radius-s); background:#fff;
+}
+.service-note .icon{ color:var(--teal); margin-top:3px; }
+.service-note p{ font-size:15.5px; color:var(--ink-soft); }
+.service-note strong{ color:var(--teal-dark); }
+@media (max-width:1000px){ .service-grid{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:660px){ .service-grid{ grid-template-columns:1fr; gap:16px; } }
+
+/* ============================================================
+   10. EMPLACEMENTS
+   ============================================================ */
+.places{ display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden; }
+.place{
+  background:#fff; padding:28px 24px 30px; transition:background-color .3s ease, transform .3s var(--ease);
+  position:relative;
+}
+.place:hover{ background:var(--teal-dark); transform:translateY(-2px); z-index:1; }
+.place .icon{ width:24px; height:24px; color:var(--teal); transition:color .3s ease, transform .35s cubic-bezier(.34,1.4,.64,1); }
+.place:hover .icon{ color:#fff; transform:scale(1.1); }
+.place h3{ font-size:16.5px; margin-top:16px; transition:color .3s ease; }
+.place:hover h3{ color:#fff; }
+.place p{ margin-top:7px; font-size:14px; color:var(--ink-soft); line-height:1.5; transition:color .3s ease; }
+.place:hover p{ color:rgba(255,255,255,.78); }
+@media (max-width:1000px){ .places{ grid-template-columns:repeat(2,1fr); } }
+@media (max-width:520px){ .places{ grid-template-columns:1fr; } }
+
+.places-foot{ margin-top:24px; font-size:15px; color:var(--ink-soft); }
+.places-foot strong{ color:var(--teal-dark); }
+
+/* ============================================================
+   11. LES 4 ÉTAPES
+   ============================================================ */
+.steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative; }
+.step{ position:relative; padding:34px 28px 4px 0; }
+.step:not(:last-child){ padding-right:36px; }
+.step::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:1px; background:var(--line);
+}
+.step::after{
+  content:''; position:absolute; top:0; left:0; width:0; height:1px; background:var(--teal);
+  transition:width .9s var(--ease);
+}
+.step.is-visible::after{ width:100%; transition-delay:calc(var(--i,0) * 160ms); }
+.step__num{
+  font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.08em; color:var(--teal);
+  display:flex; align-items:center; gap:10px;
+}
+.step__num em{ font-style:normal; width:26px; height:26px; border-radius:50%; background:var(--teal-tint); display:flex; align-items:center; justify-content:center; color:var(--teal-dark); font-size:11.5px; }
+.step h3{ font-size:19.5px; margin-top:16px; }
+.step p{ margin-top:11px; color:var(--ink-soft); font-size:15px; line-height:1.62; }
+.section--dark .step::before{ background:var(--deep-line); }
 .section--dark .step__num{ color:var(--teal-light); }
-.section--dark .step h3{ color:#fff; }
-.section--dark .step p{ color:#AEC0C4; }
-.section--dark .step::before{ background:#2a343a; }
+.section--dark .step__num em{ background:rgba(62,156,107,.16); color:var(--teal-light); }
+.section--dark .step p{ color:var(--deep-ink); }
+@media (max-width:1000px){ .steps{ grid-template-columns:1fr 1fr; } .step:not(:last-child){ padding-right:28px; } }
+@media (max-width:600px){ .steps{ grid-template-columns:1fr; } .step, .step:not(:last-child){ padding:26px 0 6px; } }
 
-/* Benefits */
-.benefits{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden; }
-.benefit{ background:var(--surface); padding:32px 28px; }
-.benefit .icon{ width:26px; height:26px; color:var(--teal); margin-bottom:18px; transition:transform .35s cubic-bezier(.34,1.56,.64,1); }
-.benefit:hover .icon{ transform:scale(1.15) rotate(-6deg); }
-.benefit h3{ font-size:17px; }
-.benefit p{ margin-top:8px; color:var(--ink-soft); font-size:14.5px; }
-.section--dark .benefits{ background:#1c262b; border-color:#1c262b; }
-.section--dark .benefit{ background:#141c20; }
-.section--dark .benefit .icon{ color:var(--teal-light); }
-.section--dark .benefit:hover{ background:#182126; }
-.section--dark .benefit h3{ color:#fff; }
-.section--dark .benefit p{ color:#AEC0C4; }
-
-/* Maintenance / support */
-.support{ display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
-.support__card{ background:var(--ink); color:#fff; border-radius:var(--radius-l); padding:40px; }
-.support__card h3{ color:#fff; font-size:22px; }
-.support__card p{ color:#B9C4C8; margin-top:12px; font-size:15px; }
-.support__card .btn{ margin-top:24px; }
-.support ul li{ display:flex; gap:14px; padding:14px 0; border-bottom:1px solid var(--line); }
-.support ul li .icon{ color:var(--teal); margin-top:2px; }
-.support ul li strong{ display:block; font-size:15px; }
-.support ul li span{ color:var(--ink-soft); font-size:14px; }
-.section--dark .support__card{ background:#141c20; border:1px solid #232f35; }
-.section--dark .support ul li{ border-color:#1c262b; }
-.section--dark .support ul li .icon{ color:var(--teal-light); }
-.section--dark .support ul li strong{ color:#fff; }
-.section--dark .support ul li span{ color:#AEC0C4; }
-
-/* Contact */
-.contact{ display:grid; grid-template-columns:.85fr 1.15fr; gap:56px; }
-.contact__info h2{ font-size:clamp(26px,3vw,34px); }
-.contact__info p{ margin-top:14px; color:var(--ink-soft); }
-.contact__info .contact-row{ display:flex; gap:12px; align-items:center; margin-top:22px; font-size:14.5px; }
-.contact__info .contact-row .icon{ color:var(--teal); }
-.form-card{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:36px; box-shadow:var(--shadow-s); }
-.field{ margin-bottom:18px; }
-.field label{ display:block; font-size:13px; font-weight:600; margin-bottom:7px; color:var(--ink-soft); }
-.field input, .field select, .field textarea{
-  width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:var(--radius-s);
-  background:var(--bg); transition:border-color .15s ease;
+/* ============================================================
+   12. DISTRIBUTEUR ANIMÉ — fond plein écran + parallaxe
+   ============================================================ */
+.parallax-decouvrir{ position:relative; background:var(--deep); }
+.parallax-decouvrir__bg{ position:sticky; top:0; height:100vh; width:100%; overflow:hidden; z-index:0; }
+.parallax-decouvrir__scrim{
+  position:absolute; inset:0; transition:background 1.1s ease; z-index:2;
+  background:linear-gradient(100deg, rgba(12,22,17,.94) 0%, rgba(12,22,17,.76) 34%, rgba(12,22,17,.22) 64%, rgba(12,22,17,0) 100%);
 }
-.field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--teal); outline:none; }
-.field-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
-.form-note{ font-size:13px; color:var(--ink-faint); margin-top:14px; }
-.form-success{ background:var(--teal-tint); color:var(--teal-dark); padding:14px 16px; border-radius:var(--radius-s); font-size:14px; margin-top:16px; }
-
-/* Footer */
-.footer{ padding:48px 0 38px; background:var(--ink); background-image:none; }
-.cap-trim{
-  height:14px; background-color:var(--ink);
-  background-image:radial-gradient(circle, var(--bg) 5px, transparent 5.5px);
-  background-size:26px 26px; background-position:13px -6px; background-repeat:repeat-x;
+.parallax-decouvrir__scrim.is-right{
+  background:linear-gradient(260deg, rgba(12,22,17,.94) 0%, rgba(12,22,17,.76) 34%, rgba(12,22,17,.22) 64%, rgba(12,22,17,0) 100%);
 }
-.footer .wrap{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
-.footer .brand span:first-child{ color:#fff; }
-.footer .brand span:last-child{ color:var(--teal-light); }
-.footer__links{ display:flex; gap:24px; }
-.footer__links a.nav__link{ color:#AEC0C4; }
-.footer__links a.nav__link:hover{ color:#fff; }
-.footer small{ color:#728089; font-size:13px; }
+.parallax-decouvrir__glow{
+  position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.55; transition:opacity .6s ease; z-index:1;
+  background:radial-gradient(circle at 50% 46%, rgba(62,156,107,.42), transparent 55%);
+}
+
+/* --- Le distributeur dessiné --- */
+.draw-machine{
+  position:absolute; top:50%; left:50%; width:400px; max-width:70vw;
+  transform:translate(-50%,-50%) scale(1.02); will-change:transform; z-index:1;
+}
+.draw-machine__cabinet{
+  position:relative; display:flex; gap:10px; background:linear-gradient(180deg,#1A2620,#0E1A14);
+  border:1px solid #2A3A32; border-radius:18px; padding:14px; box-shadow:0 40px 90px rgba(0,0,0,.62);
+  perspective:1000px;
+}
+.draw-machine__door{
+  flex:1; position:relative; transform-origin:left center; transition:transform 1.2s cubic-bezier(.65,0,.35,1);
+  transform-style:preserve-3d;
+}
+.draw-machine__glass{
+  position:relative; overflow:hidden; border-radius:9px; min-height:376px;
+  background:linear-gradient(160deg,#0B1410 0%,#172720 55%,#0B1410 100%); border:1px solid #24332B;
+}
+.draw-machine__shine{
+  position:absolute; top:0; left:-40%; width:35%; height:100%; z-index:2;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.07), transparent);
+  transform:skewX(-12deg); animation:glass-shimmer 6s ease-in-out infinite;
+}
+@keyframes glass-shimmer{ 0%,100%{ left:-40%; } 50%{ left:120%; } }
+.draw-machine__cols{ position:relative; z-index:1; display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:14px 12px; height:100%; }
+.draw-machine__col{ display:flex; flex-direction:column; gap:6px; justify-content:flex-start; }
+
+.draw-machine__side{ width:62px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:10px; padding:14px 0; position:relative; transition:box-shadow .5s ease; border-radius:9px; }
+.draw-machine__screen{
+  width:100%; background:#0D1E15; border:1px solid #1D3A2A; border-radius:5px; padding:8px 2px;
+  text-align:center; font-size:9px; color:var(--teal-light); letter-spacing:.04em;
+  box-shadow:inset 0 0 8px rgba(62,156,107,.5); transition:color .3s ease;
+}
+.draw-machine__keypad{ display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
+.draw-machine__keypad span{ width:11px; height:11px; border-radius:3px; background:#18251E; border:1px solid #2A3A32; }
+.draw-machine__coinslot{ width:70%; height:4px; background:#18251E; border-radius:2px; margin-top:auto; }
+.draw-machine__legs{ display:flex; justify-content:space-between; padding:12px 26px 0; }
+.draw-machine__legs span{ width:14px; height:14px; border-radius:50%; background:#37453D; }
+
+/* Produits */
+.draw-machine__product{ position:relative; width:100%; transition:opacity .5s ease, transform .5s ease; }
+.draw-machine__product--can{ aspect-ratio:.58; border-radius:4px 4px 3px 3px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.1); }
+.draw-machine__product--can::before{ content:''; position:absolute; top:0; left:0; right:0; height:14%; background:rgba(255,255,255,.4); border-radius:4px 4px 0 0; }
+.draw-machine__product--bottle{ aspect-ratio:.42; clip-path:polygon(30% 0%,70% 0%,70% 12%,100% 26%,100% 100%,0% 100%,0% 26%,30% 12%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
+.draw-machine__product--bag{ aspect-ratio:.72; border-radius:9px 9px 5px 5px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
+
+/* Schéma de mesures — étape emplacement */
+.draw-machine__schema{ position:absolute; left:-30px; bottom:-10px; width:120%; height:120%; overflow:visible; opacity:0; transition:opacity .6s ease; pointer-events:none; }
+.draw-machine.is-active-emplacement .draw-machine__schema{ opacity:1; }
+.draw-machine__schema .fx-dash{ stroke:var(--teal-light); stroke-width:1.5; stroke-dasharray:5 5; fill:none; opacity:.8; }
+.draw-machine__schema .fx-label{ fill:var(--teal-light); font-family:var(--font-mono); font-size:12px; }
+.draw-machine__schema .fx-ping{ fill:var(--teal-light); animation:fx-ping 1.8s ease-in-out infinite; }
+@keyframes fx-ping{ 0%,100%{ opacity:.4; r:4; } 50%{ opacity:1; r:7; } }
+
+/* Mini-courbe temps réel — étape suivi */
+.draw-machine__pulse{ position:absolute; right:-64px; top:30%; width:120px; height:56px; overflow:visible; opacity:0; transition:opacity .6s ease; pointer-events:none; }
+.draw-machine.is-active-suivi .draw-machine__pulse{ opacity:1; }
+.draw-machine__pulse .fx-line{ fill:none; stroke:var(--teal-light); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.draw-machine__pulse .fx-dot{ fill:#fff; }
+.draw-machine.is-active-suivi .draw-machine__screen{ color:#fff; }
+.draw-machine.is-active-installation .draw-machine__side{ box-shadow:0 0 34px 8px rgba(62,156,107,.42); }
+
+/* Produits qui bougent — étape produits */
+.draw-machine.is-active-produits .draw-machine__product{ animation:product-bob 2.2s ease-in-out infinite; }
+.draw-machine.is-active-produits .draw-machine__col:nth-child(2n) .draw-machine__product{ animation-delay:.25s; }
+.draw-machine.is-active-produits .draw-machine__col:nth-child(3n) .draw-machine__product{ animation-delay:.5s; }
+.draw-machine.is-active-produits .draw-machine__col:nth-child(4n) .draw-machine__product{ animation-delay:.75s; }
+@keyframes product-bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
+
+/* Réapprovisionnement */
+.draw-machine.is-active-reappro .draw-machine__door{ animation:door-cycle 5.5s cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes door-cycle{ 0%,6%{ transform:rotateY(0deg); } 28%,72%{ transform:rotateY(-34deg); } 94%,100%{ transform:rotateY(0deg); } }
+.draw-machine.is-active-reappro .draw-machine__product{ animation:product-restock 5.5s ease infinite; animation-delay:calc(var(--seed) * 70ms); }
+@keyframes product-restock{ 0%,22%{ opacity:1; transform:scale(1); } 34%,66%{ opacity:0; transform:scale(.5); } 82%,100%{ opacity:1; transform:scale(1); } }
+
+/* ============================================================
+   12b. PANNE PUIS RÉPARATION — cycle de 9 s (étape maintenance)
+   ============================================================ */
+.draw-machine__fault{
+  position:absolute; inset:-70px; z-index:6; pointer-events:none; opacity:0; border-radius:40px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(236,72,44,.62) 0%, rgba(198,48,28,.3) 34%, transparent 62%),
+    radial-gradient(circle at 88% 18%, rgba(255,120,70,.45), transparent 32%);
+  mix-blend-mode:screen;
+}
+.draw-machine__crack{ position:absolute; inset:0; width:100%; height:100%; z-index:5; pointer-events:none; opacity:0; }
+.draw-machine__crack path{
+  fill:none; stroke:rgba(255,255,255,.9); stroke-width:1.5; stroke-linecap:round;
+  stroke-dasharray:600; stroke-dashoffset:600;
+  filter:drop-shadow(0 0 3px rgba(255,255,255,.5));
+}
+.draw-machine__sweep{
+  position:absolute; left:0; right:0; top:-45%; height:40%; z-index:6; pointer-events:none; opacity:0;
+  background:linear-gradient(180deg, transparent, rgba(62,156,107,.42), rgba(255,255,255,.5), rgba(62,156,107,.42), transparent);
+}
+.draw-machine__alert{
+  position:absolute; top:14px; left:0; right:0; z-index:4; opacity:0;
+  background:#2B0E0A; border:1px solid #7E2E20; border-radius:5px; padding:8px 2px;
+  text-align:center; font-size:8.5px; letter-spacing:.07em; color:#FF8368;
+  box-shadow:inset 0 0 8px rgba(255,90,60,.5);
+}
+.draw-machine__sparks{ position:absolute; right:14px; top:32%; z-index:7; pointer-events:none; width:40px; height:70px; }
+.draw-machine__sparks span{
+  position:absolute; width:4px; height:4px; border-radius:50%; background:#FFDCA6; opacity:0;
+  box-shadow:0 0 9px 2px rgba(255,168,72,.85);
+}
+.draw-machine__sparks span:nth-child(1){ left:4px; top:8px; }
+.draw-machine__sparks span:nth-child(2){ left:22px; top:30px; }
+.draw-machine__sparks span:nth-child(3){ left:10px; top:54px; }
+
+.draw-machine.is-active-maintenance .draw-machine__cabinet{ animation:mnt-shake 9s linear infinite; }
+@keyframes mnt-shake{
+  0%,8%   { transform:translate(0,0) rotate(0deg); }
+  9%      { transform:translate(-6px,2px) rotate(-.7deg); }
+  10.5%   { transform:translate(6px,-3px) rotate(.7deg); }
+  12%     { transform:translate(-5px,2px) rotate(-.5deg); }
+  13.5%   { transform:translate(4px,-2px) rotate(.4deg); }
+  15%     { transform:translate(-3px,1px) rotate(-.3deg); }
+  16.5%   { transform:translate(2px,-1px) rotate(.2deg); }
+  18%,54% { transform:translate(0,3px) rotate(-.6deg); }
+  62%     { transform:translate(0,1px) rotate(-.2deg); }
+  70%,100%{ transform:translate(0,0) rotate(0deg); }
+}
+.draw-machine.is-active-maintenance .draw-machine__fault{ animation:mnt-fault 9s linear infinite; }
+@keyframes mnt-fault{
+  0%,8%{ opacity:0; } 9%{ opacity:1; } 11%{ opacity:.25; } 13%{ opacity:1; }
+  15%{ opacity:.4; } 17%,50%{ opacity:.75; } 56%{ opacity:.3; } 62%,100%{ opacity:0; }
+}
+.draw-machine.is-active-maintenance .draw-machine__crack{ animation:mnt-crack 9s linear infinite; }
+@keyframes mnt-crack{ 0%,8.5%{ opacity:0; } 9%,54%{ opacity:1; } 63%,100%{ opacity:0; } }
+.draw-machine.is-active-maintenance .draw-machine__crack path{ animation:mnt-crack-draw 9s linear infinite; }
+@keyframes mnt-crack-draw{ 0%,9%{ stroke-dashoffset:600; } 19%,58%{ stroke-dashoffset:0; } 68%,100%{ stroke-dashoffset:600; } }
+.draw-machine.is-active-maintenance .draw-machine__sweep{ animation:mnt-sweep 9s linear infinite; }
+@keyframes mnt-sweep{
+  0%,53%  { opacity:0; top:-45%; }
+  55%     { opacity:1; top:-45%; }
+  67%     { opacity:1; top:105%; }
+  70%,100%{ opacity:0; top:105%; }
+}
+.draw-machine.is-active-maintenance .draw-machine__alert{ animation:mnt-alert 9s linear infinite; }
+@keyframes mnt-alert{
+  0%,8.5%{ opacity:0; }
+  9%{ opacity:1; } 10.5%{ opacity:.15; } 12%{ opacity:1; } 13.5%{ opacity:.15; }
+  15%{ opacity:1; } 24%{ opacity:1; } 26%{ opacity:.2; } 28%{ opacity:1; }
+  40%{ opacity:1; } 42%{ opacity:.2; } 44%,56%{ opacity:1; }
+  60%,100%{ opacity:0; }
+}
+.draw-machine.is-active-maintenance .draw-machine__screen{ animation:mnt-screen 9s linear infinite; }
+@keyframes mnt-screen{
+  0%,8%{ color:var(--teal-light); box-shadow:inset 0 0 8px rgba(62,156,107,.5); }
+  9%,58%{ color:#38473F; box-shadow:inset 0 0 8px rgba(0,0,0,.65); }
+  68%{ color:#fff; box-shadow:inset 0 0 16px rgba(62,156,107,.95); }
+  78%,100%{ color:var(--teal-light); box-shadow:inset 0 0 8px rgba(62,156,107,.5); }
+}
+.draw-machine.is-active-maintenance .draw-machine__product{ animation:mnt-prod 9s ease infinite; animation-delay:calc(var(--seed) * 20ms); }
+@keyframes mnt-prod{
+  0%,8%{ opacity:1; transform:translateY(0) rotate(0deg); filter:none; }
+  11%{ transform:translateY(5px) rotate(-7deg); }
+  15%,52%{ opacity:.42; transform:translateY(4px) rotate(-5deg); filter:grayscale(.75); }
+  64%,100%{ opacity:1; transform:translateY(0) rotate(0deg); filter:none; }
+}
+.draw-machine.is-active-maintenance .draw-machine__door{ animation:mnt-door 9s cubic-bezier(.65,0,.35,1) infinite; }
+@keyframes mnt-door{ 0%,44%{ transform:rotateY(0deg); } 53%,66%{ transform:rotateY(-20deg); } 76%,100%{ transform:rotateY(0deg); } }
+.draw-machine.is-active-maintenance .draw-machine__wrench-wrap{ animation:mnt-wrench 9s cubic-bezier(.34,1.3,.64,1) infinite; }
+@keyframes mnt-wrench{
+  0%,40%  { opacity:0; transform:translate(20px,-16px) scale(.65); }
+  47%,70% { opacity:1; transform:translate(0,0) scale(1); }
+  78%,100%{ opacity:0; transform:translate(20px,-16px) scale(.65); }
+}
+.draw-machine.is-active-maintenance .draw-machine__wrench{ animation:mnt-tap 1.05s ease-in-out infinite; transform-origin:72% 28%; }
+@keyframes mnt-tap{ 0%,100%{ transform:rotate(0deg); } 28%{ transform:rotate(-30deg); } 54%{ transform:rotate(13deg); } 76%{ transform:rotate(-7deg); } }
+.draw-machine.is-active-maintenance .draw-machine__side{ animation:mnt-ok 9s ease infinite; }
+@keyframes mnt-ok{ 0%,64%{ box-shadow:none; } 71%{ box-shadow:0 0 36px 9px rgba(62,156,107,.55); } 84%,100%{ box-shadow:none; } }
+/* Le halo vert d'ambiance s'éteint pendant la panne et revient à la remise en service */
+.draw-machine.is-active-maintenance ~ .parallax-decouvrir__glow{ animation:mnt-glow 9s linear infinite; }
+@keyframes mnt-glow{ 0%,8%{ opacity:.55; } 10%,54%{ opacity:.1; } 68%{ opacity:.85; } 80%,100%{ opacity:.55; } }
+.draw-machine.is-active-maintenance .draw-machine__sparks span{ animation:mnt-spark 9s linear infinite; }
+.draw-machine.is-active-maintenance .draw-machine__sparks span:nth-child(2){ animation-delay:.35s; }
+.draw-machine.is-active-maintenance .draw-machine__sparks span:nth-child(3){ animation-delay:.7s; }
+@keyframes mnt-spark{
+  0%,8.6%{ opacity:0; transform:scale(.4); }
+  9.4%{ opacity:1; transform:scale(1.5); }
+  10.6%{ opacity:0; transform:scale(.4); }
+  22%{ opacity:0; } 23%{ opacity:1; transform:scale(1.3); } 24.4%{ opacity:0; }
+  46%{ opacity:0; } 47%{ opacity:.9; transform:scale(1.2); } 48.4%,100%{ opacity:0; transform:scale(.4); }
+}
+.draw-machine__wrench-wrap{ position:absolute; right:-30px; top:-26px; width:34px; height:34px; color:var(--teal-light); opacity:0; }
+.draw-machine__wrench{ width:100%; height:100%; display:block; }
 
 @media (max-width:900px){
-  .hero .wrap{ grid-template-columns:1fr; }
-  .steps{ grid-template-columns:1fr; gap:36px; }
-  .benefits{ grid-template-columns:1fr; }
-  .support{ grid-template-columns:1fr; }
-  .contact{ grid-template-columns:1fr; }
+  .draw-machine{ max-width:78vw; }
+  .draw-machine__schema, .draw-machine__pulse{ display:none; }
 }
 
+/* Textes en scrollytelling */
+.parallax-decouvrir__steps{ position:relative; z-index:2; margin-top:-100vh; }
+.scroll-step{ min-height:92vh; display:flex; flex-direction:column; justify-content:center; padding:20px 0; max-width:470px; }
+.scroll-step:first-child{ padding-top:120px; }
+.scroll-step:last-child{ min-height:70vh; }
+.scroll-step.is-right{ margin-left:auto; }
+.scroll-step__icon-wrap{
+  display:flex; align-items:center; justify-content:center; width:54px; height:54px; border-radius:13px;
+  background:rgba(62,156,107,.12); border:1px solid rgba(62,156,107,.28); margin-bottom:18px;
+  opacity:.3; transform:scale(.85); transition:opacity .5s ease, transform .5s ease, background-color .5s ease, box-shadow .5s ease;
+}
+.scroll-step.is-active .scroll-step__icon-wrap{ opacity:1; transform:scale(1); background:rgba(62,156,107,.18); box-shadow:0 0 30px rgba(62,156,107,.3); }
+.scroll-step__icon{ width:26px; height:26px; color:var(--teal-light); }
+.scroll-step__stat{ font-family:var(--font-mono); font-size:12px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--teal-light); opacity:.25; transition:opacity .5s ease; }
+.scroll-step.is-active .scroll-step__stat{ opacity:1; }
+.scroll-step__meta{ display:flex; align-items:center; gap:12px; margin-top:10px; }
+.scroll-step__num{
+  font-family:var(--font-mono); font-size:12.5px; font-weight:600; color:#fff; background:rgba(255,255,255,.13);
+  width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  transition:background-color .4s ease, transform .4s ease;
+}
+.scroll-step.is-active .scroll-step__num{ background:var(--teal); transform:scale(1.1); }
+.scroll-step__code{ font-family:var(--font-mono); font-size:12px; color:#7E8D85; letter-spacing:.05em; text-transform:uppercase; transition:color .4s ease; }
+.scroll-step.is-active .scroll-step__code{ color:var(--teal-light); }
+.scroll-step__track{ height:2px; flex:1; background:rgba(255,255,255,.13); border-radius:2px; overflow:hidden; max-width:58px; }
+.scroll-step__track span{ display:block; height:100%; width:0; background:var(--teal-light); transition:width .6s ease; }
+.scroll-step.is-active .scroll-step__track span{ width:100%; }
+.scroll-step h3{ font-size:clamp(26px,3vw,34px); margin-top:14px; opacity:.2; transform:translateY(20px); color:#fff; transition:opacity .6s var(--ease), transform .6s var(--ease); }
+.scroll-step p{ margin-top:14px; color:#BDCBC3; font-size:17px; max-width:42ch; opacity:0; transform:translateY(20px); transition:opacity .6s var(--ease) .1s, transform .6s var(--ease) .1s; }
+.scroll-step.is-active h3{ opacity:1; transform:translateY(0); }
+.scroll-step.is-active p{ opacity:1; transform:translateY(0); }
+@media (max-width:900px){
+  .parallax-decouvrir__scrim, .parallax-decouvrir__scrim.is-right{ background:linear-gradient(180deg, rgba(12,22,17,.5) 0%, rgba(12,22,17,.9) 55%, rgba(12,22,17,.96) 100%); }
+  .scroll-step, .scroll-step.is-right{ min-height:80vh; max-width:none; margin-left:0; }
+  .scroll-step:first-child{ padding-top:60px; }
+}
+
+/* ============================================================
+   13. AVANTAGES PARTENAIRE
+   ============================================================ */
+.adv-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--deep-line); border:1px solid var(--deep-line); border-radius:var(--radius-m); overflow:hidden; }
+.adv{ background:#132218; padding:32px 28px 34px; transition:background-color .3s ease; }
+.adv:hover{ background:#182B1F; }
+.adv__n{ font-family:var(--font-mono); font-size:12px; color:var(--teal-light); letter-spacing:.08em; }
+.adv h3{ font-size:18px; margin-top:14px; color:#fff; }
+.adv p{ margin-top:10px; color:var(--deep-ink); font-size:15px; line-height:1.62; }
+@media (max-width:1000px){ .adv-grid{ grid-template-columns:1fr 1fr; } }
+@media (max-width:640px){ .adv-grid{ grid-template-columns:1fr; } }
+
+/* ============================================================
+   14. PRODUITS
+   ============================================================ */
+.prod-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.prod{ background:#fff; border:1px solid var(--line); border-radius:var(--radius-m); padding:28px 26px 30px; transition:transform .3s var(--ease), box-shadow .3s var(--ease); }
+.prod:hover{ transform:translateY(-4px); box-shadow:var(--shadow-m); }
+.prod__head{ display:flex; align-items:center; gap:12px; }
+.prod__head .icon{ width:22px; height:22px; color:var(--teal); }
+.prod h3{ font-size:17.5px; }
+.prod p{ margin-top:10px; color:var(--ink-soft); font-size:14.5px; }
+.chips{ display:flex; flex-wrap:wrap; gap:7px; margin-top:16px; }
+.chip{
+  font-size:13px; color:var(--ink-soft); background:var(--surface-alt); border:1px solid var(--line-soft);
+  padding:5px 11px; border-radius:999px; transition:background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+.prod:hover .chip{ background:var(--teal-tint); border-color:transparent; color:var(--teal-dark); }
+.prod-foot{ margin-top:26px; font-size:15px; color:var(--ink-soft); }
+@media (max-width:940px){ .prod-grid{ grid-template-columns:1fr; } }
+
+/* ============================================================
+   15. À PROPOS
+   ============================================================ */
+.about__quote{
+  font-family:var(--font-display); font-size:clamp(21px,2.4vw,29px); line-height:1.35; letter-spacing:-0.02em;
+  color:var(--teal-dark); font-weight:500;
+}
+.about__quote em{ font-family:var(--font-body); font-style:italic; color:var(--teal); }
+.about__body p{ color:var(--ink-soft); font-size:16.5px; line-height:1.7; }
+.about__body p + p{ margin-top:16px; }
+.about__sign{ margin-top:26px; display:flex; align-items:center; gap:14px; padding-top:22px; border-top:1px solid var(--line); }
+.about__avatar{
+  width:46px; height:46px; border-radius:50%; background:var(--teal-dark); color:#fff; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-weight:600; font-size:16px; letter-spacing:0;
+}
+.about__sign div strong{ display:block; font-family:var(--font-display); font-size:15.5px; color:var(--teal-dark); }
+.about__sign div span{ display:block; font-size:14px; color:var(--ink-faint); }
+.about__facts{ display:grid; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden; margin-top:30px; }
+.about__fact{ background:#fff; padding:20px 24px; display:flex; gap:13px; align-items:flex-start; }
+.about__fact .icon{ color:var(--teal); margin-top:2px; width:19px; height:19px; }
+.about__fact strong{ display:block; font-family:var(--font-display); font-size:15px; color:var(--teal-dark); }
+.about__fact span{ display:block; font-size:14.5px; color:var(--ink-soft); margin-top:2px; line-height:1.5; }
+
+/* ============================================================
+   16. FAQ
+   ============================================================ */
+.faq{ max-width:900px; margin:0 auto; border-top:1px solid var(--line); }
+.faq__item{ border-bottom:1px solid var(--line); }
+.faq__q{
+  width:100%; background:none; border:none; text-align:left; padding:24px 44px 24px 0; position:relative;
+  font-family:var(--font-display); font-size:18px; font-weight:600; letter-spacing:-0.018em; color:var(--teal-dark);
+  transition:color .2s ease; line-height:1.35;
+}
+.faq__q:hover{ color:var(--teal); }
+.faq__q::after,.faq__q::before{
+  content:''; position:absolute; right:8px; top:50%; background:var(--teal); transition:transform .3s var(--ease), opacity .3s ease;
+}
+.faq__q::before{ width:15px; height:1.8px; margin-top:-.9px; }
+.faq__q::after{ width:1.8px; height:15px; margin-top:-7.5px; margin-right:6.6px; }
+.faq__item.is-open .faq__q::after{ transform:rotate(90deg); opacity:0; }
+.faq__a{ overflow:hidden; height:0; transition:height .35s var(--ease); }
+.faq__a-inner{ padding:0 60px 26px 0; color:var(--ink-soft); font-size:16px; line-height:1.68; }
+.faq__a-inner strong{ color:var(--teal-dark); }
+@media (max-width:600px){ .faq__q{ font-size:16.5px; } .faq__a-inner{ padding-right:24px; } }
+
+/* ============================================================
+   17. CTA FINALE + FORMULAIRE
+   ============================================================ */
+.cta{ background:var(--teal-dark); position:relative; overflow:hidden; }
+.cta::before{
+  content:''; position:absolute; top:-260px; left:-160px; width:760px; height:760px; border-radius:50%;
+  background:radial-gradient(circle, rgba(62,156,107,.24), transparent 66%); pointer-events:none;
+}
+.cta .wrap{ position:relative; z-index:1; display:grid; grid-template-columns:.92fr 1.08fr; gap:clamp(40px,5vw,76px); align-items:start; }
+.cta h2{ color:#fff; }
+.cta__lede{ margin-top:20px; color:#C3D5C9; font-size:17.5px; line-height:1.62; }
+.cta__list{ margin-top:30px; display:flex; flex-direction:column; gap:14px; }
+.cta__list li{ display:flex; gap:12px; align-items:flex-start; color:#DCE7DF; font-size:15.5px; line-height:1.5; }
+.cta__list .icon{ color:var(--teal-light); margin-top:3px; width:19px; height:19px; }
+.cta__direct{ margin-top:32px; padding-top:26px; border-top:1px solid rgba(255,255,255,.16); }
+.cta__direct span{ display:block; font-family:var(--font-mono); font-size:11.5px; letter-spacing:.09em; text-transform:uppercase; color:#8FA898; }
+.cta__direct a{ display:inline-flex; align-items:center; gap:10px; margin-top:10px; color:#fff; font-family:var(--font-display); font-size:17px; font-weight:600; border-bottom:1px solid rgba(255,255,255,.3); padding-bottom:3px; transition:border-color .2s ease; }
+.cta__direct a:hover{ border-color:#fff; }
+
+.form-card{ background:#fff; border-radius:var(--radius-l); padding:clamp(26px,3vw,38px); box-shadow:var(--shadow-l); }
+.form-card h3{ font-size:21px; }
+.form-card > p{ margin-top:8px; color:var(--ink-soft); font-size:15px; }
+.form-grid{ margin-top:24px; }
+.field{ margin-bottom:16px; }
+.field label{ display:block; font-size:13px; font-weight:600; margin-bottom:7px; color:var(--ink-soft); letter-spacing:-0.005em; }
+.field input, .field select, .field textarea{
+  width:100%; padding:13px 14px; border:1px solid var(--line); border-radius:var(--radius-s);
+  background:var(--surface-alt); transition:border-color .18s ease, background-color .18s ease, box-shadow .18s ease;
+}
+.field input:hover, .field select:hover, .field textarea:hover{ border-color:#CFD8CD; }
+.field input:focus, .field select:focus, .field textarea:focus{ border-color:var(--teal); background:#fff; outline:none; box-shadow:0 0 0 3px rgba(31,107,68,.1); }
+.field textarea{ resize:vertical; min-height:100px; }
+.field-row{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.form-note{ font-size:13px; color:var(--ink-faint); margin-top:14px; line-height:1.5; }
+.form-success{ background:var(--teal-tint); color:var(--teal-dark); padding:14px 16px; border-radius:var(--radius-s); font-size:14.5px; margin-top:16px; }
+.form-error{ background:var(--red-tint); color:var(--red); padding:12px 15px; border-radius:var(--radius-s); font-size:14px; margin-top:14px; }
+@media (max-width:940px){ .cta .wrap{ grid-template-columns:1fr; } }
+@media (max-width:520px){ .field-row{ grid-template-columns:1fr; gap:0; } }
+
+/* ============================================================
+   18. FOOTER
+   ============================================================ */
+.footer{ padding:56px 0 44px; background:var(--deep); }
+.footer__top{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:26px; padding-bottom:32px; border-bottom:1px solid var(--deep-line); }
+.footer .brand__name span:first-child{ color:#fff; }
+.footer .brand__name span:last-child{ color:var(--teal-light); }
+.footer .brand__mark{ background:var(--teal); }
+.footer__tag{ margin-top:12px; color:#7E8D85; font-size:14.5px; max-width:36ch; line-height:1.55; }
+.footer__links{ display:flex; gap:30px; flex-wrap:wrap; }
+.footer__links a{ color:#A9B8AF; font-size:14.5px; transition:color .2s ease; }
+.footer__links a:hover{ color:#fff; }
+.footer__bottom{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; padding-top:26px; }
+.footer__bottom small{ color:#68776F; font-size:13px; }
+.footer__bottom a{ color:#A9B8AF; text-decoration:underline; text-underline-offset:3px; }
+
+/* ============================================================
+   19. CHAT
+   ============================================================ */
+.chatpanel{ max-width:800px; margin:0 auto; background:#fff; border:1px solid var(--line); border-radius:var(--radius-l); padding:24px; box-shadow:var(--shadow-s); }
+.chatpanel__head{ display:flex; align-items:center; gap:11px; padding-bottom:16px; border-bottom:1px solid var(--line-soft); margin-bottom:14px; }
+.chatpanel__head .icon{ color:var(--teal); }
+.chatpanel__head strong{ font-family:var(--font-display); font-size:15.5px; color:var(--teal-dark); }
+.chatpanel__head span{ font-size:13.5px; color:var(--ink-faint); }
+.chatpanel__messages{ display:flex; flex-direction:column; gap:13px; max-height:380px; overflow-y:auto; padding:4px 4px 14px; scroll-behavior:smooth; }
+.msg{ max-width:82%; padding:12px 16px; border-radius:14px; font-size:15px; line-height:1.55; opacity:0; transform:translateY(8px); animation:msg-in .35s ease forwards; }
+@keyframes msg-in{ to{ opacity:1; transform:translateY(0); } }
+.msg--assistant{ align-self:flex-start; background:var(--surface-alt); color:var(--ink); border-bottom-left-radius:4px; }
+.msg--user{ align-self:flex-end; background:var(--teal-dark); color:#fff; border-bottom-right-radius:4px; }
+.msg--error{ align-self:flex-start; background:var(--red-tint); color:var(--red); border-bottom-left-radius:4px; }
+.typing{ align-self:flex-start; display:flex; gap:4px; padding:14px 16px; background:var(--surface-alt); border-radius:14px; border-bottom-left-radius:4px; }
+.typing span{ width:6px; height:6px; border-radius:50%; background:var(--teal-dark); opacity:.5; animation:typing-bounce 1s ease-in-out infinite; }
+.typing span:nth-child(2){ animation-delay:.15s; }
+.typing span:nth-child(3){ animation-delay:.3s; }
+@keyframes typing-bounce{ 0%,60%,100%{ transform:translateY(0); opacity:.5; } 30%{ transform:translateY(-5px); opacity:1; } }
+.chatpanel__inputrow{ display:flex; gap:10px; align-items:flex-end; border-top:1px solid var(--line-soft); padding-top:16px; }
+.chatpanel__inputrow textarea{ flex:1; resize:none; border:1px solid var(--line); border-radius:var(--radius-s); padding:12px 14px; background:var(--surface-alt); max-height:120px; }
+.chatpanel__inputrow textarea:focus{ border-color:var(--teal); background:#fff; outline:none; }
+.chatpanel__inputrow .btn--icon{ width:46px; height:46px; flex-shrink:0; }
+
+.chatfab{
+  position:fixed; right:22px; bottom:22px; z-index:50; width:54px; height:54px; border-radius:50%;
+  background:var(--teal-dark); border:none; display:flex; align-items:center; justify-content:center;
+  box-shadow:0 10px 28px rgba(18,61,40,.35); transition:transform .2s var(--ease), box-shadow .3s ease;
+}
+.chatfab:hover{ transform:scale(1.07); box-shadow:0 14px 34px rgba(18,61,40,.45); }
+@media (max-width:640px){ .chatpanel__messages{ max-height:320px; } .msg{ max-width:90%; } .chatfab{ right:16px; bottom:16px; } }
+
+/* ============================================================
+   20. RÉVÉLATIONS AU DÉFILEMENT
+   ============================================================ */
+.reveal{ opacity:0; transform:translateY(22px); transition:opacity .75s var(--ease), transform .75s var(--ease); }
+.reveal.is-visible{ opacity:1; transform:translateY(0); }
+.reveal[data-i]{ transition-delay:calc(var(--i,0) * 80ms); }
+.reveal-hero{ opacity:0; transform:translateY(14px); animation:hero-in .8s var(--ease) forwards; animation-delay:var(--d,0ms); }
+@keyframes hero-in{ to{ opacity:1; transform:translateY(0); } }
+
+/* ============================================================
+   21. APERÇU MOBILE / ESPACE PRO / ADMIN (inchangé)
+   ============================================================ */
 /* ============================================================
    APERÇU MOBILE (depuis un écran PC)
    ============================================================ */
@@ -453,243 +1004,6 @@ img{ max-width:100%; display:block; }
   background:linear-gradient(90deg, var(--teal), var(--teal-light));
   transition:width .1s linear;
 }
-
-/* ============================================================
-   SCROLL-REVEAL ANIMATIONS
-   ============================================================ */
-.reveal{ opacity:0; transform:translateY(26px); transition:opacity .7s cubic-bezier(.16,.8,.3,1), transform .7s cubic-bezier(.16,.8,.3,1); }
-.reveal.is-visible{ opacity:1; transform:translateY(0); }
-.benefits .benefit.reveal{ transition-delay:calc(var(--i,0) * 70ms); }
-.steps .step.reveal{ transition-delay:calc(var(--i,0) * 90ms); }
-
-.reveal-hero{ opacity:0; transform:translateY(16px); animation:hero-in .7s cubic-bezier(.16,.8,.3,1) forwards; animation-delay:var(--d,0ms); }
-@keyframes hero-in{ to{ opacity:1; transform:translateY(0); } }
-
-/* card lift on hover, life on interaction */
-.benefit{ transition:transform .25s ease, box-shadow .25s ease, background-color .25s ease; }
-.benefit:hover{ transform:translateY(-4px); box-shadow:var(--shadow-s); background:var(--teal-tint); z-index:1; position:relative; }
-.step{ transition:transform .25s ease; }
-.step:hover{ transform:translateY(-3px); }
-.step:hover .step__num{ color:var(--teal-light); }
-
-.btn{ transform:translateY(0); }
-.btn:hover{ transform:translateY(-2px); box-shadow:0 6px 16px rgba(22,35,43,.14); }
-.btn:active{ transform:translateY(0); box-shadow:none; }
-
-.pin{ transition:transform .18s cubic-bezier(.34,1.56,.64,1), background-color .2s ease; }
-.nav__link{ position:relative; }
-.nav__link::after{ content:''; position:absolute; left:0; right:100%; bottom:-4px; height:2px; background:var(--teal); transition:right .25s ease; }
-.nav__link:hover::after{ right:0; }
-
-@keyframes board-float{ 0%,100%{ transform:rotate(-2deg) translateY(0); } 50%{ transform:rotate(-2deg) translateY(-8px); } }
-
-/* ============================================================
-   CHAT / ASSISTANT IA
-   ============================================================ */
-.chatpanel{ max-width:760px; margin:0 auto; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:24px; box-shadow:var(--shadow-s); }
-.chatpanel__messages{ display:flex; flex-direction:column; gap:14px; max-height:420px; overflow-y:auto; padding:4px 4px 14px; scroll-behavior:smooth; }
-.msg{ max-width:80%; padding:12px 16px; border-radius:16px; font-size:14.5px; line-height:1.5; opacity:0; transform:translateY(10px); animation:msg-in .35s ease forwards; }
-@keyframes msg-in{ to{ opacity:1; transform:translateY(0); } }
-.msg--assistant{ align-self:flex-start; background:var(--teal-tint); color:var(--ink); border-bottom-left-radius:4px; }
-.msg--user{ align-self:flex-end; background:var(--ink); color:#fff; border-bottom-right-radius:4px; }
-.msg--error{ align-self:flex-start; background:var(--red-tint); color:var(--red); border-bottom-left-radius:4px; }
-.typing{ align-self:flex-start; display:flex; gap:4px; padding:14px 16px; background:var(--teal-tint); border-radius:16px; border-bottom-left-radius:4px; }
-.typing span{ width:6px; height:6px; border-radius:50%; background:var(--teal-dark); opacity:.5; animation:typing-bounce 1s ease-in-out infinite; }
-.typing span:nth-child(2){ animation-delay:.15s; }
-.typing span:nth-child(3){ animation-delay:.3s; }
-@keyframes typing-bounce{ 0%,60%,100%{ transform:translateY(0); opacity:.5; } 30%{ transform:translateY(-5px); opacity:1; } }
-.chatpanel__inputrow{ display:flex; gap:10px; align-items:flex-end; border-top:1px solid var(--line); padding-top:16px; }
-.chatpanel__inputrow textarea{ flex:1; resize:none; border:1px solid var(--line); border-radius:var(--radius-s); padding:12px 14px; background:var(--bg); max-height:120px; }
-.chatpanel__inputrow textarea:focus{ border-color:var(--teal); outline:none; }
-.chatpanel__inputrow .btn--icon{ width:44px; height:44px; flex-shrink:0; }
-
-.chatfab{
-  position:fixed; right:24px; bottom:24px; z-index:50; width:56px; height:56px; border-radius:50%;
-  background:var(--teal); border:none; display:flex; align-items:center; justify-content:center;
-  box-shadow:0 10px 24px rgba(31,107,68,.35); animation:fab-pulse 2.6s ease-in-out infinite;
-  transition:transform .2s ease;
-}
-.chatfab:hover{ transform:scale(1.08); }
-@keyframes fab-pulse{ 0%,100%{ box-shadow:0 10px 24px rgba(31,107,68,.35); } 50%{ box-shadow:0 10px 30px rgba(31,107,68,.55); } }
-
-@media (max-width:640px){
-  .chatpanel__messages{ max-height:340px; }
-  .msg{ max-width:90%; }
-}
-
-/* ============================================================
-   DISTRIBUTEUR INTERACTIF — fond plein écran + parallaxe
-   ============================================================ */
-.parallax-decouvrir{ position:relative; background:#05090b; background-image:none; }
-
-.parallax-decouvrir__bg{ position:sticky; top:0; height:100vh; width:100%; overflow:hidden; z-index:0; }
-.parallax-decouvrir__scrim{
-  position:absolute; inset:0; transition:background 1.1s ease; z-index:2;
-  background:linear-gradient(100deg, rgba(5,9,11,.9) 0%, rgba(5,9,11,.72) 34%, rgba(5,9,11,.2) 64%, rgba(5,9,11,0) 100%);
-}
-.parallax-decouvrir__scrim.is-right{
-  background:linear-gradient(260deg, rgba(5,9,11,.9) 0%, rgba(5,9,11,.72) 34%, rgba(5,9,11,.2) 64%, rgba(5,9,11,0) 100%);
-}
-.parallax-decouvrir__glow{
-  position:absolute; inset:0; pointer-events:none; mix-blend-mode:screen; opacity:.6; transition:opacity .6s ease; z-index:1;
-  background:radial-gradient(circle at 50% 50%, rgba(79,174,124,.4), transparent 55%);
-}
-
-/* ============================================================
-   DISTRIBUTEUR DESSINÉ — animable (porte, produits, casiers)
-   ============================================================ */
-.draw-machine{
-  position:absolute; top:50%; left:50%; width:420px; max-width:72vw;
-  transform:translate(-50%,-50%) scale(1.02); will-change:transform; z-index:1;
-}
-.draw-machine__cabinet{
-  position:relative; display:flex; gap:10px; background:linear-gradient(180deg,#171f24,#0d1417);
-  border:1px solid #2a343a; border-radius:20px; padding:14px; box-shadow:0 40px 90px rgba(0,0,0,.6);
-  perspective:1000px;
-}
-.draw-machine__door{
-  flex:1; position:relative; transform-origin:left center; transition:transform 1.2s cubic-bezier(.65,0,.35,1);
-  transform-style:preserve-3d;
-}
-.draw-machine__glass{
-  position:relative; overflow:hidden; border-radius:10px; min-height:380px;
-  background:linear-gradient(160deg,#0A1114 0%,#182831 55%,#0A1114 100%); border:1px solid #24313a;
-}
-.draw-machine__shine{
-  position:absolute; top:0; left:-40%; width:35%; height:100%;
-  background:linear-gradient(100deg, transparent, rgba(255,255,255,.08), transparent);
-  transform:skewX(-12deg); animation:glass-shimmer 6s ease-in-out infinite;
-}
-@keyframes glass-shimmer{ 0%,100%{ left:-40%; } 50%{ left:120%; } }
-.draw-machine__cols{ position:relative; z-index:1; display:grid; grid-template-columns:repeat(5,1fr); gap:8px; padding:14px 12px; height:100%; }
-.draw-machine__col{ display:flex; flex-direction:column; gap:6px; justify-content:flex-start; }
-.draw-machine__product{ transition:opacity .5s ease, transform .5s ease; }
-
-.draw-machine__side{ width:64px; flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:10px; padding:14px 0; position:relative; transition:box-shadow .5s ease; border-radius:10px; }
-.draw-machine__screen{
-  width:100%; background:#0F1E16; border:1px solid #1E3A2C; border-radius:5px; padding:8px 2px;
-  text-align:center; font-size:9px; color:var(--teal-light); letter-spacing:.04em;
-  box-shadow:inset 0 0 8px rgba(79,174,124,.5); transition:color .3s ease;
-}
-.draw-machine__keypad{ display:grid; grid-template-columns:repeat(3,1fr); gap:5px; }
-.draw-machine__keypad span{ width:11px; height:11px; border-radius:3px; background:#1A272D; border:1px solid #2C3F48; }
-.draw-machine__coinslot{ width:70%; height:4px; background:#1A272D; border-radius:2px; margin-top:auto; }
-
-.draw-machine__legs{ display:flex; justify-content:space-between; padding:12px 26px 0; }
-.draw-machine__legs span{ width:14px; height:14px; border-radius:50%; background:#3a4650; }
-
-/* Produits réalistes (canette / bouteille / snack), réutilisés dans les casiers */
-.draw-machine__product{ position:relative; width:100%; }
-.draw-machine__product--can{ aspect-ratio:.58; border-radius:4px 4px 3px 3px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.1); }
-.draw-machine__product--can::before{ content:''; position:absolute; top:0; left:0; right:0; height:14%; background:rgba(255,255,255,.4); border-radius:4px 4px 0 0; }
-.draw-machine__product--bottle{ aspect-ratio:.42; clip-path:polygon(30% 0%,70% 0%,70% 12%,100% 26%,100% 100%,0% 100%,0% 26%,30% 12%); box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
-.draw-machine__product--bag{ aspect-ratio:.72; border-radius:9px 9px 5px 5px; box-shadow:inset 0 0 0 1px rgba(255,255,255,.08); }
-
-/* Schéma de mesures — étape emplacement */
-.draw-machine__schema{ position:absolute; left:-30px; bottom:-10px; width:120%; height:120%; overflow:visible; opacity:0; transition:opacity .6s ease; pointer-events:none; }
-.draw-machine.is-active-emplacement .draw-machine__schema{ opacity:1; }
-.draw-machine__schema .fx-dash{ stroke:var(--teal-light); stroke-width:1.5; stroke-dasharray:5 5; fill:none; opacity:.8; }
-.draw-machine__schema .fx-label{ fill:var(--teal-light); font-family:var(--font-mono); font-size:12px; }
-.draw-machine__schema .fx-ping{ fill:var(--teal-light); animation:fx-ping 1.8s ease-in-out infinite; }
-@keyframes fx-ping{ 0%,100%{ opacity:.4; r:4; } 50%{ opacity:1; r:7; } }
-
-/* Mini-courbe temps réel — étape suivi */
-.draw-machine__pulse{ position:absolute; right:-64px; top:30%; width:120px; height:56px; overflow:visible; opacity:0; transition:opacity .6s ease; pointer-events:none; }
-.draw-machine.is-active-suivi .draw-machine__pulse{ opacity:1; }
-.draw-machine__pulse .fx-line{ fill:none; stroke:var(--teal-light); stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
-.draw-machine__pulse .fx-dot{ fill:#fff; }
-.draw-machine.is-active-suivi .draw-machine__screen{ color:#fff; }
-
-/* Clé — étape maintenance / halo — étape installation */
-.draw-machine__wrench-wrap{ position:absolute; right:-30px; top:-26px; width:32px; height:32px; color:var(--teal-light); opacity:0; transition:opacity .5s ease; }
-.draw-machine__wrench{ width:100%; height:100%; display:block; }
-.draw-machine.is-active-maintenance .draw-machine__wrench-wrap{ opacity:1; }
-.draw-machine.is-active-maintenance .draw-machine__wrench{ animation:fx-tap 2.4s ease-in-out infinite; transform-origin:70% 30%; }
-@keyframes fx-tap{ 0%,80%,100%{ transform:rotate(0deg); } 88%{ transform:rotate(-18deg); } 94%{ transform:rotate(10deg); } }
-.draw-machine.is-active-installation .draw-machine__side{ box-shadow:0 0 34px 8px rgba(79,174,124,.45); }
-
-/* Produits qui bougent — étape produits */
-.draw-machine.is-active-produits .draw-machine__product{ animation:product-bob 2.2s ease-in-out infinite; }
-.draw-machine.is-active-produits .draw-machine__col:nth-child(2n) .draw-machine__product{ animation-delay:.25s; }
-.draw-machine.is-active-produits .draw-machine__col:nth-child(3n) .draw-machine__product{ animation-delay:.5s; }
-.draw-machine.is-active-produits .draw-machine__col:nth-child(4n) .draw-machine__product{ animation-delay:.75s; }
-@keyframes product-bob{ 0%,100%{ transform:translateY(0); } 50%{ transform:translateY(-7px); } }
-
-/* Réapprovisionnement — la porte s'ouvre, les casiers se vident puis se remplissent, la porte se referme */
-.draw-machine.is-active-reappro .draw-machine__door{ animation:door-cycle 5.5s cubic-bezier(.65,0,.35,1) infinite; }
-@keyframes door-cycle{
-  0%, 6%{ transform:rotateY(0deg); }
-  28%, 72%{ transform:rotateY(-34deg); }
-  94%, 100%{ transform:rotateY(0deg); }
-}
-.draw-machine.is-active-reappro .draw-machine__product{
-  animation:product-restock 5.5s ease infinite; animation-delay:calc(var(--seed) * 70ms);
-}
-@keyframes product-restock{
-  0%, 22%{ opacity:1; transform:scale(1); }
-  34%, 66%{ opacity:0; transform:scale(.5); }
-  82%, 100%{ opacity:1; transform:scale(1); }
-}
-
-@media (max-width:900px){
-  .draw-machine{ max-width:80vw; }
-  .draw-machine__schema, .draw-machine__pulse, .draw-machine__wrench-wrap{ display:none; }
-}
-
-.parallax-decouvrir__steps{ position:relative; z-index:2; margin-top:-100vh; }
-.scroll-step{
-  min-height:92vh; display:flex; flex-direction:column; justify-content:center; padding:20px 0;
-  max-width:480px;
-}
-.scroll-step:first-child{ padding-top:120px; }
-.scroll-step:last-child{ min-height:70vh; }
-.scroll-step.is-right{ margin-left:auto; }
-
-.scroll-step__icon-wrap{
-  display:flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:16px;
-  background:rgba(79,174,124,.12); border:1px solid rgba(79,174,124,.3); margin-bottom:18px;
-  opacity:.3; transform:scale(.85); transition:opacity .5s ease, transform .5s ease, background-color .5s ease, box-shadow .5s ease;
-}
-.scroll-step.is-active .scroll-step__icon-wrap{
-  opacity:1; transform:scale(1); background:rgba(79,174,124,.18); box-shadow:0 0 30px rgba(79,174,124,.35);
-}
-.scroll-step__icon{ width:28px; height:28px; color:var(--teal-light); }
-
-.scroll-step__stat{
-  font-family:var(--font-mono); font-size:13px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
-  color:var(--teal-light); opacity:.25; transition:opacity .5s ease;
-}
-.scroll-step.is-active .scroll-step__stat{ opacity:1; }
-
-.scroll-step__meta{ display:flex; align-items:center; gap:12px; margin-top:10px; }
-.scroll-step__num{
-  font-family:var(--font-mono); font-size:13px; font-weight:700; color:#fff; background:rgba(255,255,255,.14);
-  width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
-  transition:background-color .4s ease, transform .4s ease;
-}
-.scroll-step.is-active .scroll-step__num{ background:var(--teal); transform:scale(1.1); }
-.scroll-step__code{ font-family:var(--font-mono); font-size:12.5px; color:#8CA0A8; letter-spacing:.04em; text-transform:uppercase; transition:color .4s ease; }
-.scroll-step.is-active .scroll-step__code{ color:var(--teal-light); }
-.scroll-step__track{ height:2px; flex:1; background:rgba(255,255,255,.14); border-radius:2px; overflow:hidden; max-width:60px; }
-.scroll-step__track span{ display:block; height:100%; width:0; background:var(--teal-light); transition:width .6s ease; }
-.scroll-step.is-active .scroll-step__track span{ width:100%; }
-
-.scroll-step h3{
-  font-size:32px; margin-top:14px; opacity:.2; transform:translateY(22px); color:#fff;
-  transition:opacity .6s cubic-bezier(.16,.8,.3,1), transform .6s cubic-bezier(.16,.8,.3,1);
-}
-.scroll-step p{
-  margin-top:14px; color:#C7D2D5; font-size:17px; max-width:42ch; opacity:0; transform:translateY(22px);
-  transition:opacity .6s cubic-bezier(.16,.8,.3,1) .1s, transform .6s cubic-bezier(.16,.8,.3,1) .1s;
-}
-.scroll-step.is-active h3{ opacity:1; transform:translateY(0); }
-.scroll-step.is-active p{ opacity:1; transform:translateY(0); }
-
-@media (max-width:900px){
-  .parallax-decouvrir__scrim, .parallax-decouvrir__scrim.is-right{ background:linear-gradient(180deg, rgba(5,9,11,.55) 0%, rgba(5,9,11,.9) 55%, rgba(5,9,11,.96) 100%); }
-  .scroll-step, .scroll-step.is-right{ min-height:80vh; max-width:none; margin-left:0; }
-  .scroll-step:first-child{ padding-top:60px; }
-}
 </style>
 </head>
 <body>
@@ -699,14 +1013,18 @@ img{ max-width:100%; display:block; }
      ============================================================ -->
 <div id="publicSite">
 
-  <nav class="nav">
+  <nav class="nav" id="siteNav">
     <div class="wrap">
-      <a href="#top" class="brand"><span>CLT</span><span>Distrib</span></a>
+      <a href="#top" class="brand">
+        <span class="brand__mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span class="brand__name"><span>CLT</span><span>Distrib</span></span>
+      </a>
       <div class="nav__links">
-        <a class="nav__link" href="#comment">Comment ça marche</a>
-        <a class="nav__link" href="#avantages">Ce que je gère</a>
-        <a class="nav__link" href="#maintenance">Maintenance</a>
-        <a class="nav__link" href="#assistant">Une question ?</a>
+        <a class="nav__link" href="#service">Notre service</a>
+        <a class="nav__link" href="#emplacements">Emplacements</a>
+        <a class="nav__link" href="#etapes">Comment ça marche</a>
+        <a class="nav__link" href="#produits">Produits</a>
+        <a class="nav__link" href="#faq">FAQ</a>
       </div>
       <div class="nav__actions">
         <div class="view-toggle">
@@ -717,159 +1035,291 @@ img{ max-width:100%; display:block; }
             <svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
           </button>
         </div>
-        <a href="#assistant" class="btn btn--primary btn--sm" id="navAssistantBtn"><span class="btn-label">Écrivez-moi</span></a>
-        <button class="nav__burger" id="burgerBtn" aria-label="Ouvrir le menu">
+        <a href="#contact" class="btn btn--primary btn--sm">Étudier mon emplacement</a>
+        <button class="nav__burger" id="burgerBtn" aria-label="Ouvrir le menu" aria-expanded="false">
           <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
     </div>
     <div class="nav__mobile" id="mobileNav">
-      <a href="#comment">Comment ça marche</a>
-      <a href="#avantages">Ce que je gère</a>
-      <a href="#maintenance">Maintenance</a>
-      <a href="#assistant">Une question ?</a>
+      <a href="#service">Notre service</a>
+      <a href="#emplacements">Emplacements</a>
+      <a href="#etapes">Comment ça marche</a>
+      <a href="#produits">Produits</a>
+      <a href="#apropos">Qui sommes-nous</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact" class="btn btn--primary">Étudier mon emplacement</a>
     </div>
   </nav>
 
+  <!-- 1 — HERO ------------------------------------------------ -->
   <header class="hero" id="top">
-    <div class="hero__bg" aria-hidden="true">
-      <img src="images/distributeur.jpg" alt="Distributeur automatique CLTDistrib rempli de boissons et snacks">
-    </div>
-    <div class="hero__glow" aria-hidden="true"></div>
-    <div class="hero__scrim" aria-hidden="true"></div>
     <div class="wrap">
       <div class="hero__text">
-        <h1 class="reveal-hero" style="--d:60ms">Installer un distributeur chez vous ne devrait vous demander <em>aucun effort</em>.</h1>
-        <p class="lede reveal-hero" style="--d:140ms">Choix de l'emplacement, produits, réapprovisionnement, pannes : je m'occupe de tout, du premier échange au suivi quotidien. Ce site vous montre exactement comment, étape par étape.</p>
-        <div class="hero__cta reveal-hero" style="--d:220ms">
-          <a href="#assistant" class="btn btn--accent" id="heroAssistantBtn">Poser une question</a>
-          <a href="#comment" class="btn btn--ghost">Voir comment ça marche</a>
+        <span class="eyebrow reveal-hero" style="--d:0ms">Distribution automatique en entreprise</span>
+        <h1 class="reveal-hero" style="--d:70ms">Un distributeur automatique installé et géré chez vous&nbsp;— vous ne fournissez que <em>l'emplacement</em>.</h1>
+        <p class="lede reveal-hero" style="--d:150ms">Machine, produits, réapprovisionnement, entretien et gestion des paiements sont entièrement pris en charge par CLTDistrib. Vous n'achetez rien, vous ne gérez aucun stock : vos équipes et vos visiteurs trouvent simplement de quoi boire et manger sur place.</p>
+        <div class="hero__cta reveal-hero" style="--d:230ms">
+          <a href="#contact" class="btn btn--primary">Étudier votre emplacement gratuitement</a>
+          <a href="#service" class="btn btn--ghost">Découvrir notre solution</a>
+        </div>
+        <p class="hero__note reveal-hero" style="--d:300ms">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+          Étude de l'emplacement sans frais et sans engagement.
+        </p>
+      </div>
+
+      <div class="hero__visual reveal-hero" style="--d:200ms">
+        <div class="hero__frame">
+          <img src="images/distributeur.jpg" alt="Distributeur automatique de boissons et snacks installé par CLTDistrib" width="900" height="1000">
+          <span class="hero__caption">Distributeur boissons &amp; snacks</span>
+        </div>
+        <div class="hero__badge">
+          <div class="hero__badge-row">
+            <span class="hero__badge-icon">
+              <svg class="icon" viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 9.1 8 10 4.6-.9 8-5 8-10V6l-8-4z"/><path d="m9 12 2 2 4-4"/></svg>
+            </span>
+            <div>
+              <strong>Aucun investissement</strong>
+              <span>Machine, installation et entretien à notre charge.</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </header>
 
-  <section class="section section--dark" id="comment">
+  <!-- BANDEAU DE CONFIANCE ------------------------------------ -->
+  <div class="trust">
+    <div class="wrap">
+      <div class="trust__item">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h8"/><path d="M9 18h6"/></svg>
+        <div><strong>Machine fournie par nos soins</strong><span>Vous n'achetez ni ne louez aucun matériel.</span></div>
+      </div>
+      <div class="trust__item">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg>
+        <div><strong>Réassort assuré</strong><span>Nous passons remplir et contrôler la machine.</span></div>
+      </div>
+      <div class="trust__item">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg>
+        <div><strong>Entretien et dépannage</strong><span>Un seul interlocuteur en cas de problème.</span></div>
+      </div>
+      <div class="trust__item">
+        <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+        <div><strong>Paiements gérés</strong><span>Carte, sans contact et pièces, encaissement inclus.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2 — LE BESOIN ------------------------------------------- -->
+  <section class="section" id="pourquoi">
+    <div class="wrap split">
+      <div class="reveal">
+        <span class="eyebrow">Le besoin</span>
+        <h2>Une pause qui reste sur place, c'est du temps et du confort gagnés.</h2>
+        <p class="need__lead" style="margin-top:22px">Dans la plupart des sites, il n'existe aucune solution simple pour boire ou grignoter sur place.</p>
+        <p>Résultat : on sort acheter à l'extérieur, on quitte le poste plus longtemps que prévu, et un visiteur qui attend n'a rien à sa disposition. Un distributeur bien placé règle ce point sans rien changer à votre organisation.</p>
+      </div>
+      <div class="need__list reveal">
+        <div class="need__item">
+          <div class="need__item-top">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>
+            <h3>Pour vos salariés</h3>
+          </div>
+          <p>Une boisson fraîche ou un en-cas accessible à toute heure, y compris en horaires décalés, sans avoir à sortir du site ni à prévoir de la monnaie.</p>
+        </div>
+        <div class="need__item">
+          <div class="need__item-top">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M10 21v-5h4v5"/></svg>
+            <h3>Pour vos clients et visiteurs</h3>
+          </div>
+          <p>Un hall d'accueil, une salle d'attente ou un espace de réception où l'on peut patienter dans de bonnes conditions : c'est un détail que l'on remarque.</p>
+        </div>
+        <div class="need__item">
+          <div class="need__item-top">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <h3>Pour vous, côté gestion</h3>
+          </div>
+          <p>Aucun achat de matériel, aucun stock à suivre, aucune caisse à gérer. Le service fonctionne en autonomie et nous en assurons l'exploitation complète.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 — SERVICE CLÉ EN MAIN --------------------------------- -->
+  <section class="section section--alt" id="service">
     <div class="wrap">
       <div class="section__head reveal">
-        <span class="section__kicker">La méthode</span>
-        <h2>Quatre étapes, un seul interlocuteur : moi</h2>
-        <p>Pas de service client, pas de sous-traitant. Je suis là de la première visite jusqu'au dernier café servi.</p>
+        <span class="eyebrow">Notre service</span>
+        <h2>Un service clé en main, du premier repérage au suivi quotidien.</h2>
+        <p>Nous fournissons et exploitons le distributeur. Votre seule contribution : un emplacement adapté et une prise électrique.</p>
+      </div>
+      <div class="service-grid">
+        <article class="service-card reveal" data-i="0">
+          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M6 21V8l6-4 6 4v13"/><path d="M10 21v-6h4v6"/></svg></div>
+          <h3>Installation</h3>
+          <p>Nous livrons, positionnons et mettons en service la machine, puis nous testons les paiements avec vous. L'intervention se fait sans interrompre votre activité.</p>
+          <span class="service-card__tag">À notre charge</span>
+        </article>
+        <article class="service-card reveal" data-i="1">
+          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg></div>
+          <h3>Approvisionnement</h3>
+          <p>Nous remplissons la machine, contrôlons les dates de péremption et ajustons la sélection en fonction de ce qui se consomme réellement chez vous.</p>
+          <span class="service-card__tag">Passages réguliers</span>
+        </article>
+        <article class="service-card reveal" data-i="2">
+          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg></div>
+          <h3>Maintenance</h3>
+          <p>Bourrage, monnayeur, lecteur de carte, réfrigération : vous nous signalez le problème et nous intervenons. Vous n'avez ni pièce à commander ni technicien à chercher.</p>
+          <span class="service-card__tag">Un seul contact</span>
+        </article>
+        <article class="service-card reveal" data-i="3">
+          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 11h18"/><path d="M5 11V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><path d="M6 11v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8"/><path d="M10 15h4"/></svg></div>
+          <h3>Nettoyage</h3>
+          <p>À chaque passage, la façade, la vitre et la zone de service sont nettoyées. La machine reste présentable, y compris dans un espace vu par vos clients.</p>
+          <span class="service-card__tag">À chaque visite</span>
+        </article>
+        <article class="service-card reveal" data-i="4">
+          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></div>
+          <h3>Gestion des paiements</h3>
+          <p>Carte bancaire, sans contact (téléphone, montre) et pièces avec rendu de monnaie. Le terminal, l'encaissement et le suivi sont de notre côté.</p>
+          <span class="service-card__tag">Sans billets</span>
+        </article>
+        <article class="service-card reveal" data-i="5">
+          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div>
+          <h3>Suivi des stocks</h3>
+          <p>Les niveaux de chaque colonne sont suivis sur notre tableau de bord. Nous programmons les passages en fonction du stock, pas d'un calendrier fixe.</p>
+          <span class="service-card__tag">Suivi en ligne</span>
+        </article>
+      </div>
+      <div class="service-note reveal">
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5"/><path d="M12 8h.01"/></svg>
+        <p><strong>Important :</strong> nous ne vendons pas de distributeurs. Nous restons propriétaires de la machine et nous l'exploitons chez vous. Votre rôle se limite à mettre à disposition un emplacement adapté.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 — EMPLACEMENTS ---------------------------------------- -->
+  <section class="section" id="emplacements">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <span class="eyebrow">Où l'installer</span>
+        <h2>Les lieux où un distributeur trouve naturellement sa place.</h2>
+        <p>Le critère n'est pas la taille du site, mais le passage : dès qu'un espace réunit régulièrement des personnes, un distributeur devient utile.</p>
+      </div>
+      <div class="places">
+        <div class="place reveal" data-i="0">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M15 9h2a2 2 0 0 1 2 2v10"/><path d="M9 7h2M9 11h2M9 15h2"/></svg>
+          <h3>Entreprises &amp; PME</h3>
+          <p>Salle de pause, couloir principal ou espace commun.</p>
+        </div>
+        <div class="place reveal" data-i="1">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h18"/></svg>
+          <h3>Bureaux &amp; open spaces</h3>
+          <p>Près des espaces de travail et des salles de réunion.</p>
+        </div>
+        <div class="place reveal" data-i="2">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21V9l9-5 9 5v12"/><path d="M3 13h18"/><path d="M9 21v-5h6v5"/></svg>
+          <h3>Entrepôts &amp; logistique</h3>
+          <p>Zones de quai, vestiaires et salles de repos.</p>
+        </div>
+        <div class="place reveal" data-i="3">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V10l5-3v14"/><path d="M9 21V7l6-4v18"/><path d="M15 21V11l5 3v7"/><path d="M12 9h.01M12 13h.01"/></svg>
+          <h3>Sites industriels</h3>
+          <p>Ateliers et équipes en horaires décalés ou de nuit.</p>
+        </div>
+        <div class="place reveal" data-i="4">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 9v6M21 9v6"/><path d="M6.5 6v12M17.5 6v12"/><path d="M6.5 12h11"/></svg>
+          <h3>Salles de sport</h3>
+          <p>Boissons et barres à la sortie des zones d'entraînement.</p>
+        </div>
+        <div class="place reveal" data-i="5">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V6a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v15"/><path d="M15 10h4a1 1 0 0 1 1 1v10"/><path d="M8 9h3M8 13h3M8 17h3"/></svg>
+          <h3>Hôtels &amp; hébergements</h3>
+          <p>Halls, étages et espaces accessibles en dehors des horaires de service.</p>
+        </div>
+        <div class="place reveal" data-i="6">
+          <svg class="icon" viewBox="0 0 24 24"><path d="m3 8 9-4 9 4-9 4-9-4z"/><path d="M7 10.5V16c0 1.5 2.5 3 5 3s5-1.5 5-3v-5.5"/><path d="M21 8v6"/></svg>
+          <h3>Centres de formation</h3>
+          <p>Entre deux sessions, pour les stagiaires comme pour les formateurs.</p>
+        </div>
+        <div class="place reveal" data-i="7">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.4 3.9 5.6 3.9 9S14.5 18.6 12 21c-2.5-2.4-3.9-5.6-3.9-9S9.5 5.4 12 3z"/></svg>
+          <h3>Lieux publics</h3>
+          <p>Espaces d'accueil et lieux de passage ouverts au public.</p>
+        </div>
+      </div>
+      <p class="places-foot reveal"><strong>Votre site n'apparaît pas dans cette liste&nbsp;?</strong> Dites-nous ce que vous avez : nous vous dirons honnêtement si l'emplacement s'y prête ou non.</p>
+    </div>
+  </section>
+
+  <!-- 5 — LES 4 ÉTAPES ---------------------------------------- -->
+  <section class="section section--dark" id="etapes">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <span class="eyebrow">Comment ça marche</span>
+        <h2>Quatre étapes, un seul interlocuteur.</h2>
+        <p>De la première prise de contact à la mise en service, le processus est court et ne mobilise presque pas votre temps.</p>
       </div>
       <div class="steps">
-        <div class="step reveal">
-          <div class="step__num">01</div>
-          <h3>L'échange initial</h3>
-          <p>On regarde ensemble les emplacements qui font sens sur votre site — près d'une salle de pause, d'un hall d'accueil, ou d'un flux de passage précis — pour que la machine trouve naturellement sa place.</p>
+        <div class="step reveal" data-i="0">
+          <div class="step__num"><em>01</em> Prise de contact</div>
+          <h3>Vous nous décrivez votre site</h3>
+          <p>Type de lieu, nombre de personnes présentes, horaires. Quelques informations suffisent pour savoir si l'installation a du sens.</p>
         </div>
-        <div class="step reveal">
-          <div class="step__num">02</div>
-          <h3>L'étude du besoin</h3>
-          <p>La sélection change du tout au tout selon le lieu : boissons fraîches et snacks pour vos équipes, ou une offre plus large pensée pour dynamiser un espace ouvert au public.</p>
+        <div class="step reveal" data-i="1">
+          <div class="step__num"><em>02</em> Visite sur place</div>
+          <h3>Nous étudions l'emplacement</h3>
+          <p>Nous venons voir l'espace disponible, l'accès à une prise et le flux de passage réel. Cette visite est gratuite et sans engagement.</p>
         </div>
-        <div class="step reveal">
-          <div class="step__num">03</div>
-          <h3>L'installation</h3>
-          <p>Chaque site a ses contraintes propres — un mur, une prise, un accès livraison. Je m'adapte à la configuration réelle plutôt que d'imposer un modèle standard.</p>
+        <div class="step reveal" data-i="2">
+          <div class="step__num"><em>03</em> Installation</div>
+          <h3>Nous mettons la machine en service</h3>
+          <p>Livraison, positionnement, branchement, premier remplissage et test des moyens de paiement, à une date convenue ensemble.</p>
         </div>
-        <div class="step reveal">
-          <div class="step__num">04</div>
-          <h3>Suivi &amp; maintenance</h3>
-          <p>Chaque machine remonte son niveau de stock en direct. Je passe au bon moment, avec les bons produits — et j'interviens dès qu'un incident est signalé.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section section--dark" id="avantages">
-    <div class="wrap">
-      <div class="section__head reveal">
-        <span class="section__kicker">Ce que je gère pour vous</span>
-        <h2>Un service pensé pour être invisible pour vous</h2>
-        <p>Vous profitez du distributeur, je gère tout le reste.</p>
-      </div>
-      <div class="benefits">
-        <div class="benefit reveal">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
-          <h3>Sans investissement</h3>
-          <p>La machine, l'installation et l'entretien sont à ma charge. Vous ne signez aucun chèque, vous ne gérez aucun stock.</p>
-        </div>
-        <div class="benefit reveal">
-          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
-          <h3>Adapté à votre environnement</h3>
-          <p>Chaque sélection colle à son public : équipes en bureau, personnel d'un site industriel, ou clients de passage dans un lieu ouvert.</p>
-        </div>
-        <div class="benefit reveal">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-6h6v6"/></svg>
-          <h3>Intégration sur mesure</h3>
-          <p>Pas de gabarit unique : l'emplacement, le raccordement et l'encombrement se décident selon ce que votre site permet vraiment.</p>
-        </div>
-        <div class="benefit reveal">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
-          <h3>Stock suivi en ligne</h3>
-          <p>Un capteur, pas un carnet : le niveau de chaque colonne remonte en direct sur mon tableau de bord.</p>
-        </div>
-        <div class="benefit reveal">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg>
-          <h3>Réapprovisionnement optimal</h3>
-          <p>Je passe quand le stock le justifie vraiment — ni trop tôt par habitude, ni trop tard par oubli.</p>
-        </div>
-        <div class="benefit reveal">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg>
-          <h3>Maintenance directe</h3>
-          <p>Un souci ? Je le résous moi-même dans la majorité des cas. Le constructeur ne prend le relais que pour les pannes techniques lourdes.</p>
+        <div class="step reveal" data-i="3">
+          <div class="step__num"><em>04</em> Exploitation</div>
+          <h3>Nous assurons le suivi</h3>
+          <p>Réassort, nettoyage, dépannage et ajustement de la sélection. Vous n'avez plus qu'un numéro à connaître en cas de besoin.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section section--dark" id="paiement">
-    <div class="wrap">
-      <div class="section__head reveal">
-        <span class="section__kicker">Moyens de paiement</span>
-        <h2>Aucun frein au moment de payer</h2>
-        <p>Carte, sans contact ou pièces : chaque distributeur accepte le mode de paiement que votre équipe préfère. Simplement, pas de billets.</p>
-      </div>
-      <div class="benefits reveal" style="grid-template-columns:repeat(3,1fr)">
-        <div class="benefit">
-          <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
-          <h3>Carte bancaire</h3>
-          <p>Paiement classique par carte, avec code au-delà du plafond du sans contact.</p>
-        </div>
-        <div class="benefit">
-          <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="2" width="12" height="20" rx="2"/><path d="M15 8a6.5 6.5 0 0 1 0 8"/><path d="M18 5a11 11 0 0 1 0 14"/><path d="M21 2a15 15 0 0 1 0 20"/></svg>
-          <h3>Sans contact</h3>
-          <p>Carte, smartphone ou montre connectée : la transaction se fait en un geste, sans code à saisir.</p>
-        </div>
-        <div class="benefit">
-          <svg class="icon" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12a7 3 0 0 0 14 0V6"/><path d="M5 10a7 3 0 0 0 14 0"/><path d="M5 14a7 3 0 0 0 14 0"/></svg>
-          <h3>Monnaie</h3>
-          <p>Les pièces restent acceptées, avec rendu automatique — pratique pour l'appoint.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section class="parallax-decouvrir" id="decouvrir">
+  <!-- SECTION IMMERSIVE — LE DISTRIBUTEUR ---------------------- -->
+  <section class="parallax-decouvrir" id="solution">
     <div class="parallax-decouvrir__bg">
       <div class="draw-machine" id="parallaxImg">
         <div class="draw-machine__cabinet">
           <div class="draw-machine__door" id="machineDoor">
             <div class="draw-machine__glass">
               <div class="draw-machine__cols" id="machineCols"></div>
+              <svg class="draw-machine__crack" viewBox="0 0 200 400" preserveAspectRatio="none" aria-hidden="true">
+                <path d="M106 4 L94 92 L124 148 L88 224 L112 300 L80 398"/>
+                <path d="M94 92 L30 116"/>
+                <path d="M94 92 L152 54"/>
+                <path d="M124 148 L188 126"/>
+                <path d="M88 224 L18 248"/>
+                <path d="M112 300 L178 324"/>
+                <path d="M88 224 L138 268"/>
+              </svg>
+              <div class="draw-machine__sweep" aria-hidden="true"></div>
               <div class="draw-machine__shine" aria-hidden="true"></div>
             </div>
           </div>
           <div class="draw-machine__side">
             <div class="draw-machine__screen mono" id="machineScreenText">PRÊT</div>
+            <div class="draw-machine__alert mono" aria-hidden="true">ERR E-07</div>
             <div class="draw-machine__keypad" aria-hidden="true">
               <span></span><span></span><span></span><span></span><span></span><span></span>
             </div>
             <div class="draw-machine__coinslot" aria-hidden="true"></div>
             <div class="draw-machine__wrench-wrap" aria-hidden="true">
-              <svg class="draw-machine__wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg>
+              <svg class="draw-machine__wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg>
             </div>
           </div>
+          <div class="draw-machine__sparks" aria-hidden="true"><span></span><span></span><span></span></div>
+          <div class="draw-machine__fault" aria-hidden="true"></div>
         </div>
         <div class="draw-machine__legs" aria-hidden="true"><span></span><span></span></div>
 
@@ -892,76 +1342,304 @@ img{ max-width:100%; display:block; }
     <div class="wrap parallax-decouvrir__steps" id="scrollSteps"></div>
   </section>
 
-  <section class="section section--dark" id="maintenance">
+  <!-- 6 — AVANTAGES ------------------------------------------- -->
+  <section class="section section--dark" id="avantages">
     <div class="wrap">
-      <div class="support reveal">
-        <div class="support__card">
-          <h3>Déjà équipé chez CLTDistrib ?</h3>
-          <p>Une panne, un besoin de réassort, une question : un seul numéro, une seule adresse, moi au bout du fil.</p>
-          <a href="mailto:clementpiresvalente@gmail.com?subject=Support%20—%20Distributeur%20installé" class="btn btn--accent">
-            <svg class="icon" viewBox="0 0 24 24" style="color:#fff"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-            Signaler un besoin
-          </a>
+      <div class="section__head reveal">
+        <span class="eyebrow">Pour le site partenaire</span>
+        <h2>Ce que vous y gagnez concrètement.</h2>
+        <p>Le service est conçu pour être utile à vos équipes et invisible dans votre organisation.</p>
+      </div>
+      <div class="adv-grid">
+        <div class="adv reveal" data-i="0">
+          <span class="adv__n">01</span>
+          <h3>Zéro investissement</h3>
+          <p>La machine, sa livraison, son installation et son entretien sont financés par CLTDistrib. Aucune avance de trésorerie n'est demandée.</p>
         </div>
-        <div>
-          <ul>
-            <li>
-              <svg class="icon" viewBox="0 0 24 24"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8z"/></svg>
-              <div><strong>Intervention rapide</strong><span>Un signalement le matin, une intervention le jour même dans la grande majorité des cas.</span></div>
-            </li>
-            <li>
-              <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
-              <div><strong>Réapprovisionnement planifié</strong><span>La fréquence des visites suit la consommation réelle, pas un calendrier fixe.</span></div>
-            </li>
-            <li>
-              <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 9.5c0-1.4 1.3-2.5 3-2.5s3 1.1 3 2.5-1.3 2-3 2.5-3 1.1-3 2.5 1.3 2.5 3 2.5 3-1.1 3-2.5"/></svg>
-              <div><strong>Un contact direct</strong><span>Pas de standard téléphonique, pas de ticket qui se perd dans une file d'attente.</span></div>
-            </li>
-          </ul>
+        <div class="adv reveal" data-i="1">
+          <span class="adv__n">02</span>
+          <h3>Zéro charge de gestion</h3>
+          <p>Pas de commandes à passer, pas de stock à surveiller, pas de caisse à faire. Aucune tâche supplémentaire pour vos équipes.</p>
+        </div>
+        <div class="adv reveal" data-i="2">
+          <span class="adv__n">03</span>
+          <h3>Un service utile au quotidien</h3>
+          <p>Vos salariés restent sur place pendant la pause, et vos visiteurs trouvent de quoi patienter dans de bonnes conditions.</p>
+        </div>
+        <div class="adv reveal" data-i="3">
+          <span class="adv__n">04</span>
+          <h3>Une sélection qui s'ajuste</h3>
+          <p>La gamme évolue avec les habitudes réelles du site : ce qui ne part pas est remplacé, ce qui plaît est renforcé.</p>
+        </div>
+        <div class="adv reveal" data-i="4">
+          <span class="adv__n">05</span>
+          <h3>Un interlocuteur unique</h3>
+          <p>Pas de plateforme téléphonique ni de sous-traitant : la même personne suit votre site d'un bout à l'autre.</p>
+        </div>
+        <div class="adv reveal" data-i="5">
+          <span class="adv__n">06</span>
+          <h3>Réversible</h3>
+          <p>Si le distributeur ne trouve pas son public, nous le retirons. Vous n'êtes pas engagé sur du matériel qui vous appartiendrait.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section section--tint" id="assistant">
+  <!-- 7 — PRODUITS -------------------------------------------- -->
+  <section class="section" id="produits">
     <div class="wrap">
       <div class="section__head reveal">
-        <span class="section__kicker">Écrivez-moi</span>
-        <h2>Une question ? Un site en tête ? Parlons-en.</h2>
-        <p>Ce site explique le service en détail, mais rien ne remplace un échange direct. Posez votre question ici pour une réponse immédiate — et si votre projet est concret, on peut convenir d'un rendez-vous pour l'étudier ensemble sur place.</p>
+        <span class="eyebrow">Ce que contient la machine</span>
+        <h2>Boissons et snacks, sélectionnés selon le lieu.</h2>
+        <p>Voici les familles de produits que nous proposons habituellement. La sélection définitive se construit avec vous, en fonction du public du site.</p>
       </div>
-      <div class="chatpanel reveal">
+      <div class="prod-grid">
+        <article class="prod reveal" data-i="0">
+          <div class="prod__head">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M8 2h8l-1 5H9L8 2z"/><path d="M9 7h6v13a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V7z"/><path d="M9 12h6"/></svg>
+            <h3>Boissons fraîches</h3>
+          </div>
+          <p>Le cœur de la machine, en réfrigéré, disponible toute la journée.</p>
+          <div class="chips">
+            <span class="chip">Eaux plates</span><span class="chip">Eaux gazeuses</span><span class="chip">Sodas</span>
+            <span class="chip">Jus de fruits</span><span class="chip">Thés glacés</span><span class="chip">Boissons énergisantes</span>
+          </div>
+        </article>
+        <article class="prod reveal" data-i="1">
+          <div class="prod__head">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12l-1.4 17.2a2 2 0 0 1-2 1.8H9.4a2 2 0 0 1-2-1.8L6 3z"/><path d="M8 8h8M8 13h8"/></svg>
+            <h3>Snacks salés</h3>
+          </div>
+          <p>Pour la pause de milieu de journée ou les fins de poste.</p>
+          <div class="chips">
+            <span class="chip">Chips</span><span class="chip">Biscuits apéritifs</span><span class="chip">Crackers</span>
+            <span class="chip">Fruits secs</span><span class="chip">Graines salées</span>
+          </div>
+        </article>
+        <article class="prod reveal" data-i="2">
+          <div class="prod__head">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7v10M11 7v10M15 7v10"/></svg>
+            <h3>Snacks sucrés</h3>
+          </div>
+          <p>Les incontournables, avec des formats individuels adaptés à la pause.</p>
+          <div class="chips">
+            <span class="chip">Barres chocolatées</span><span class="chip">Biscuits</span><span class="chip">Gaufres</span>
+            <span class="chip">Madeleines</span><span class="chip">Barres de céréales</span>
+          </div>
+        </article>
+      </div>
+      <p class="prod-foot reveal">La gamme peut inclure des options plus légères (eaux, fruits secs, barres de céréales) si votre site le souhaite. Selon le modèle installé et le besoin, une offre de boissons chaudes peut être étudiée séparément.</p>
+    </div>
+  </section>
+
+  <!-- 8 — À PROPOS -------------------------------------------- -->
+  <section class="section section--alt" id="apropos">
+    <div class="wrap split">
+      <div class="reveal">
+        <span class="eyebrow">Qui sommes-nous</span>
+        <p class="about__quote" style="margin-top:22px">Une entreprise indépendante, locale, qui préfère <em>bien suivre quelques sites</em> plutôt que d'en installer beaucoup et de les oublier.</p>
+        <div class="about__facts">
+          <div class="about__fact">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            <div><strong>Un service de proximité</strong><span>Nous intervenons sur un secteur géographique restreint, pour rester réellement disponibles.</span></div>
+          </div>
+          <div class="about__fact">
+            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+            <div><strong>Une réponse rapide</strong><span>Vous écrivez, nous répondons. Pas de ticket qui se perd dans une file d'attente.</span></div>
+          </div>
+          <div class="about__fact">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+            <div><strong>Des engagements tenables</strong><span>Nous préférons annoncer ce que nous savons faire plutôt que de promettre l'impossible.</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="about__body reveal">
+        <p>CLTDistrib est une jeune entreprise indépendante. Je l'ai créée avec une idée simple : proposer aux entreprises et aux lieux de passage de ma région un service de distribution automatique réellement suivi, où l'on sait qui appeler et où l'on obtient une réponse.</p>
+        <p>Je m'occupe personnellement de chaque site : le repérage de l'emplacement, l'installation, les passages de réassort, le nettoyage et le dépannage. Il n'y a ni centre d'appels ni sous-traitant entre vous et moi.</p>
+        <p>Je démarre cette activité, et je l'assume : c'est précisément pour cette raison que chaque emplacement compte et que je préfère m'engager sur un suivi sérieux plutôt que sur des promesses de volume. Si un jour la machine ne rend pas le service attendu chez vous, nous la retirons — c'est aussi simple que ça.</p>
+        <div class="about__sign">
+          <span class="about__avatar" aria-hidden="true">CP</span>
+          <div>
+            <strong>Clément Pires Valente</strong>
+            <span>Fondateur — CLTDistrib</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 — FAQ -------------------------------------------------- -->
+  <section class="section" id="faq">
+    <div class="wrap">
+      <div class="section__head section__head--center reveal">
+        <span class="eyebrow">Questions fréquentes</span>
+        <h2>Ce que les responsables de site nous demandent.</h2>
+      </div>
+      <div class="faq reveal" id="faqList">
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" aria-expanded="false">Combien cela me coûte-t-il ?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Rien. La machine, sa livraison, son installation, son approvisionnement et son entretien sont à notre charge. Vous mettez à disposition un emplacement et une prise électrique : c'est la seule contribution attendue de votre part.</div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" aria-expanded="false">Qui est propriétaire du distributeur ?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Nous. <strong>Nous ne vendons pas de machines</strong> : nous fournissons la nôtre et nous l'exploitons chez vous. Vous n'achetez aucun matériel et vous n'avez aucun stock à gérer.</div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" aria-expanded="false">De quoi ai-je besoin sur place ?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">D'un emplacement stable d'environ un mètre carré, à l'abri des intempéries, avec une prise électrique standard à proximité et un accès permettant la livraison puis les passages de réassort. Nous vérifions tous ces points lors de la visite.</div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" aria-expanded="false">Qui remplit et nettoie la machine ?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Nous, à chaque passage : réassort des colonnes, contrôle des dates de péremption, nettoyage de la façade, de la vitre et de la zone de service. Vos équipes n'ont rien à faire.</div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" aria-expanded="false">Que se passe-t-il en cas de panne ?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Vous nous signalez le problème et nous intervenons. La majorité des incidents courants (bourrage, monnayeur, réglage) se règlent sur place. Si la machine nécessite une intervention lourde, nous prenons en charge le retour auprès du constructeur et la remise en service.</div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" aria-expanded="false">Quels moyens de paiement sont acceptés ?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Carte bancaire, paiement sans contact (carte, téléphone, montre) et pièces avec rendu de monnaie. Les billets ne sont pas acceptés. L'encaissement et le suivi des transactions sont gérés de notre côté.</div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" aria-expanded="false">Qui choisit les produits ?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Nous partons d'une sélection large, puis nous l'ajustons avec vous en fonction de ce qui se consomme réellement. Si votre site souhaite des options particulières, dites-le nous : la gamme s'adapte.</div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" aria-expanded="false">Combien de temps avant l'installation ?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Après la visite de l'emplacement, nous convenons ensemble d'une date. La mise en service se fait en une demi-journée environ, sans interrompre votre activité.</div></div>
+        </div>
+        <div class="faq__item">
+          <h3><button class="faq__q" type="button" aria-expanded="false">Puis-je faire retirer la machine ?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Oui. Si le distributeur ne correspond pas à vos attentes ou ne trouve pas son public, nous venons le récupérer. Vous n'êtes pas immobilisé par un matériel qui vous appartiendrait.</div></div>
+        </div>
+      </div>
+
+      <div class="chatpanel reveal" style="margin-top:44px" id="chatBlock">
+        <div class="chatpanel__head">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>
+          <div>
+            <strong>Vous ne trouvez pas votre réponse ?</strong>
+            <span>Posez votre question ici — réponse immédiate sur les sujets courants.</span>
+          </div>
+        </div>
         <div class="chatpanel__messages" id="chatMessages"></div>
         <div class="chatpanel__inputrow">
-          <textarea id="chatInput" rows="1" placeholder="Ex : comment gérez-vous le réapprovisionnement ?"></textarea>
-          <button class="btn btn--accent btn--icon" id="chatSend" aria-label="Envoyer">
+          <textarea id="chatInput" rows="1" placeholder="Ex : comment gérez-vous le réapprovisionnement ?" aria-label="Votre question"></textarea>
+          <button class="btn btn--accent btn--icon" id="chatSend" aria-label="Envoyer la question">
             <svg class="icon" viewBox="0 0 24 24" style="color:#fff"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
           </button>
         </div>
-        <p class="form-note">Réponse instantanée aux questions courantes. Pour un projet précis, écrivez-moi directement — je réponds sous 24h pour caler un rendez-vous.</p>
-      </div>
-      <div class="contact-row" style="margin-top:22px;justify-content:center">
-        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg> <a href="mailto:clementpiresvalente@gmail.com">clementpiresvalente@gmail.com</a>
+        <p class="form-note">Pour un projet précis, utilisez plutôt le formulaire ci-dessous : nous revenons vers vous pour organiser la visite.</p>
       </div>
     </div>
   </section>
 
-  <div class="cap-trim" aria-hidden="true"></div>
+  <!-- 10 — CTA FINALE ------------------------------------------ -->
+  <section class="section cta" id="contact">
+    <div class="wrap">
+      <div class="reveal">
+        <span class="eyebrow">Étude gratuite</span>
+        <h2 style="margin-top:18px">Faisons le point sur votre emplacement.</h2>
+        <p class="cta__lede">Décrivez-nous votre site en quelques lignes. Nous vous répondons pour organiser une visite, vérifier si l'emplacement s'y prête et vous dire franchement ce qu'il en est.</p>
+        <ul class="cta__list">
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Visite et étude de l'emplacement sans frais</span></li>
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Aucun engagement de votre part à ce stade</span></li>
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Une réponse claire, même si votre site ne s'y prête pas</span></li>
+        </ul>
+        <div class="cta__direct">
+          <span>Ou écrivez-nous directement</span>
+          <a href="mailto:clementpiresvalente@gmail.com?subject=Étude%20d'emplacement%20—%20distributeur%20automatique">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+            clementpiresvalente@gmail.com
+          </a>
+        </div>
+      </div>
+
+      <div class="form-card reveal">
+        <h3>Demander une étude d'emplacement</h3>
+        <p>Réponse sous 24 à 48 h ouvrées.</p>
+        <form class="form-grid" id="leadForm" novalidate>
+          <div class="field-row">
+            <div class="field">
+              <label for="fNom">Nom et prénom *</label>
+              <input id="fNom" name="nom" type="text" autocomplete="name" placeholder="Ex : Marie Dupont" required>
+            </div>
+            <div class="field">
+              <label for="fSociete">Société / structure *</label>
+              <input id="fSociete" name="societe" type="text" autocomplete="organization" placeholder="Ex : Atelier Dupont SARL" required>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="fEmail">E-mail *</label>
+              <input id="fEmail" name="email" type="email" autocomplete="email" placeholder="marie.dupont@societe.fr" required>
+            </div>
+            <div class="field">
+              <label for="fTel">Téléphone</label>
+              <input id="fTel" name="tel" type="tel" autocomplete="tel" placeholder="06 00 00 00 00">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="fType">Type de lieu *</label>
+              <select id="fType" name="type" required>
+                <option value="">Sélectionner…</option>
+                <option>Entreprise / PME</option>
+                <option>Bureaux / open space</option>
+                <option>Entrepôt / logistique</option>
+                <option>Site industriel / atelier</option>
+                <option>Salle de sport</option>
+                <option>Hôtel / hébergement</option>
+                <option>Centre de formation</option>
+                <option>Lieu public / accueil</option>
+                <option>Autre</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="fVille">Ville / code postal *</label>
+              <input id="fVille" name="ville" type="text" placeholder="Ex : Bonnières-sur-Seine (78)" required>
+            </div>
+          </div>
+          <div class="field">
+            <label for="fMessage">Décrivez votre site</label>
+            <textarea id="fMessage" name="message" placeholder="Nombre de personnes présentes sur place, horaires, emplacement envisagé, présence de public…"></textarea>
+          </div>
+          <button class="btn btn--primary btn--wide" type="submit">Demander l'étude gratuite</button>
+          <p class="form-note" id="formNote">En envoyant ce formulaire, votre messagerie s'ouvre avec le récapitulatif prêt à partir. Vos informations ne servent qu'à préparer la visite.</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
   <footer class="footer">
     <div class="wrap">
-      <div class="brand" style="font-size:17px"><span>CLT</span><span>Distrib</span></div>
-      <div class="footer__links">
-        <a class="nav__link" href="#comment">Comment ça marche</a>
-        <a class="nav__link" href="#assistant">Une question ?</a>
+      <div class="footer__top">
+        <div>
+          <div class="brand">
+            <span class="brand__mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+            <span class="brand__name"><span>CLT</span><span>Distrib</span></span>
+          </div>
+          <p class="footer__tag">Installation et exploitation de distributeurs automatiques de boissons et snacks pour les entreprises et les lieux de passage.</p>
+        </div>
+        <div class="footer__links">
+          <a href="#service">Notre service</a>
+          <a href="#emplacements">Emplacements</a>
+          <a href="#etapes">Comment ça marche</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contact">Contact</a>
+        </div>
       </div>
-      <small>© 2026 CLTDistrib. Tous droits réservés. · <a href="mentions-legales.html" style="color:inherit;text-decoration:underline">Mentions légales</a></small>
+      <div class="footer__bottom">
+        <small>© 2026 CLTDistrib. Tous droits réservés.</small>
+        <small><a href="mentions-legales.html">Mentions légales</a> · <a href="mailto:clementpiresvalente@gmail.com">clementpiresvalente@gmail.com</a></small>
+      </div>
     </div>
   </footer>
 
 </div>
 
 <button class="chatfab" id="chatFab" aria-label="Poser une question">
-  <svg class="icon" viewBox="0 0 24 24" style="color:#fff;width:24px;height:24px"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>
+  <svg class="icon" viewBox="0 0 24 24" style="color:#fff;width:23px;height:23px"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>
 </button>
 <div class="scrollbar-progress" id="scrollProgress"></div>
 
@@ -1144,6 +1822,7 @@ img{ max-width:100%; display:block; }
   </div>
 </div>
 
+
 <script>
 (function(){
 "use strict";
@@ -1226,34 +1905,52 @@ function saveData(){
 }
 
 /* ============================================================
-   SCROLL PROGRESS BAR
+   BARRE DE PROGRESSION DE LECTURE
    ============================================================ */
 (function initScrollProgress(){
   var bar = document.getElementById("scrollProgress");
+  if(!bar) return;
   var ticking = false;
   function update(){
     var h = document.documentElement;
-    var scrolled = h.scrollTop;
     var max = h.scrollHeight - h.clientHeight;
-    var pct = max > 0 ? (scrolled / max) * 100 : 0;
-    bar.style.width = pct + "%";
+    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
     ticking = false;
   }
   window.addEventListener("scroll", function(){
     if(!ticking){ requestAnimationFrame(update); ticking = true; }
-  });
+  }, { passive:true });
   update();
 })();
 
 /* ============================================================
-   SCROLL-REVEAL
+   NAVIGATION — ombre au défilement
+   ============================================================ */
+(function initNavShadow(){
+  var nav = document.getElementById("siteNav");
+  if(!nav) return;
+  var ticking = false;
+  function update(){
+    nav.classList.toggle("is-stuck", window.scrollY > 12);
+    ticking = false;
+  }
+  window.addEventListener("scroll", function(){
+    if(!ticking){ requestAnimationFrame(update); ticking = true; }
+  }, { passive:true });
+  update();
+})();
+
+/* ============================================================
+   APPARITIONS AU DÉFILEMENT
    ============================================================ */
 (function initReveal(){
-  var groups = [document.querySelectorAll(".benefits .benefit"), document.querySelectorAll(".steps .step")];
-  groups.forEach(function(list){
-    list.forEach(function(el, i){ el.style.setProperty("--i", i); });
-  });
   var items = document.querySelectorAll(".reveal");
+  items.forEach(function(el){
+    var i = el.getAttribute("data-i");
+    if(i !== null) el.style.setProperty("--i", i);
+  });
+  document.querySelectorAll(".steps .step").forEach(function(el, i){ el.style.setProperty("--i", i); });
+
   if(!("IntersectionObserver" in window)){
     items.forEach(function(el){ el.classList.add("is-visible"); });
     return;
@@ -1265,26 +1962,34 @@ function saveData(){
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.15, rootMargin: "0px 0px -40px 0px" });
+  }, { threshold: 0.12, rootMargin: "0px 0px -50px 0px" });
   items.forEach(function(el){ observer.observe(el); });
 })();
 
 /* ============================================================
-   PUBLIC NAV (menu mobile)
+   MENU MOBILE
    ============================================================ */
 var burgerBtn = document.getElementById("burgerBtn");
 var mobileNav = document.getElementById("mobileNav");
-burgerBtn.addEventListener("click", function(){
-  mobileNav.classList.toggle("is-open");
-});
-mobileNav.querySelectorAll("a").forEach(function(a){
-  a.addEventListener("click", function(){ mobileNav.classList.remove("is-open"); });
-});
+if(burgerBtn && mobileNav){
+  burgerBtn.addEventListener("click", function(){
+    var open = mobileNav.classList.toggle("is-open");
+    burgerBtn.setAttribute("aria-expanded", open ? "true" : "false");
+    document.body.style.overflow = open ? "hidden" : "";
+  });
+  mobileNav.querySelectorAll("a").forEach(function(a){
+    a.addEventListener("click", function(){
+      mobileNav.classList.remove("is-open");
+      burgerBtn.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+    });
+  });
+}
 
 /* ============================================================
    BASCULE VUE PC / VUE MOBILE
    Sur PC : "mobile" ouvre un aperçu dans un cadre de téléphone.
-   Sur téléphone : "PC" force une largeur de page fixe (comme "Voir la version ordinateur").
+   Sur téléphone : "PC" force une largeur de page fixe.
    ============================================================ */
 (function initViewToggle(){
   var viewDesktopBtn = document.getElementById("viewDesktopBtn");
@@ -1292,6 +1997,7 @@ mobileNav.querySelectorAll("a").forEach(function(a){
   var preview = document.getElementById("devicePreview");
   var frame = document.getElementById("devicePreviewFrame");
   var closeBtn = document.getElementById("closeDevicePreview");
+  if(!viewDesktopBtn || !viewMobileBtn || !preview || !frame || !closeBtn) return;
   var viewportMeta = document.querySelector('meta[name="viewport"]');
   var DEFAULT_VIEWPORT = "width=device-width, initial-scale=1.0";
   var WIDE_VIEWPORT = "width=1280";
@@ -1301,7 +2007,6 @@ mobileNav.querySelectorAll("a").forEach(function(a){
     viewDesktopBtn.classList.toggle("is-active", key === "desktop");
     viewMobileBtn.classList.toggle("is-active", key === "mobile");
   }
-
   function openMobilePreview(){
     frame.src = location.pathname + location.search;
     preview.classList.remove("hidden");
@@ -1313,21 +2018,14 @@ mobileNav.querySelectorAll("a").forEach(function(a){
 
   viewMobileBtn.addEventListener("click", function(){
     setActive("mobile");
-    if(IS_SMALL_SCREEN){
-      if(viewportMeta) viewportMeta.setAttribute("content", DEFAULT_VIEWPORT);
-    } else {
-      openMobilePreview();
-    }
+    if(IS_SMALL_SCREEN){ if(viewportMeta) viewportMeta.setAttribute("content", DEFAULT_VIEWPORT); }
+    else { openMobilePreview(); }
   });
-
   viewDesktopBtn.addEventListener("click", function(){
     setActive("desktop");
     closeMobilePreview();
-    if(IS_SMALL_SCREEN && viewportMeta){
-      viewportMeta.setAttribute("content", WIDE_VIEWPORT);
-    }
+    if(IS_SMALL_SCREEN && viewportMeta) viewportMeta.setAttribute("content", WIDE_VIEWPORT);
   });
-
   closeBtn.addEventListener("click", function(){ closeMobilePreview(); setActive("desktop"); });
   preview.addEventListener("click", function(e){
     if(e.target === preview){ closeMobilePreview(); setActive("desktop"); }
@@ -1335,43 +2033,147 @@ mobileNav.querySelectorAll("a").forEach(function(a){
 })();
 
 /* ============================================================
-   DISTRIBUTEUR INTERACTIF — effets directement sur la photo
+   FAQ — accordéon
+   ============================================================ */
+(function initFaq(){
+  var list = document.getElementById("faqList");
+  if(!list) return;
+  var items = list.querySelectorAll(".faq__item");
+
+  function close(item){
+    var panel = item.querySelector(".faq__a");
+    var btn = item.querySelector(".faq__q");
+    panel.style.height = panel.scrollHeight + "px";
+    requestAnimationFrame(function(){ panel.style.height = "0px"; });
+    item.classList.remove("is-open");
+    btn.setAttribute("aria-expanded", "false");
+  }
+  function open(item){
+    var panel = item.querySelector(".faq__a");
+    var btn = item.querySelector(".faq__q");
+    var inner = panel.firstElementChild;
+    panel.style.height = inner.offsetHeight + "px";
+    item.classList.add("is-open");
+    btn.setAttribute("aria-expanded", "true");
+  }
+
+  items.forEach(function(item){
+    item.querySelector(".faq__q").addEventListener("click", function(){
+      var isOpen = item.classList.contains("is-open");
+      items.forEach(function(other){ if(other !== item && other.classList.contains("is-open")) close(other); });
+      if(isOpen){ close(item); } else { open(item); }
+    });
+  });
+
+  window.addEventListener("resize", function(){
+    items.forEach(function(item){
+      if(item.classList.contains("is-open")){
+        var panel = item.querySelector(".faq__a");
+        panel.style.height = panel.firstElementChild.offsetHeight + "px";
+      }
+    });
+  });
+})();
+
+/* ============================================================
+   FORMULAIRE — récapitulatif prêt à envoyer par e-mail
+   ============================================================ */
+(function initLeadForm(){
+  var form = document.getElementById("leadForm");
+  if(!form) return;
+  var note = document.getElementById("formNote");
+  var MAIL = "clementpiresvalente@gmail.com";
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault();
+    var data = {
+      nom: form.nom.value.trim(),
+      societe: form.societe.value.trim(),
+      email: form.email.value.trim(),
+      tel: form.tel.value.trim(),
+      type: form.type.value,
+      ville: form.ville.value.trim(),
+      message: form.message.value.trim()
+    };
+
+    var missing = [];
+    if(!data.nom) missing.push("votre nom");
+    if(!data.societe) missing.push("votre société");
+    if(!data.email || data.email.indexOf("@") === -1) missing.push("un e-mail valide");
+    if(!data.type) missing.push("le type de lieu");
+    if(!data.ville) missing.push("la ville");
+
+    var old = form.querySelector(".form-error, .form-success");
+    if(old) old.remove();
+
+    if(missing.length){
+      var err = document.createElement("p");
+      err.className = "form-error";
+      err.textContent = "Merci de renseigner : " + missing.join(", ") + ".";
+      form.insertBefore(err, note);
+      return;
+    }
+
+    var body =
+      "Demande d'étude d'emplacement\n\n" +
+      "Nom : " + data.nom + "\n" +
+      "Société : " + data.societe + "\n" +
+      "E-mail : " + data.email + "\n" +
+      "Téléphone : " + (data.tel || "non renseigné") + "\n" +
+      "Type de lieu : " + data.type + "\n" +
+      "Ville : " + data.ville + "\n\n" +
+      "Description du site :\n" + (data.message || "non renseignée") + "\n";
+
+    var href = "mailto:" + MAIL +
+      "?subject=" + encodeURIComponent("Étude d'emplacement — " + data.societe + " (" + data.ville + ")") +
+      "&body=" + encodeURIComponent(body);
+
+    var ok = document.createElement("p");
+    ok.className = "form-success";
+    ok.textContent = "Votre messagerie s'ouvre avec le récapitulatif. S'il ne s'ouvre pas, écrivez-nous à " + MAIL + ".";
+    form.insertBefore(ok, note);
+
+    window.location.href = href;
+  });
+})();
+
+/* ============================================================
+   DISTRIBUTEUR ANIMÉ — scrollytelling + parallaxe
    ============================================================ */
 var parallaxImgEl = null, parallaxSectionEl = null, parallaxZoomPulse = 0, parallaxZoomRaf = null;
 
 var MACHINE_INFO = {
   emplacement: {
-    code: "A1", stat: "Sur mesure", title: "L'emplacement", screen: "PRÊT",
-    caption: "Je me déplace avant toute installation pour repérer le bon mur, la bonne prise, et éviter les mauvaises surprises le jour J. Cette visite ne coûte rien et n'engage à rien."
+    code: "A1", stat: "Visite gratuite", title: "L'emplacement", screen: "PRÊT",
+    caption: "Avant toute installation, nous venons repérer le bon mur, la bonne prise et le passage réel. Cette visite ne coûte rien et n'engage à rien."
   },
   produits: {
-    code: "A2", stat: "100% adapté", title: "Les produits", screen: "FRAIS",
-    caption: "Le premier remplissage part sur une sélection large. Ensuite, j'ajuste selon ce qui se vend vite et ce qui reste — la machine se resserre sur vos habitudes en quelques semaines."
+    code: "A2", stat: "Adapté au site", title: "Les produits", screen: "FRAIS",
+    caption: "Le premier remplissage part sur une sélection large. Nous l'ajustons ensuite selon ce qui se consomme réellement chez vous."
   },
   installation: {
-    code: "B1", stat: "Zéro contrainte", title: "L'installation", screen: "EN SERVICE",
-    caption: "Livraison, mise en place, branchement, test des paiements : comptez une demi-journée en moyenne, sans que votre activité s'arrête."
+    code: "B1", stat: "Sans interruption", title: "L'installation", screen: "EN SERVICE",
+    caption: "Livraison, mise en place, branchement, test des moyens de paiement : une demi-journée en moyenne, sans arrêter votre activité."
   },
   suivi: {
-    code: "B2", stat: "Temps réel", title: "Le stock en ligne", screen: "EN LIGNE",
-    caption: "Chaque colonne du distributeur est reliée à mon tableau de bord. Je vois une rupture arriver avant qu'un seul client ne la remarque."
+    code: "B2", stat: "Suivi en ligne", title: "Le suivi des stocks", screen: "EN LIGNE",
+    caption: "Chaque colonne remonte son niveau sur notre tableau de bord. Nous voyons une rupture arriver avant qu'elle ne gêne qui que ce soit."
   },
   reappro: {
-    code: "C1", stat: "Jamais à sec", title: "Le réapprovisionnement", screen: "RÉAPPRO...",
-    caption: "Ouverture, contrôle des dates de péremption, réassort, fermeture : un passage dure rarement plus de dix minutes, au moment où le stock le justifie vraiment."
+    code: "C1", stat: "Passages ciblés", title: "Le réapprovisionnement", screen: "RÉAPPRO",
+    caption: "Ouverture, contrôle des dates, réassort, nettoyage, fermeture. Le passage est programmé au moment où le stock le justifie."
   },
   maintenance: {
-    code: "C2", stat: "100% autonome", title: "La maintenance", screen: "OK",
-    caption: "La grande majorité des pannes se règlent sur place, le jour même. Pour le reste, la machine repart chez le constructeur, sous garantie."
+    code: "C2", stat: "Réparé, pas remplacé par vous", title: "La panne, et après", screen: "OK",
+    caption: "Une vitre fêlée, un monnayeur bloqué, un écran en erreur : la machine tombe en panne, vous nous le signalez, nous intervenons — et elle repart. Vous n'avez ni pièce à commander ni technicien à chercher."
   }
 };
 
 var MACHINE_ORDER = ["emplacement","produits","installation","suivi","reappro","maintenance"];
 
-/* Halo ambiant, discret, au centre du distributeur */
 function initMachineGlow(){
   var glow = document.getElementById("parallaxGlow");
-  if(glow) glow.style.background = "radial-gradient(circle at 50% 46%, rgba(79,174,124,.5), transparent 55%)";
+  if(glow) glow.style.background = "radial-gradient(circle at 50% 46%, rgba(62,156,107,.45), transparent 55%)";
 }
 
 var ICON_PATHS = {
@@ -1384,7 +2186,7 @@ var ICON_PATHS = {
 };
 
 var PRODUCT_KINDS = ["can","can","bottle","can","bag"];
-var PRODUCT_COLORS = ["var(--teal)","var(--amber)","var(--teal-dark)","var(--teal-light)","var(--ink-soft)","#8A5A3B","#C9524B"];
+var PRODUCT_COLORS = ["#2F8F5B","#B5822F","#1F6B44","#3E9C6B","#5C6B63","#8A5A3B","#B14A38"];
 
 function fillMachineColumns(){
   var wrap = document.getElementById("machineCols");
@@ -1409,23 +2211,22 @@ function fillMachineColumns(){
 
 (function initMachine(){
   var stepsWrap = document.getElementById("scrollSteps");
-  if(stepsWrap){
-    stepsWrap.innerHTML = MACHINE_ORDER.map(function(key, i){
-      var data = MACHINE_INFO[key];
-      var sideClass = i % 2 === 1 ? " is-right" : "";
-      return '<div class="scroll-step' + sideClass + '" data-key="' + key + '">' +
-        '<div class="scroll-step__icon-wrap"><svg class="scroll-step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + ICON_PATHS[key] + '</svg></div>' +
-        '<span class="scroll-step__stat mono">' + data.stat + '</span>' +
-        '<div class="scroll-step__meta">' +
-          '<span class="scroll-step__num mono">' + (i+1) + '</span>' +
-          '<span class="scroll-step__code mono">Casier ' + data.code + '</span>' +
-          '<span class="scroll-step__track"><span></span></span>' +
-        '</div>' +
-        '<h3>' + data.title + '</h3>' +
-        '<p>' + data.caption + '</p>' +
-      '</div>';
-    }).join("");
-  }
+  if(!stepsWrap) return;
+  stepsWrap.innerHTML = MACHINE_ORDER.map(function(key, i){
+    var data = MACHINE_INFO[key];
+    var sideClass = i % 2 === 1 ? " is-right" : "";
+    return '<div class="scroll-step' + sideClass + '" data-key="' + key + '">' +
+      '<div class="scroll-step__icon-wrap"><svg class="scroll-step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + ICON_PATHS[key] + '</svg></div>' +
+      '<span class="scroll-step__stat mono">' + data.stat + '</span>' +
+      '<div class="scroll-step__meta">' +
+        '<span class="scroll-step__num mono">' + (i+1) + '</span>' +
+        '<span class="scroll-step__code mono">Casier ' + data.code + '</span>' +
+        '<span class="scroll-step__track"><span></span></span>' +
+      '</div>' +
+      '<h3>' + data.title + '</h3>' +
+      '<p>' + data.caption + '</p>' +
+    '</div>';
+  }).join("");
 
   fillMachineColumns();
   initMachineGlow();
@@ -1434,7 +2235,6 @@ function fillMachineColumns(){
   initParallax();
 })();
 
-/* Le texte le plus proche du centre de l'écran devient actif pendant le défilement */
 function initScrollytell(){
   var steps = document.querySelectorAll(".scroll-step");
   if(!steps.length) return;
@@ -1444,9 +2244,7 @@ function initScrollytell(){
   }
   var observer = new IntersectionObserver(function(entries){
     entries.forEach(function(entry){
-      if(entry.isIntersecting){
-        selectMachineFeature(entry.target.getAttribute("data-key"));
-      }
+      if(entry.isIntersecting){ selectMachineFeature(entry.target.getAttribute("data-key")); }
     });
   }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
   steps.forEach(function(s){ observer.observe(s); });
@@ -1458,8 +2256,7 @@ function selectMachineFeature(key){
   var data = MACHINE_INFO[key];
   if(!data || key === MACHINE_ACTIVE_KEY) return;
   MACHINE_ACTIVE_KEY = key;
-  var idx = MACHINE_ORDER.indexOf(key);
-  var isRight = idx % 2 === 1;
+  var isRight = MACHINE_ORDER.indexOf(key) % 2 === 1;
 
   document.querySelectorAll(".scroll-step").forEach(function(step){
     step.classList.toggle("is-active", step.getAttribute("data-key") === key);
@@ -1480,8 +2277,6 @@ function selectMachineFeature(key){
   triggerZoomPulse();
 }
 
-/* Défilement de la photo en arrière-plan à une vitesse différente du scroll (parallaxe),
-   avec un petit zoom déclenché à chaque changement d'étape */
 var parallaxTicking = false;
 
 function applyParallaxTransform(){
@@ -1491,8 +2286,7 @@ function applyParallaxTransform(){
   var vh = window.innerHeight;
   var total = rect.height + vh;
   if(!total) return;
-  var progress = (vh - rect.top) / total;
-  progress = Math.max(0, Math.min(1, progress));
+  var progress = Math.max(0, Math.min(1, (vh - rect.top) / total));
   var shift = (progress - 0.5) * 110;
   var scale = 1.02 + parallaxZoomPulse * 0.05;
   parallaxImgEl.style.transform = "translate(-50%,-50%) translateY(" + shift.toFixed(1) + "px) scale(" + scale.toFixed(3) + ")";
@@ -1522,42 +2316,43 @@ function initParallax(){
   if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   parallaxSectionEl = section;
   parallaxImgEl = img;
-
   window.addEventListener("scroll", function(){
     if(!parallaxTicking){ requestAnimationFrame(applyParallaxTransform); parallaxTicking = true; }
-  });
+  }, { passive:true });
   window.addEventListener("resize", applyParallaxTransform);
   applyParallaxTransform();
 }
 
 /* ============================================================
-   ÉCHANGE (FAQ automatique par mots-clés — 100% local, sans API)
+   QUESTIONS COURANTES (réponses locales, sans API)
    ============================================================ */
 var CHAT_FAQ = [
-  { keys:["install","pose","mise en place","mettre en place"],
-    reply:"Une demi-journée en moyenne : livraison, branchement, test des paiements. Entre notre premier échange et la mise en service, comptez généralement moins de 15 jours." },
-  { keys:["produit","boisson","snack","offre","choix","varié"],
-    reply:"Le premier remplissage part sur une sélection large, puis j'ajuste selon ce qui se vend le mieux chez vous — la machine colle à vos habitudes en quelques semaines." },
-  { keys:["maintenance","panne","entretien","répar","incident"],
-    reply:"La plupart des pannes se règlent sur place, le jour même. Pour le reste, la machine repart chez le constructeur sous garantie. Un souci ? Contactez-moi directement." },
-  { keys:["stock","réappro","reappro","rupture"],
-    reply:"Chaque colonne remonte son niveau en direct sur mon tableau de bord. Je passe quand le stock le justifie — un passage dure rarement plus de dix minutes." },
+  { keys:["install","pose","mise en place","mettre en place","brancher"],
+    reply:"L'installation dure une demi-journée en moyenne : livraison, positionnement, branchement et test des moyens de paiement. Nous convenons de la date ensemble après la visite de l'emplacement." },
+  { keys:["produit","boisson","snack","offre","choix","varié","manger","boire"],
+    reply:"Boissons fraîches (eaux, sodas, jus, thés glacés), snacks salés et snacks sucrés. Nous partons d'une sélection large puis nous l'ajustons selon ce qui se consomme réellement chez vous." },
+  { keys:["maintenance","panne","entretien","répar","repar","incident","cass","bloqu"],
+    reply:"Vous nous signalez le problème et nous intervenons. La majorité des incidents (bourrage, monnayeur, réglage) se règlent sur place. Pour une intervention lourde, nous prenons en charge le retour constructeur et la remise en service." },
+  { keys:["stock","réappro","reappro","rupture","remplir","vide"],
+    reply:"Les niveaux de chaque colonne sont suivis sur notre tableau de bord. Nous programmons les passages en fonction du stock réel, pas d'un calendrier fixe." },
+  { keys:["nettoy","propre","hygiène","hygiene"],
+    reply:"À chaque passage, nous nettoyons la façade, la vitre et la zone de service. La machine reste présentable, y compris dans un espace vu par vos clients." },
   { keys:["paiement","carte","cb","especes","espèces","monnaie","sans contact","billet"],
-    reply:"Carte bancaire, sans contact (mobile, montre) et pièces sont acceptés — pas de billets. De quoi ne jamais faire attendre un client pour un café." },
-  { keys:["prix","tarif","coût","cout","investissement","payer","gratuit","frais"],
-    reply:"Machine, installation, entretien : tout est à ma charge, aucun frais de votre côté. Pour un chiffrage précis selon votre site, le plus simple est qu'on en discute directement." },
-  { keys:["emplacement","où","ou mettre","lieu","site"],
-    reply:"Je me déplace avant toute installation pour repérer le bon endroit — passage réel, horaires, accès. Cette visite ne coûte rien et n'engage à rien." },
-  { keys:["délai","delai","combien de temps","rapide"],
-    reply:"Comptez généralement moins de 15 jours entre notre premier échange et la mise en service de votre distributeur." },
-  { keys:["rdv","rendez-vous","rendez vous","visite","venir","passer"],
-    reply:"Avec plaisir. Écrivez-moi à clementpiresvalente@gmail.com avec quelques disponibilités et l'adresse du site, je reviens vers vous rapidement pour caler ça." },
-  { keys:["commander","réserver","reserver","devis","contact","contacter","email","téléphone","telephone","joindre"],
-    reply:"Ce site sert à présenter le service — pas à passer commande. Pour un devis ou pour qu'on convienne d'un rendez-vous, écrivez-moi directement à clementpiresvalente@gmail.com." },
+    reply:"Carte bancaire, sans contact (carte, téléphone, montre) et pièces avec rendu de monnaie. Les billets ne sont pas acceptés. L'encaissement est géré de notre côté." },
+  { keys:["prix","tarif","coût","cout","investissement","payer","gratuit","frais","louer","location","acheter"],
+    reply:"Rien n'est à votre charge : la machine, l'installation, l'approvisionnement et l'entretien sont financés par CLTDistrib. Nous ne vendons pas de distributeurs — nous restons propriétaires de la machine et nous l'exploitons chez vous." },
+  { keys:["emplacement","où","ou mettre","lieu","site","place","prise","électri","electri"],
+    reply:"Il faut environ un mètre carré au sec, une prise électrique standard à proximité et un accès pour la livraison et les passages de réassort. Nous vérifions tout cela lors de la visite, qui est gratuite." },
+  { keys:["délai","delai","combien de temps","rapide","quand"],
+    reply:"Après la visite de l'emplacement, nous fixons ensemble une date de mise en service. La pose elle-même prend une demi-journée environ." },
+  { keys:["rdv","rendez-vous","rendez vous","visite","venir","passer","étude","etude"],
+    reply:"Avec plaisir. Remplissez le formulaire en bas de page ou écrivez-nous à clementpiresvalente@gmail.com avec la ville et le type de lieu : nous revenons vers vous pour organiser la visite." },
+  { keys:["retirer","arrêter","arreter","résilier","resilier","engagement"],
+    reply:"Si le distributeur ne trouve pas son public, nous venons le récupérer. Vous n'êtes pas immobilisé par un matériel qui vous appartiendrait." },
   { keys:["bonjour","salut","hello","bonsoir"],
-    reply:"Bonjour ! Posez-moi vos questions sur l'emplacement, les produits, l'installation, le suivi des stocks, la maintenance ou les paiements — ou dites-moi si vous préférez qu'on en parle de vive voix." }
+    reply:"Bonjour ! Posez-moi vos questions sur l'emplacement, les produits, l'installation, le suivi des stocks, la maintenance ou les paiements." }
 ];
-var CHAT_FALLBACK = "Je n'ai pas de réponse toute prête pour cette question. Écrivez-moi directement à clementpiresvalente@gmail.com — on peut aussi convenir d'un rendez-vous si votre projet est concret.";
+var CHAT_FALLBACK = "Je n'ai pas de réponse toute prête pour cette question. Le plus simple est de nous écrire à clementpiresvalente@gmail.com, ou d'utiliser le formulaire d'étude d'emplacement en bas de page.";
 
 function findFaqReply(text){
   var norm = text.toLowerCase();
@@ -1570,82 +2365,73 @@ function findFaqReply(text){
   return CHAT_FALLBACK;
 }
 
-var chatHistory = [];
 var chatMessagesEl = document.getElementById("chatMessages");
 var chatInput = document.getElementById("chatInput");
 var chatSendBtn = document.getElementById("chatSend");
 
-function addMessage(role, text){
-  var div = document.createElement("div");
-  div.className = "msg msg--" + role;
-  div.textContent = text;
-  chatMessagesEl.appendChild(div);
-  chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
-  return div;
+if(chatMessagesEl && chatInput && chatSendBtn){
+  (function initChat(){
+    function addMessage(role, text){
+      var div = document.createElement("div");
+      div.className = "msg msg--" + role;
+      div.textContent = text;
+      chatMessagesEl.appendChild(div);
+      chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+    }
+    function addTyping(){
+      var div = document.createElement("div");
+      div.className = "typing";
+      div.id = "typingIndicator";
+      div.innerHTML = "<span></span><span></span><span></span>";
+      chatMessagesEl.appendChild(div);
+      chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+    }
+    function removeTyping(){
+      var el = document.getElementById("typingIndicator");
+      if(el) el.remove();
+    }
+
+    addMessage("assistant", "Bonjour ! Posez-moi vos questions sur l'emplacement, les produits, l'installation, le suivi des stocks, la maintenance ou les moyens de paiement.");
+
+    function autoResize(){
+      chatInput.style.height = "auto";
+      chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + "px";
+    }
+    var chatBusy = false;
+    function sendChatMessage(){
+      var text = chatInput.value.trim();
+      if(!text || chatBusy) return;
+      addMessage("user", text);
+      chatInput.value = "";
+      autoResize();
+      chatBusy = true;
+      chatSendBtn.disabled = true;
+      addTyping();
+      var reply = findFaqReply(text);
+      setTimeout(function(){
+        removeTyping();
+        chatBusy = false;
+        chatSendBtn.disabled = false;
+        addMessage("assistant", reply);
+      }, 500 + Math.random()*400);
+    }
+
+    chatInput.addEventListener("input", autoResize);
+    chatInput.addEventListener("keydown", function(e){
+      if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendChatMessage(); }
+    });
+    chatSendBtn.addEventListener("click", sendChatMessage);
+
+    var fab = document.getElementById("chatFab");
+    if(fab){
+      fab.addEventListener("click", function(){
+        var block = document.getElementById("chatBlock");
+        if(block) block.scrollIntoView({ behavior:"smooth", block:"center" });
+        setTimeout(function(){ chatInput.focus(); }, 600);
+      });
+    }
+  })();
 }
-
-function addTyping(){
-  var div = document.createElement("div");
-  div.className = "typing";
-  div.id = "typingIndicator";
-  div.innerHTML = "<span></span><span></span><span></span>";
-  chatMessagesEl.appendChild(div);
-  chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
-}
-function removeTyping(){
-  var el = document.getElementById("typingIndicator");
-  if(el) el.remove();
-}
-
-var CHAT_GREETING = "Bonjour ! Posez-moi vos questions sur l'emplacement, les produits, l'installation, le suivi des stocks, la maintenance ou les paiements. Et si votre projet est concret, dites-le moi — on peut convenir d'un rendez-vous.";
-addMessage("assistant", CHAT_GREETING);
-chatHistory.push({ role:"assistant", content:CHAT_GREETING });
-
-function autoResize(){
-  chatInput.style.height = "auto";
-  chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + "px";
-}
-chatInput.addEventListener("input", autoResize);
-chatInput.addEventListener("keydown", function(e){
-  if(e.key === "Enter" && !e.shiftKey){
-    e.preventDefault();
-    sendChatMessage();
-  }
-});
-chatSendBtn.addEventListener("click", sendChatMessage);
-
-var chatBusy = false;
-function sendChatMessage(){
-  var text = chatInput.value.trim();
-  if(!text || chatBusy) return;
-  addMessage("user", text);
-  chatHistory.push({ role:"user", content:text });
-  chatInput.value = "";
-  autoResize();
-  chatBusy = true;
-  chatSendBtn.disabled = true;
-  addTyping();
-
-  var reply = findFaqReply(text);
-  setTimeout(function(){
-    removeTyping();
-    chatBusy = false;
-    chatSendBtn.disabled = false;
-    addMessage("assistant", reply);
-    chatHistory.push({ role:"assistant", content:reply });
-  }, 500 + Math.random()*400);
-}
-
-/* Bouton flottant + CTA : ouvrent et amènent le focus sur l'assistant */
-function focusAssistant(){
-  setTimeout(function(){ chatInput.focus(); }, 450);
-}
-["chatFab","heroAssistantBtn","navAssistantBtn"].forEach(function(id){
-  var el = document.getElementById(id);
-  if(el) el.addEventListener("click", focusAssistant);
-});
-
-
 
 /* ============================================================
    ACCESS GATE
