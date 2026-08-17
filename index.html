@@ -3,13 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLTDistrib — Distributeurs automatiques installés et gérés pour les entreprises</title>
-<meta name="description" content="CLTDistrib installe et exploite des distributeurs de boissons et snacks dans les entreprises, bureaux, entrepôts, salles de sport et lieux publics. Machine, produits, réassort, entretien et paiements pris en charge : vous fournissez l'emplacement, nous gérons le reste.">
+<title>CLTDistrib | Distributeurs automatiques de boissons &amp; snacks</title>
+<meta name="description" content="CLTDistrib propose des solutions de distribution automatique de boissons et snacks pour les entreprises, établissements et lieux accueillant du public. Étude de votre emplacement.">
+<link rel="canonical" href="https://clt78.github.io/cltdistrib-site/">
 <meta name="theme-color" content="#123D28">
-<meta property="og:title" content="CLTDistrib — Distributeurs automatiques clé en main pour les entreprises">
-<meta property="og:description" content="Vous fournissez l'emplacement, nous fournissons et gérons le distributeur : installation, produits, réassort, entretien et paiements inclus.">
+<meta property="og:title" content="CLTDistrib | Distributeurs automatiques de boissons &amp; snacks">
+<meta property="og:description" content="Installation et exploitation de distributeurs automatiques de boissons et snacks en entreprise. Vous avez l'emplacement, CLTDistrib s'occupe du reste.">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
+<meta property="og:url" content="https://clt78.github.io/cltdistrib-site/">
+<meta name="twitter:card" content="summary_large_image">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "CLTDistrib",
+  "description": "Installation et exploitation de distributeurs automatiques de boissons et snacks pour les entreprises, établissements et lieux accueillant du public.",
+  "url": "https://clt78.github.io/cltdistrib-site/",
+  "email": "clementpiresvalente@gmail.com"
+}
+</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='5' fill='%231F6B44'/%3E%3Crect x='5' y='5' width='6' height='6' rx='1' fill='%23fff'/%3E%3Crect x='13' y='5' width='6' height='6' rx='1' fill='%23fff'/%3E%3Crect x='5' y='13' width='6' height='6' rx='1' fill='%23fff'/%3E%3Crect x='13' y='13' width='6' height='6' rx='1' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -113,7 +126,7 @@ img{ max-width:100%; display:block; }
    3. BUTTONS
    ============================================================ */
 .btn{
-  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  display:inline-flex; align-items:center; justify-content:center; gap:9px; white-space:nowrap;
   padding:15px 26px; border-radius:var(--radius-s); border:1px solid transparent;
   font-family:var(--font-display); font-weight:600; font-size:15.5px; letter-spacing:-0.012em;
   transition:background-color .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease), box-shadow .25s var(--ease);
@@ -158,8 +171,8 @@ img{ max-width:100%; display:block; }
 .brand__mark span:nth-child(3){ opacity:.72; }
 .brand__name span:first-child{ color:var(--ink); }
 .brand__name span:last-child{ color:var(--teal); font-weight:500; }
-.nav__links{ display:flex; align-items:center; gap:30px; }
-.nav__link{ font-size:14.5px; font-weight:500; color:var(--ink-soft); position:relative; padding:4px 0; }
+.nav__links{ display:flex; align-items:center; gap:clamp(14px,1.6vw,26px); }
+.nav__link{ font-size:14px; font-weight:500; color:var(--ink-soft); position:relative; padding:4px 0; white-space:nowrap; }
 .nav__link:hover{ color:var(--teal-dark); }
 .nav__link::after{ content:''; position:absolute; left:0; right:100%; bottom:-2px; height:1.5px; background:var(--teal); transition:right .28s var(--ease); }
 .nav__link:hover::after{ right:0; }
@@ -179,7 +192,8 @@ img{ max-width:100%; display:block; }
 .view-toggle__btn:hover{ color:var(--ink); }
 .view-toggle__btn.is-active{ background:#fff; color:var(--teal-dark); box-shadow:var(--shadow-s); }
 
-@media (max-width:1000px){ .nav__links{ display:none; } .nav__burger{ display:block; } }
+@media (max-width:1180px){ .nav__links{ display:none; } .nav__burger{ display:block; } }
+@media (max-width:1320px){ .nav .wrap{ gap:16px; } .view-toggle{ display:none; } }
 @media (max-width:640px){ .nav__actions .btn--primary{ display:none; } .view-toggle{ display:none; } }
 
 /* ============================================================
@@ -905,7 +919,7 @@ html{
   html{ scroll-snap-type:y mandatory; }
 }
 
-.slide, .section{ scroll-snap-align:start; scroll-snap-stop:always; }
+.slide, .section, .hero{ scroll-snap-align:start; scroll-snap-stop:always; }
 .slide{ min-height:var(--slideh); display:flex; flex-direction:column; }
 .slide .section{ scroll-snap-align:none; scroll-snap-stop:normal; min-height:0; }
 .slide--hero .hero{ flex:1; }
@@ -1252,6 +1266,142 @@ html{
   background:linear-gradient(90deg, var(--teal), var(--teal-light));
   transition:width .1s linear;
 }
+
+/* ============================================================
+   22. NOUVEAUX BLOCS (offre, rôle, partenariat, engagement, contact)
+   ============================================================ */
+
+/* Vous avez l'emplacement, nous nous occupons du reste */
+.covers{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden; }
+.cover{ background:#fff; padding:22px 24px; display:flex; gap:14px; align-items:flex-start; transition:background-color .25s ease; }
+.cover:hover{ background:var(--teal-tint); }
+.cover__check{
+  width:26px; height:26px; border-radius:50%; background:var(--teal-tint); color:var(--teal-dark);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;
+  transition:background-color .25s ease, color .25s ease;
+}
+.cover__check .icon{ width:15px; height:15px; stroke-width:2.4; }
+.cover:hover .cover__check{ background:var(--teal-dark); color:#fff; }
+.cover strong{ display:block; font-family:var(--font-display); font-size:16px; color:var(--teal-dark); letter-spacing:-0.015em; }
+.cover span{ display:block; font-size:14px; color:var(--ink-soft); margin-top:4px; line-height:1.5; }
+.covers-foot{ margin-top:20px; text-align:center; font-size:15.5px; color:var(--ink-soft); max-width:70ch; margin-left:auto; margin-right:auto; }
+.covers-foot strong{ color:var(--teal-dark); }
+@media (max-width:1000px){ .covers{ grid-template-columns:1fr 1fr; } }
+@media (max-width:560px){ .covers{ grid-template-columns:1fr; } }
+
+/* CTA sous les 4 étapes */
+.steps-cta{ margin-top:32px; }
+
+/* Votre rôle */
+.role-list{ margin-top:24px; display:grid; gap:1px; background:var(--line); border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden; }
+.role-item{ background:#fff; padding:20px 24px; display:flex; gap:16px; align-items:flex-start; }
+.role-item__n{
+  font-family:var(--font-mono); font-size:12px; font-weight:600; color:var(--teal-dark);
+  background:var(--teal-tint); width:32px; height:32px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.role-item strong{ display:block; font-family:var(--font-display); font-size:16.5px; color:var(--teal-dark); letter-spacing:-0.015em; }
+.role-item span{ display:block; font-size:14.5px; color:var(--ink-soft); margin-top:4px; line-height:1.5; }
+.role-note{ margin-top:18px; font-size:15px; color:var(--ink-soft); line-height:1.6; }
+
+/* Conditions de partenariat */
+.partner-card{
+  background:var(--teal-dark); color:#fff; border-radius:var(--radius-l); padding:clamp(24px,3vw,36px);
+  box-shadow:var(--shadow-m);
+}
+.partner-card .eyebrow{ color:var(--teal-light); }
+.partner-card .eyebrow::before{ background:var(--teal-light); }
+.partner-card h3{ color:#fff; font-size:clamp(20px,2.2vw,25px); margin-top:14px; line-height:1.2; }
+.partner-card p{ margin-top:14px; color:#C6D7CC; font-size:15.5px; line-height:1.62; }
+.partner-card .btn{ margin-top:24px; }
+
+/* Engagement */
+.adv-grid--4{ grid-template-columns:repeat(4,1fr); }
+@media (max-width:1000px){ .adv-grid--4{ grid-template-columns:1fr 1fr; } }
+.engagement-foot{
+  margin-top:24px; display:flex; align-items:center; justify-content:center; gap:11px;
+  color:#fff; font-size:16.5px; font-family:var(--font-display); letter-spacing:-0.015em;
+}
+.engagement-foot .icon{ color:var(--teal-light); width:20px; height:20px; }
+
+/* Pourquoi travailler avec nous */
+.service-grid--4{ grid-template-columns:repeat(4,1fr); }
+@media (max-width:1000px){ .service-grid--4{ grid-template-columns:1fr 1fr; } }
+
+/* Produits en deux colonnes */
+.prod-grid--2{ grid-template-columns:1fr 1fr; }
+@media (max-width:760px){ .prod-grid--2{ grid-template-columns:1fr; } }
+
+/* Titre de la section immersive, posé dans la première étape */
+.scroll-title{
+  font-size:clamp(22px,2.4vw,30px); color:#fff; margin:8px 0 26px; letter-spacing:-0.025em; line-height:1.15;
+  max-width:20ch;
+}
+
+/* Bloc coordonnées */
+.contact-card{
+  margin-top:28px; padding-top:24px; border-top:1px solid rgba(255,255,255,.16);
+}
+.contact-card__name{ display:block; font-family:var(--font-display); font-size:18px; color:#fff; letter-spacing:-0.02em; }
+.contact-card__sub{ display:block; font-size:14px; color:#8FA898; margin-top:2px; }
+.contact-card__list{ margin:18px 0 0; display:grid; gap:12px; }
+.contact-card__list div{ display:grid; grid-template-columns:150px 1fr; gap:10px; align-items:baseline; }
+.contact-card__list dt{ font-family:var(--font-mono); font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:#8FA898; }
+.contact-card__list dd{ margin:0; font-size:15px; color:#fff; }
+.contact-card__list dd a{ border-bottom:1px solid rgba(255,255,255,.3); padding-bottom:2px; transition:border-color .2s ease; }
+.contact-card__list dd a:hover{ border-color:#fff; }
+.contact-card__list dd.is-todo{
+  color:#D6B27A; font-family:var(--font-mono); font-size:12.5px; letter-spacing:.04em;
+  border:1px dashed rgba(214,178,122,.5); border-radius:4px; padding:3px 9px;
+  display:inline-block; justify-self:start;
+}
+@media (max-width:520px){ .contact-card__list div{ grid-template-columns:1fr; gap:2px; } }
+
+/* Footer en colonnes */
+.footer__brand{ max-width:340px; }
+.footer__cols{ display:flex; gap:clamp(28px,5vw,64px); flex-wrap:wrap; }
+.footer__col{ display:flex; flex-direction:column; gap:9px; }
+.footer__col-title{ font-family:var(--font-mono); font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:#68776F; margin-bottom:3px; }
+.footer__col a{ color:#A9B8AF; font-size:14.5px; transition:color .2s ease; }
+.footer__col a:hover{ color:#fff; }
+.footer__todo{
+  font-family:var(--font-mono); font-size:11.5px; color:#8A7A5A;
+  border:1px dashed rgba(138,122,90,.5); border-radius:4px; padding:2px 8px; align-self:flex-start;
+}
+@media (max-width:760px){ .footer__cols{ gap:24px 32px; } .footer__brand{ max-width:none; } }
+
+/* Le hero est désormais une diapositive à part entière */
+.hero{ scroll-snap-align:start; scroll-snap-stop:always; min-height:var(--slideh); }
+
+/* Compacité sur téléphone des nouveaux blocs */
+@media (max-width:640px){
+  .cover{ padding:13px 14px; gap:11px; }
+  .cover__check{ width:22px; height:22px; }
+  .cover__check .icon{ width:13px; height:13px; }
+  .cover strong{ font-size:14.5px; }
+  .cover span{ font-size:12.5px; margin-top:2px; line-height:1.4; }
+  .covers-foot{ margin-top:14px; font-size:13.5px; text-align:left; }
+  .steps-cta{ margin-top:20px; }
+  .steps-cta .btn{ width:100%; }
+  .role-list{ margin-top:16px; }
+  .role-item{ padding:13px 14px; gap:12px; }
+  .role-item__n{ width:26px; height:26px; font-size:11px; }
+  .role-item strong{ font-size:15px; }
+  .role-item span{ font-size:13px; margin-top:2px; }
+  .role-note{ margin-top:12px; font-size:13.5px; }
+  .partner-card{ padding:18px; }
+  .partner-card h3{ font-size:18px; margin-top:10px; }
+  .partner-card p{ font-size:13.5px; margin-top:10px; line-height:1.5; }
+  .partner-card .btn{ margin-top:16px; width:100%; }
+  .engagement-foot{ margin-top:16px; font-size:14.5px; gap:8px; text-align:left; }
+  .contact-card{ margin-top:18px; padding-top:16px; }
+  .contact-card__name{ font-size:16px; }
+  .contact-card__list{ margin-top:12px; gap:9px; }
+  .contact-card__list dd{ font-size:14px; }
+  .footer__col{ gap:7px; }
+  .footer__col a{ font-size:13.5px; }
+  .scroll-title{ font-size:19px; margin:6px 0 16px; }
+}
 </style>
 </head>
 <body>
@@ -1268,11 +1418,13 @@ html{
         <span class="brand__name"><span>CLT</span><span>Distrib</span></span>
       </a>
       <div class="nav__links">
-        <a class="nav__link" href="#service">Notre service</a>
-        <a class="nav__link" href="#emplacements">Emplacements</a>
-        <a class="nav__link" href="#etapes">Comment ça marche</a>
-        <a class="nav__link" href="#produits">Produits</a>
+        <a class="nav__link" href="#top">Accueil</a>
+        <a class="nav__link" href="#offre">Notre solution</a>
+        <a class="nav__link" href="#lieux">Pour quels lieux&nbsp;?</a>
+        <a class="nav__link" href="#etapes">Comment ça marche&nbsp;?</a>
+        <a class="nav__link" href="#apropos">À propos</a>
         <a class="nav__link" href="#faq">FAQ</a>
+        <a class="nav__link" href="#contact">Contact</a>
       </div>
       <div class="nav__actions">
         <div class="view-toggle">
@@ -1290,86 +1442,106 @@ html{
       </div>
     </div>
     <div class="nav__mobile" id="mobileNav">
-      <a href="#service">Notre service</a>
-      <a href="#emplacements">Emplacements</a>
-      <a href="#etapes">Comment ça marche</a>
-      <a href="#produits">Produits</a>
-      <a href="#apropos">Qui sommes-nous</a>
+      <a href="#top">Accueil</a>
+      <a href="#offre">Notre solution</a>
+      <a href="#lieux">Pour quels lieux ?</a>
+      <a href="#etapes">Comment ça marche ?</a>
+      <a href="#apropos">À propos</a>
       <a href="#faq">FAQ</a>
+      <a href="#contact">Contact</a>
       <a href="#contact" class="btn btn--primary">Étudier mon emplacement</a>
     </div>
   </nav>
 
-  <!-- 1 — HERO ------------------------------------------------ -->
-  <div class="slide slide--hero">
+  <!-- 1 — HERO ------------------------------------------------- -->
   <header class="hero" id="top">
     <div class="wrap">
       <div class="hero__text">
-        <span class="eyebrow reveal-hero" style="--d:0ms">Distribution automatique en entreprise</span>
-        <h1 class="reveal-hero" style="--d:70ms">Un distributeur automatique installé et géré chez vous&nbsp;— vous ne fournissez que <em>l'emplacement</em>.</h1>
-        <p class="lede reveal-hero" style="--d:150ms">Machine, produits, réapprovisionnement, entretien et gestion des paiements sont entièrement pris en charge par CLTDistrib. Vous n'achetez rien, vous ne gérez aucun stock : vos équipes et vos visiteurs trouvent simplement de quoi boire et manger sur place.</p>
+        <span class="eyebrow reveal-hero" style="--d:0ms">Distribution automatique — boissons &amp; snacks</span>
+        <h1 class="reveal-hero" style="--d:70ms">Des boissons et snacks <em>à portée de main</em>.</h1>
+        <p class="lede reveal-hero" style="--d:150ms">CLTDistrib installe et exploite des distributeurs automatiques adaptés aux entreprises, établissements et lieux accueillant du personnel ou du public.</p>
         <div class="hero__cta reveal-hero" style="--d:230ms">
-          <a href="#contact" class="btn btn--primary">Étudier votre emplacement gratuitement</a>
-          <a href="#service" class="btn btn--ghost">Découvrir notre solution</a>
+          <a href="#contact" class="btn btn--primary">Étudier mon emplacement</a>
+          <a href="#offre" class="btn btn--ghost">Découvrir la solution</a>
         </div>
         <p class="hero__note reveal-hero" style="--d:300ms">
           <svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
-          Étude de l'emplacement sans frais et sans engagement.
+          Étude de l'emplacement gratuite et sans engagement.
         </p>
       </div>
 
       <div class="hero__visual reveal-hero" style="--d:200ms">
         <div class="hero__frame">
-          <img src="images/distributeur.jpg" alt="Distributeur automatique de boissons et snacks installé par CLTDistrib" width="900" height="1000">
-          <span class="hero__caption">Distributeur boissons &amp; snacks</span>
-        </div>
-        <div class="hero__badge">
-          <div class="hero__badge-row">
-            <span class="hero__badge-icon">
-              <svg class="icon" viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.4 9.1 8 10 4.6-.9 8-5 8-10V6l-8-4z"/><path d="m9 12 2 2 4-4"/></svg>
-            </span>
-            <div>
-              <strong>Aucun investissement</strong>
-              <span>Machine, installation et entretien à notre charge.</span>
-            </div>
-          </div>
+          <img src="images/distributeur.jpg" alt="Distributeur automatique de boissons et snacks — photo d'illustration" width="900" height="620">
+          <span class="hero__caption">Photo d'illustration</span>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- BANDEAU DE CONFIANCE ------------------------------------ -->
-  <div class="trust">
+  <!-- 2 — VOUS AVEZ L'EMPLACEMENT ------------------------------- -->
+  <section class="section section--alt" id="offre">
     <div class="wrap">
-      <div class="trust__item">
-        <svg class="icon" viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h8"/><path d="M9 18h6"/></svg>
-        <div><strong>Machine fournie par nos soins</strong><span>Vous n'achetez ni ne louez aucun matériel.</span></div>
+      <div class="section__head section__head--center reveal">
+        <span class="eyebrow">Notre solution</span>
+        <h2>Vous avez l'emplacement. Nous nous occupons du reste.</h2>
+        <p>CLTDistrib ne vend pas de distributeurs : nous exploitons un service de distribution automatique sur votre site.</p>
       </div>
-      <div class="trust__item">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg>
-        <div><strong>Réassort assuré</strong><span>Nous passons remplir et contrôler la machine.</span></div>
+      <div class="covers">
+        <div class="cover reveal" data-i="0">
+          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <div>
+            <strong>Machine fournie</strong>
+            <span>Le distributeur est mis à disposition par CLTDistrib.</span>
+          </div>
+        </div>
+        <div class="cover reveal" data-i="1">
+          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <div>
+            <strong>Installation</strong>
+            <span>Livraison, mise en place et mise en service sur l'emplacement défini.</span>
+          </div>
+        </div>
+        <div class="cover reveal" data-i="2">
+          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <div>
+            <strong>Boissons &amp; snacks</strong>
+            <span>Une sélection de produits construite selon le public du lieu.</span>
+          </div>
+        </div>
+        <div class="cover reveal" data-i="3">
+          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <div>
+            <strong>Réassort régulier</strong>
+            <span>Le réapprovisionnement est assuré selon les besoins du site.</span>
+          </div>
+        </div>
+        <div class="cover reveal" data-i="4">
+          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <div>
+            <strong>Entretien &amp; maintenance</strong>
+            <span>Nettoyage de la machine et intervention en cas de dysfonctionnement.</span>
+          </div>
+        </div>
+        <div class="cover reveal" data-i="5">
+          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+          <div>
+            <strong>Paiement CB &amp; sans contact</strong>
+            <span>Moyens de paiement gérés par CLTDistrib.</span>
+          </div>
+        </div>
       </div>
-      <div class="trust__item">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg>
-        <div><strong>Entretien et dépannage</strong><span>Un seul interlocuteur en cas de problème.</span></div>
-      </div>
-      <div class="trust__item">
-        <svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
-        <div><strong>Paiements gérés</strong><span>Carte, sans contact et pièces, encaissement inclus.</span></div>
-      </div>
+      <p class="covers-foot reveal">Vous n'avez pas à gérer les stocks, les approvisionnements ou l'entretien quotidien de la machine. <strong>CLTDistrib assure le suivi de l'exploitation.</strong></p>
     </div>
-  </div>
+  </section>
 
-  </div>
-
-  <!-- 2 — LE BESOIN ------------------------------------------- -->
+  <!-- 3 — POURQUOI INSTALLER UN DISTRIBUTEUR -------------------- -->
   <section class="section" id="pourquoi">
     <div class="wrap split">
       <div class="reveal">
-        <span class="eyebrow">Le besoin</span>
-        <h2>Une pause qui reste sur place, c'est du temps et du confort gagnés.</h2>
-        <p class="need__lead" style="margin-top:22px">Dans la plupart des sites, il n'existe aucune solution simple pour boire ou grignoter sur place.</p>
-        <p>Résultat : on sort acheter à l'extérieur, on quitte le poste plus longtemps que prévu, et un visiteur qui attend n'a rien à sa disposition. Un distributeur bien placé règle ce point sans rien changer à votre organisation.</p>
+        <span class="eyebrow">Pourquoi installer un distributeur</span>
+        <h2>Un service simple pour votre établissement.</h2>
+        <p class="need__lead" style="margin-top:20px">Un distributeur automatique permet de proposer facilement des boissons et snacks aux personnes présentes sur votre site, sans créer de point de vente ni mobiliser votre personnel.</p>
       </div>
       <div class="need__list reveal">
         <div class="need__item">
@@ -1377,167 +1549,88 @@ html{
             <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>
             <h3>Pour vos salariés</h3>
           </div>
-          <p>Une boisson fraîche ou un en-cas accessible à toute heure, y compris en horaires décalés, sans avoir à sortir du site ni à prévoir de la monnaie.</p>
+          <p>Une solution pratique pour les pauses et les petites faims.</p>
         </div>
         <div class="need__item">
           <div class="need__item-top">
             <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M10 21v-5h4v5"/></svg>
             <h3>Pour vos clients et visiteurs</h3>
           </div>
-          <p>Un hall d'accueil, une salle d'attente ou un espace de réception où l'on peut patienter dans de bonnes conditions : c'est un détail que l'on remarque.</p>
+          <p>Un service complémentaire disponible directement sur votre site.</p>
         </div>
         <div class="need__item">
           <div class="need__item-top">
             <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <h3>Pour vous, côté gestion</h3>
+            <h3>Pour votre établissement</h3>
           </div>
-          <p>Aucun achat de matériel, aucun stock à suivre, aucune caisse à gérer. Le service fonctionne en autonomie et nous en assurons l'exploitation complète.</p>
+          <p>Une solution gérée par un interlocuteur externe, sans gestion quotidienne des stocks.</p>
+        </div>
+        <div class="need__item">
+          <div class="need__item-top">
+            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            <h3>Pour vos espaces</h3>
+          </div>
+          <p>Une installation étudiée selon la configuration, le passage et les besoins du lieu.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3 — SERVICE CLÉ EN MAIN --------------------------------- -->
-  <section class="section section--alt" id="service">
+  <!-- 4 — POUR QUELS LIEUX ? ------------------------------------ -->
+  <section class="section section--alt" id="lieux">
     <div class="wrap">
       <div class="section__head reveal">
-        <span class="eyebrow">Notre service</span>
-        <h2>Un service clé en main, du premier repérage au suivi quotidien.</h2>
-        <p>Nous fournissons et exploitons le distributeur. Votre seule contribution : un emplacement adapté et une prise électrique.</p>
-      </div>
-      <div class="service-grid">
-        <article class="service-card reveal" data-i="0">
-          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M6 21V8l6-4 6 4v13"/><path d="M10 21v-6h4v6"/></svg></div>
-          <h3>Installation</h3>
-          <p>Nous livrons, positionnons et mettons en service la machine, puis nous testons les paiements avec vous. L'intervention se fait sans interrompre votre activité.</p>
-          <span class="service-card__tag">À notre charge</span>
-        </article>
-        <article class="service-card reveal" data-i="1">
-          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg></div>
-          <h3>Approvisionnement</h3>
-          <p>Nous remplissons la machine, contrôlons les dates de péremption et ajustons la sélection en fonction de ce qui se consomme réellement chez vous.</p>
-          <span class="service-card__tag">Passages réguliers</span>
-        </article>
-        <article class="service-card reveal" data-i="2">
-          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg></div>
-          <h3>Maintenance</h3>
-          <p>Bourrage, monnayeur, lecteur de carte, réfrigération : vous nous signalez le problème et nous intervenons. Vous n'avez ni pièce à commander ni technicien à chercher.</p>
-          <span class="service-card__tag">Un seul contact</span>
-        </article>
-        <article class="service-card reveal" data-i="3">
-          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 11h18"/><path d="M5 11V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/><path d="M6 11v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-8"/><path d="M10 15h4"/></svg></div>
-          <h3>Nettoyage</h3>
-          <p>À chaque passage, la façade, la vitre et la zone de service sont nettoyées. La machine reste présentable, y compris dans un espace vu par vos clients.</p>
-          <span class="service-card__tag">À chaque visite</span>
-        </article>
-        <article class="service-card reveal" data-i="4">
-          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg></div>
-          <h3>Gestion des paiements</h3>
-          <p>Carte bancaire, sans contact (téléphone, montre) et pièces avec rendu de monnaie. Le terminal, l'encaissement et le suivi sont de notre côté.</p>
-          <span class="service-card__tag">Sans billets</span>
-        </article>
-        <article class="service-card reveal" data-i="5">
-          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div>
-          <h3>Suivi des stocks</h3>
-          <p>Les niveaux de chaque colonne sont suivis sur notre tableau de bord. Nous programmons les passages en fonction du stock, pas d'un calendrier fixe.</p>
-          <span class="service-card__tag">Suivi en ligne</span>
-        </article>
-      </div>
-      <div class="service-note reveal">
-        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 16v-5"/><path d="M12 8h.01"/></svg>
-        <p><strong>Important :</strong> nous ne vendons pas de distributeurs. Nous restons propriétaires de la machine et nous l'exploitons chez vous. Votre rôle se limite à mettre à disposition un emplacement adapté.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4 — EMPLACEMENTS ---------------------------------------- -->
-  <section class="section" id="emplacements">
-    <div class="wrap">
-      <div class="section__head reveal">
-        <span class="eyebrow">Où l'installer</span>
-        <h2>Les lieux où un distributeur trouve naturellement sa place.</h2>
-        <p>Le critère n'est pas la taille du site, mais le passage : dès qu'un espace réunit régulièrement des personnes, un distributeur devient utile.</p>
+        <span class="eyebrow">Pour quels lieux</span>
+        <h2>Des solutions adaptées à différents lieux</h2>
+        <p>Voici les types d'établissements auxquels notre service s'adresse. Chaque emplacement fait l'objet d'une étude avant toute installation.</p>
       </div>
       <div class="places">
         <div class="place reveal" data-i="0">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M15 9h2a2 2 0 0 1 2 2v10"/><path d="M9 7h2M9 11h2M9 15h2"/></svg>
-          <h3>Entreprises &amp; PME</h3>
-          <p>Salle de pause, couloir principal ou espace commun.</p>
+          <h3>Entreprises &amp; bureaux</h3>
+          <p>Salle de pause, hall d'accueil ou espace commun.</p>
         </div>
         <div class="place reveal" data-i="1">
-          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18M3 9h18"/></svg>
-          <h3>Bureaux &amp; open spaces</h3>
-          <p>Près des espaces de travail et des salles de réunion.</p>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V10l5-3v14"/><path d="M9 21V7l6-4v18"/><path d="M15 21V11l5 3v7"/><path d="M12 9h.01M12 13h.01"/></svg>
+          <h3>Usines &amp; ateliers</h3>
+          <p>Vestiaires et zones de pause, y compris en horaires décalés.</p>
         </div>
         <div class="place reveal" data-i="2">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 21V9l9-5 9 5v12"/><path d="M3 13h18"/><path d="M9 21v-5h6v5"/></svg>
-          <h3>Entrepôts &amp; logistique</h3>
-          <p>Zones de quai, vestiaires et salles de repos.</p>
+          <h3>Entrepôts &amp; plateformes logistiques</h3>
+          <p>Zones de quai et salles de repos des équipes.</p>
         </div>
         <div class="place reveal" data-i="3">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V10l5-3v14"/><path d="M9 21V7l6-4v18"/><path d="M15 21V11l5 3v7"/><path d="M12 9h.01M12 13h.01"/></svg>
-          <h3>Sites industriels</h3>
-          <p>Ateliers et équipes en horaires décalés ou de nuit.</p>
-        </div>
-        <div class="place reveal" data-i="4">
           <svg class="icon" viewBox="0 0 24 24"><path d="M3 9v6M21 9v6"/><path d="M6.5 6v12M17.5 6v12"/><path d="M6.5 12h11"/></svg>
           <h3>Salles de sport</h3>
-          <p>Boissons et barres à la sortie des zones d'entraînement.</p>
+          <p>Boissons et barres à proximité des zones d'entraînement.</p>
         </div>
-        <div class="place reveal" data-i="5">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V6a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v15"/><path d="M15 10h4a1 1 0 0 1 1 1v10"/><path d="M8 9h3M8 13h3M8 17h3"/></svg>
-          <h3>Hôtels &amp; hébergements</h3>
-          <p>Halls, étages et espaces accessibles en dehors des horaires de service.</p>
-        </div>
-        <div class="place reveal" data-i="6">
+        <div class="place reveal" data-i="4">
           <svg class="icon" viewBox="0 0 24 24"><path d="m3 8 9-4 9 4-9 4-9-4z"/><path d="M7 10.5V16c0 1.5 2.5 3 5 3s5-1.5 5-3v-5.5"/><path d="M21 8v6"/></svg>
           <h3>Centres de formation</h3>
           <p>Entre deux sessions, pour les stagiaires comme pour les formateurs.</p>
         </div>
+        <div class="place reveal" data-i="5">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V6a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v15"/><path d="M15 10h4a1 1 0 0 1 1 1v10"/><path d="M8 9h3M8 13h3M8 17h3"/></svg>
+          <h3>Hôtels &amp; résidences</h3>
+          <p>Halls et étages, accessibles en dehors des horaires de service.</p>
+        </div>
+        <div class="place reveal" data-i="6">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M6 21V8l6-4 6 4v13"/><path d="M9 12h6M9 16h6"/></svg>
+          <h3>Établissements accueillant du public</h3>
+          <p>Espaces d'accueil et salles d'attente.</p>
+        </div>
         <div class="place reveal" data-i="7">
-          <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.5 2.4 3.9 5.6 3.9 9S14.5 18.6 12 21c-2.5-2.4-3.9-5.6-3.9-9S9.5 5.4 12 3z"/></svg>
-          <h3>Lieux publics</h3>
-          <p>Espaces d'accueil et lieux de passage ouverts au public.</p>
+          <svg class="icon" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="13" rx="2"/><path d="M5 9h14"/><path d="M7 20l2-4M17 20l-2-4"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
+          <h3>Gares &amp; lieux de passage</h3>
+          <p>Zones fréquentées où l'offre sur place est limitée.</p>
         </div>
       </div>
-      <p class="places-foot reveal"><strong>Votre site n'apparaît pas dans cette liste&nbsp;?</strong> Dites-nous ce que vous avez : nous vous dirons honnêtement si l'emplacement s'y prête ou non.</p>
+      <p class="places-foot reveal"><strong>Votre établissement ne figure pas dans cette liste&nbsp;?</strong> Présentez-nous votre site : nous vous dirons si l'emplacement s'y prête.</p>
     </div>
   </section>
 
-  <!-- 5 — LES 4 ÉTAPES ---------------------------------------- -->
-  <section class="section section--dark" id="etapes">
-    <div class="wrap">
-      <div class="section__head reveal">
-        <span class="eyebrow">Comment ça marche</span>
-        <h2>Quatre étapes, un seul interlocuteur.</h2>
-        <p>De la première prise de contact à la mise en service, le processus est court et ne mobilise presque pas votre temps.</p>
-      </div>
-      <div class="steps">
-        <div class="step reveal" data-i="0">
-          <div class="step__num"><em>01</em> Prise de contact</div>
-          <h3>Vous nous décrivez votre site</h3>
-          <p>Type de lieu, nombre de personnes présentes, horaires. Quelques informations suffisent pour savoir si l'installation a du sens.</p>
-        </div>
-        <div class="step reveal" data-i="1">
-          <div class="step__num"><em>02</em> Visite sur place</div>
-          <h3>Nous étudions l'emplacement</h3>
-          <p>Nous venons voir l'espace disponible, l'accès à une prise et le flux de passage réel. Cette visite est gratuite et sans engagement.</p>
-        </div>
-        <div class="step reveal" data-i="2">
-          <div class="step__num"><em>03</em> Installation</div>
-          <h3>Nous mettons la machine en service</h3>
-          <p>Livraison, positionnement, branchement, premier remplissage et test des moyens de paiement, à une date convenue ensemble.</p>
-        </div>
-        <div class="step reveal" data-i="3">
-          <div class="step__num"><em>04</em> Exploitation</div>
-          <h3>Nous assurons le suivi</h3>
-          <p>Réassort, nettoyage, dépannage et ajustement de la sélection. Vous n'avez plus qu'un numéro à connaître en cas de besoin.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION IMMERSIVE — LE DISTRIBUTEUR ---------------------- -->
+  <!-- 5 — UNE SOLUTION CLÉ EN MAIN (section immersive) ---------- -->
   <section class="parallax-decouvrir" id="solution">
     <div class="parallax-decouvrir__bg">
       <div class="draw-machine" id="parallaxImg">
@@ -1577,8 +1670,8 @@ html{
         <svg class="draw-machine__schema" viewBox="0 0 180 180" aria-hidden="true">
           <line x1="35" y1="150" x2="35" y2="30" class="fx-dash"/>
           <line x1="35" y1="150" x2="150" y2="150" class="fx-dash"/>
-          <text x="8" y="92" class="fx-label">2,1 m</text>
-          <text x="78" y="168" class="fx-label">0,9 m</text>
+          <text x="8" y="92" class="fx-label">Espace</text>
+          <text x="70" y="168" class="fx-label">Passage</text>
           <circle cx="35" cy="150" r="4" class="fx-ping"/>
         </svg>
 
@@ -1593,121 +1686,171 @@ html{
     <div class="wrap parallax-decouvrir__steps" id="scrollSteps"></div>
   </section>
 
-  <!-- 6 — AVANTAGES ------------------------------------------- -->
-  <section class="section section--dark" id="avantages">
+  <!-- 6 — COMMENT ÇA MARCHE ------------------------------------- -->
+  <section class="section section--dark" id="etapes">
     <div class="wrap">
       <div class="section__head reveal">
-        <span class="eyebrow">Pour le site partenaire</span>
-        <h2>Ce que vous y gagnez concrètement.</h2>
-        <p>Le service est conçu pour être utile à vos équipes et invisible dans votre organisation.</p>
+        <span class="eyebrow">Comment ça marche</span>
+        <h2>De votre premier contact à la mise en service.</h2>
+        <p>Un parcours court, qui ne mobilise presque pas votre temps.</p>
       </div>
-      <div class="adv-grid">
-        <div class="adv reveal" data-i="0">
-          <span class="adv__n">01</span>
-          <h3>Zéro investissement</h3>
-          <p>La machine, sa livraison, son installation et son entretien sont financés par CLTDistrib. Aucune avance de trésorerie n'est demandée.</p>
+      <div class="steps">
+        <div class="step reveal" data-i="0">
+          <div class="step__num"><em>01</em> Premier contact</div>
+          <h3>Vous nous contactez</h3>
+          <p>Présentez-nous votre établissement et votre besoin.</p>
         </div>
-        <div class="adv reveal" data-i="1">
-          <span class="adv__n">02</span>
-          <h3>Zéro charge de gestion</h3>
-          <p>Pas de commandes à passer, pas de stock à surveiller, pas de caisse à faire. Aucune tâche supplémentaire pour vos équipes.</p>
+        <div class="step reveal" data-i="1">
+          <div class="step__num"><em>02</em> Étude</div>
+          <h3>Nous étudions votre emplacement</h3>
+          <p>Nous échangeons sur l'espace disponible, le passage et les contraintes du site.</p>
         </div>
-        <div class="adv reveal" data-i="2">
-          <span class="adv__n">03</span>
-          <h3>Un service utile au quotidien</h3>
-          <p>Vos salariés restent sur place pendant la pause, et vos visiteurs trouvent de quoi patienter dans de bonnes conditions.</p>
+        <div class="step reveal" data-i="2">
+          <div class="step__num"><em>03</em> Préparation</div>
+          <h3>Nous préparons l'installation</h3>
+          <p>Nous définissons ensemble la solution adaptée à votre emplacement.</p>
         </div>
-        <div class="adv reveal" data-i="3">
-          <span class="adv__n">04</span>
-          <h3>Une sélection qui s'ajuste</h3>
-          <p>La gamme évolue avec les habitudes réelles du site : ce qui ne part pas est remplacé, ce qui plaît est renforcé.</p>
+        <div class="step reveal" data-i="3">
+          <div class="step__num"><em>04</em> Exploitation</div>
+          <h3>CLTDistrib exploite la machine</h3>
+          <p>Approvisionnement, entretien, suivi et maintenance sont pris en charge selon les conditions définies.</p>
         </div>
-        <div class="adv reveal" data-i="4">
-          <span class="adv__n">05</span>
-          <h3>Un interlocuteur unique</h3>
-          <p>Pas de plateforme téléphonique ni de sous-traitant : la même personne suit votre site d'un bout à l'autre.</p>
-        </div>
-        <div class="adv reveal" data-i="5">
-          <span class="adv__n">06</span>
-          <h3>Réversible</h3>
-          <p>Si le distributeur ne trouve pas son public, nous le retirons. Vous n'êtes pas engagé sur du matériel qui vous appartiendrait.</p>
-        </div>
+      </div>
+      <div class="steps-cta reveal">
+        <a href="#contact" class="btn btn--onDark">Parler de votre emplacement</a>
       </div>
     </div>
   </section>
 
-  <!-- 7 — PRODUITS -------------------------------------------- -->
-  <section class="section" id="produits">
+  <!-- 7 — VOTRE RÔLE + PARTENARIAT ------------------------------ -->
+  <section class="section" id="role">
+    <div class="wrap split">
+      <div class="reveal">
+        <span class="eyebrow">Ce que vous avez à faire</span>
+        <h2>Votre rôle&nbsp;? Mettre à disposition un emplacement adapté.</h2>
+        <div class="role-list">
+          <div class="role-item">
+            <span class="role-item__n">01</span>
+            <div>
+              <strong>Un espace approprié</strong>
+              <span>Un emplacement stable, accessible et cohérent avec le passage sur votre site.</span>
+            </div>
+          </div>
+          <div class="role-item">
+            <span class="role-item__n">02</span>
+            <div>
+              <strong>Une alimentation électrique adaptée</strong>
+              <span>Le raccordement nécessaire au fonctionnement de la machine.</span>
+            </div>
+          </div>
+        </div>
+        <p class="role-note">Nous étudions ensuite avec vous les conditions d'installation et d'exploitation. Les besoins techniques sont vérifiés au cas par cas lors de l'étude de l'emplacement.</p>
+      </div>
+      <div class="partner-card reveal">
+        <span class="eyebrow">Conditions</span>
+        <h3>Un partenariat étudié au cas par cas.</h3>
+        <p>Chaque emplacement est différent. Les conditions de partenariat sont donc étudiées selon le type de lieu, sa fréquentation, l'espace disponible, les contraintes techniques et les besoins des utilisateurs.</p>
+        <p>Notre objectif est de construire une solution cohérente pour chaque emplacement, avec un fonctionnement clair pour les deux parties.</p>
+        <a href="#contact" class="btn btn--accent">Étudier mon emplacement</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 — PRODUITS ---------------------------------------------- -->
+  <section class="section section--alt" id="produits">
     <div class="wrap">
       <div class="section__head reveal">
-        <span class="eyebrow">Ce que contient la machine</span>
-        <h2>Boissons et snacks, sélectionnés selon le lieu.</h2>
-        <p>Voici les familles de produits que nous proposons habituellement. La sélection définitive se construit avec vous, en fonction du public du site.</p>
+        <span class="eyebrow">Les produits</span>
+        <h2>Une offre adaptée à votre public.</h2>
+        <p>Voici les familles de produits que nous pouvons proposer. La sélection définitive est construite avec vous, selon le lieu.</p>
       </div>
-      <div class="prod-grid">
+      <div class="prod-grid prod-grid--2">
         <article class="prod reveal" data-i="0">
           <div class="prod__head">
             <svg class="icon" viewBox="0 0 24 24"><path d="M8 2h8l-1 5H9L8 2z"/><path d="M9 7h6v13a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2V7z"/><path d="M9 12h6"/></svg>
-            <h3>Boissons fraîches</h3>
+            <h3>Boissons</h3>
           </div>
-          <p>Le cœur de la machine, en réfrigéré, disponible toute la journée.</p>
           <div class="chips">
-            <span class="chip">Eaux plates</span><span class="chip">Eaux gazeuses</span><span class="chip">Sodas</span>
-            <span class="chip">Jus de fruits</span><span class="chip">Thés glacés</span><span class="chip">Boissons énergisantes</span>
+            <span class="chip">Eau</span><span class="chip">Eaux gazeuses</span><span class="chip">Sodas</span>
+            <span class="chip">Jus et boissons fruitées</span><span class="chip">Thés glacés</span>
+            <span class="chip">Boissons énergisantes</span><span class="chip">Autres références selon le lieu</span>
           </div>
         </article>
         <article class="prod reveal" data-i="1">
           <div class="prod__head">
             <svg class="icon" viewBox="0 0 24 24"><path d="M6 3h12l-1.4 17.2a2 2 0 0 1-2 1.8H9.4a2 2 0 0 1-2-1.8L6 3z"/><path d="M8 8h8M8 13h8"/></svg>
-            <h3>Snacks salés</h3>
+            <h3>Snacks</h3>
           </div>
-          <p>Pour la pause de milieu de journée ou les fins de poste.</p>
           <div class="chips">
-            <span class="chip">Chips</span><span class="chip">Biscuits apéritifs</span><span class="chip">Crackers</span>
-            <span class="chip">Fruits secs</span><span class="chip">Graines salées</span>
-          </div>
-        </article>
-        <article class="prod reveal" data-i="2">
-          <div class="prod__head">
-            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="10" rx="2"/><path d="M7 7v10M11 7v10M15 7v10"/></svg>
-            <h3>Snacks sucrés</h3>
-          </div>
-          <p>Les incontournables, avec des formats individuels adaptés à la pause.</p>
-          <div class="chips">
-            <span class="chip">Barres chocolatées</span><span class="chip">Biscuits</span><span class="chip">Gaufres</span>
-            <span class="chip">Madeleines</span><span class="chip">Barres de céréales</span>
+            <span class="chip">Chips</span><span class="chip">Biscuits</span><span class="chip">Barres chocolatées</span>
+            <span class="chip">Barres céréalières</span><span class="chip">Confiseries</span>
+            <span class="chip">Produits adaptés à la demande du site</span>
           </div>
         </article>
       </div>
-      <p class="prod-foot reveal">La gamme peut inclure des options plus légères (eaux, fruits secs, barres de céréales) si votre site le souhaite. Selon le modèle installé et le besoin, une offre de boissons chaudes peut être étudiée séparément.</p>
+      <p class="prod-foot reveal">L'offre peut évoluer selon les habitudes de consommation et les besoins du lieu.</p>
     </div>
   </section>
 
-  <!-- 8 — À PROPOS -------------------------------------------- -->
-  <section class="section section--alt" id="apropos">
+  <!-- 9 — ENGAGEMENT -------------------------------------------- -->
+  <section class="section section--dark" id="engagement">
+    <div class="wrap">
+      <div class="section__head reveal">
+        <span class="eyebrow">Notre engagement</span>
+        <h2>Pas simplement une machine posée dans un coin.</h2>
+        <p>Notre objectif est de proposer un service suivi et durable. L'exploitation d'un distributeur implique de veiller à sa disponibilité, à sa propreté, à son approvisionnement et à son bon fonctionnement.</p>
+      </div>
+      <div class="adv-grid adv-grid--4">
+        <div class="adv reveal" data-i="0">
+          <span class="adv__n">01</span>
+          <h3>Suivi</h3>
+          <p>L'état de la machine et les besoins de l'emplacement sont surveillés dans la durée.</p>
+        </div>
+        <div class="adv reveal" data-i="1">
+          <span class="adv__n">02</span>
+          <h3>Réassort</h3>
+          <p>Le réapprovisionnement est organisé en fonction de la consommation constatée sur le site.</p>
+        </div>
+        <div class="adv reveal" data-i="2">
+          <span class="adv__n">03</span>
+          <h3>Entretien</h3>
+          <p>La machine est nettoyée pour rester présentable, y compris dans un espace vu par le public.</p>
+        </div>
+        <div class="adv reveal" data-i="3">
+          <span class="adv__n">04</span>
+          <h3>Réactivité</h3>
+          <p>En cas de dysfonctionnement, vous nous signalez le problème et nous intervenons.</p>
+        </div>
+      </div>
+      <p class="engagement-foot reveal"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> <strong>Un interlocuteur unique pour votre emplacement.</strong></p>
+    </div>
+  </section>
+
+  <!-- 10 — À PROPOS --------------------------------------------- -->
+  <section class="section" id="apropos">
     <div class="wrap split">
       <div class="reveal">
-        <span class="eyebrow">Qui sommes-nous</span>
-        <p class="about__quote" style="margin-top:22px">Une entreprise indépendante, locale, qui préfère <em>bien suivre quelques sites</em> plutôt que d'en installer beaucoup et de les oublier.</p>
+        <span class="eyebrow">À propos</span>
+        <h2>Une entreprise indépendante, un interlocuteur unique.</h2>
         <div class="about__facts">
           <div class="about__fact">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
-            <div><strong>Un service de proximité</strong><span>Nous intervenons sur un secteur géographique restreint, pour rester réellement disponibles.</span></div>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/></svg>
+            <div><strong>Un contact direct</strong><span>Vous échangez avec la personne qui suit réellement votre emplacement.</span></div>
           </div>
           <div class="about__fact">
-            <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-            <div><strong>Une réponse rapide</strong><span>Vous écrivez, nous répondons. Pas de ticket qui se perd dans une file d'attente.</span></div>
+            <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            <div><strong>Un développement local</strong><span>Le service se construit sur un secteur géographique restreint, pour rester disponible.</span></div>
           </div>
           <div class="about__fact">
             <svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
-            <div><strong>Des engagements tenables</strong><span>Nous préférons annoncer ce que nous savons faire plutôt que de promettre l'impossible.</span></div>
+            <div><strong>Une approche personnalisée</strong><span>Chaque emplacement est étudié individuellement, sans solution imposée.</span></div>
           </div>
         </div>
       </div>
       <div class="about__body reveal">
-        <p>CLTDistrib est une jeune entreprise indépendante. Je l'ai créée avec une idée simple : proposer aux entreprises et aux lieux de passage de ma région un service de distribution automatique réellement suivi, où l'on sait qui appeler et où l'on obtient une réponse.</p>
-        <p>Je m'occupe personnellement de chaque site : le repérage de l'emplacement, l'installation, les passages de réassort, le nettoyage et le dépannage. Il n'y a ni centre d'appels ni sous-traitant entre vous et moi.</p>
-        <p>Je démarre cette activité, et je l'assume : c'est précisément pour cette raison que chaque emplacement compte et que je préfère m'engager sur un suivi sérieux plutôt que sur des promesses de volume. Si un jour la machine ne rend pas le service attendu chez vous, nous la retirons — c'est aussi simple que ça.</p>
+        <p>CLTDistrib est une jeune entreprise indépendante spécialisée dans le développement d'un service de distribution automatique de boissons et snacks.</p>
+        <p>Le projet est construit avec une volonté simple : proposer aux entreprises et établissements une solution pratique, suivie et adaptée à leur environnement.</p>
+        <p>En tant qu'entrepreneur indépendant, je privilégie une relation directe avec mes partenaires et un suivi attentif de chaque emplacement.</p>
         <div class="about__sign">
           <span class="about__avatar" aria-hidden="true">CP</span>
           <div>
@@ -1719,7 +1862,39 @@ html{
     </div>
   </section>
 
-  <!-- 9 — FAQ -------------------------------------------------- -->
+  <!-- 11 — POURQUOI TRAVAILLER AVEC CLTDISTRIB ------------------ -->
+  <section class="section section--alt" id="confiance">
+    <div class="wrap">
+      <div class="section__head section__head--center reveal">
+        <span class="eyebrow">Confiance</span>
+        <h2>Pourquoi travailler avec CLTDistrib&nbsp;?</h2>
+      </div>
+      <div class="service-grid service-grid--4">
+        <article class="service-card reveal" data-i="0">
+          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/></svg></div>
+          <h3>Un interlocuteur unique</h3>
+          <p>Un contact direct pour votre emplacement.</p>
+        </article>
+        <article class="service-card reveal" data-i="1">
+          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 14h8"/></svg></div>
+          <h3>Une solution clé en main</h3>
+          <p>Nous prenons en charge l'exploitation de la machine.</p>
+        </article>
+        <article class="service-card reveal" data-i="2">
+          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg></div>
+          <h3>Une offre adaptable</h3>
+          <p>Les produits peuvent évoluer selon les besoins du site.</p>
+        </article>
+        <article class="service-card reveal" data-i="3">
+          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></div>
+          <h3>Une relation de proximité</h3>
+          <p>Une entreprise indépendante qui privilégie un suivi régulier et réactif.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 — FAQ --------------------------------------------------- -->
   <section class="section" id="faq">
     <div class="wrap">
       <div class="section__head section__head--center reveal">
@@ -1728,106 +1903,130 @@ html{
       </div>
       <div class="faq reveal" id="faqList">
         <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Combien cela me coûte-t-il ?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Rien. La machine, sa livraison, son installation, son approvisionnement et son entretien sont à notre charge. Vous mettez à disposition un emplacement et une prise électrique : c'est la seule contribution attendue de votre part.</div></div>
+          <h3><button class="faq__q" type="button" aria-expanded="false">Qui fournit le distributeur&nbsp;?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">CLTDistrib. Le distributeur est mis à disposition dans le cadre du service d'exploitation : <strong>vous n'achetez pas de machine</strong> et n'avez pas de matériel à financer.</div></div>
         </div>
         <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Qui est propriétaire du distributeur ?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Nous. <strong>Nous ne vendons pas de machines</strong> : nous fournissons la nôtre et nous l'exploitons chez vous. Vous n'achetez aucun matériel et vous n'avez aucun stock à gérer.</div></div>
+          <h3><button class="faq__q" type="button" aria-expanded="false">Qui s'occupe du réapprovisionnement&nbsp;?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">CLTDistrib. Le réassort des produits est organisé selon les besoins constatés sur l'emplacement. Vos équipes n'ont ni commandes à passer ni stock à gérer.</div></div>
         </div>
         <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">De quoi ai-je besoin sur place ?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">D'un emplacement stable d'environ un mètre carré, à l'abri des intempéries, avec une prise électrique standard à proximité et un accès permettant la livraison puis les passages de réassort. Nous vérifions tous ces points lors de la visite.</div></div>
+          <h3><button class="faq__q" type="button" aria-expanded="false">Qui entretient la machine&nbsp;?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">CLTDistrib assure le nettoyage de la machine et intervient en cas de dysfonctionnement. Les modalités précises d'intervention sont définies avec vous au moment de la mise en place.</div></div>
         </div>
         <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Qui remplit et nettoie la machine ?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Nous, à chaque passage : réassort des colonnes, contrôle des dates de péremption, nettoyage de la façade, de la vitre et de la zone de service. Vos équipes n'ont rien à faire.</div></div>
+          <h3><button class="faq__q" type="button" aria-expanded="false">Les utilisateurs peuvent-ils payer par carte bancaire&nbsp;?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Oui. Les moyens de paiement sont gérés par CLTDistrib : carte bancaire et paiement sans contact. Les moyens disponibles sur une machine donnée sont confirmés lors de l'étude du projet.</div></div>
         </div>
         <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Que se passe-t-il en cas de panne ?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Vous nous signalez le problème et nous intervenons. La majorité des incidents courants (bourrage, monnayeur, réglage) se règlent sur place. Si la machine nécessite une intervention lourde, nous prenons en charge le retour auprès du constructeur et la remise en service.</div></div>
+          <h3><button class="faq__q" type="button" aria-expanded="false">Quels types de produits peuvent être proposés&nbsp;?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Des boissons (eau, eaux gazeuses, sodas, jus, thés glacés, boissons énergisantes) et des snacks (chips, biscuits, barres chocolatées, barres céréalières, confiseries). L'offre est construite selon le public du lieu et peut évoluer.</div></div>
         </div>
         <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Quels moyens de paiement sont acceptés ?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Carte bancaire, paiement sans contact (carte, téléphone, montre) et pièces avec rendu de monnaie. Les billets ne sont pas acceptés. L'encaissement et le suivi des transactions sont gérés de notre côté.</div></div>
+          <h3><button class="faq__q" type="button" aria-expanded="false">Quelle place faut-il prévoir&nbsp;?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Cela dépend du modèle de distributeur retenu. Il faut un emplacement stable et accessible, avec le dégagement nécessaire à l'utilisation et à l'intervention. L'espace exact est déterminé lors de l'étude de l'emplacement.</div></div>
         </div>
         <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Qui choisit les produits ?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Nous partons d'une sélection large, puis nous l'ajustons avec vous en fonction de ce qui se consomme réellement. Si votre site souhaite des options particulières, dites-le nous : la gamme s'adapte.</div></div>
+          <h3><button class="faq__q" type="button" aria-expanded="false">Combien coûte l'installation pour l'entreprise&nbsp;?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">L'étude de l'emplacement est <strong>gratuite et sans engagement</strong>. Les conditions d'installation et d'exploitation sont ensuite définies au cas par cas, selon le type de lieu, sa fréquentation et les contraintes techniques. Elles vous sont présentées clairement avant toute décision.</div></div>
         </div>
         <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Combien de temps avant l'installation ?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Après la visite de l'emplacement, nous convenons ensemble d'une date. La mise en service se fait en une demi-journée environ, sans interrompre votre activité.</div></div>
+          <h3><button class="faq__q" type="button" aria-expanded="false">Est-ce que toutes les demandes d'installation sont acceptées&nbsp;?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">Non. Un emplacement doit réunir certaines conditions pour qu'un distributeur ait du sens : passage suffisant, espace disponible, accès et contraintes techniques compatibles. Si votre site ne s'y prête pas, nous vous le disons directement.</div></div>
         </div>
         <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Puis-je faire retirer la machine ?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Oui. Si le distributeur ne correspond pas à vos attentes ou ne trouve pas son public, nous venons le récupérer. Vous n'êtes pas immobilisé par un matériel qui vous appartiendrait.</div></div>
+          <h3><button class="faq__q" type="button" aria-expanded="false">Comment savoir si mon emplacement est adapté&nbsp;?</button></h3>
+          <div class="faq__a"><div class="faq__a-inner">En nous décrivant votre établissement via le formulaire en bas de page. Nous revenons vers vous pour étudier la faisabilité du projet, gratuitement et sans engagement de votre part.</div></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 9b — POSER UNE QUESTION ---------------------------------- -->
+  <!-- 13 — POSER UNE QUESTION ----------------------------------- -->
   <section class="section section--alt" id="question">
     <div class="wrap">
       <div class="section__head section__head--center reveal">
         <span class="eyebrow">Une autre question</span>
         <h2>Posez-la, la réponse est immédiate.</h2>
-        <p>Emplacement, produits, installation, stocks, maintenance, paiements : demandez ce que vous voulez savoir.</p>
+        <p>Emplacement, produits, installation, réassort, maintenance, paiements : demandez ce que vous souhaitez savoir.</p>
       </div>
       <div class="chatpanel reveal" id="chatBlock">
         <div class="chatpanel__messages" id="chatMessages"></div>
         <div class="chatpanel__inputrow">
-          <textarea id="chatInput" rows="1" placeholder="Ex : comment gérez-vous le réapprovisionnement ?" aria-label="Votre question"></textarea>
+          <textarea id="chatInput" rows="1" placeholder="Ex : qui s'occupe du réapprovisionnement ?" aria-label="Votre question"></textarea>
           <button class="btn btn--accent btn--icon" id="chatSend" aria-label="Envoyer la question">
             <svg class="icon" viewBox="0 0 24 24" style="color:#fff"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
           </button>
         </div>
-        <p class="form-note">Pour un projet précis, utilisez plutôt le formulaire ci-dessous : nous revenons vers vous pour organiser la visite.</p>
+        <p class="form-note">Pour un projet précis, utilisez le formulaire ci-dessous : nous revenons vers vous pour étudier votre emplacement.</p>
       </div>
     </div>
   </section>
 
-  <!-- 10 — CTA FINALE ------------------------------------------ -->
+  <!-- 14 — FORMULAIRE + CONTACT + FOOTER ------------------------ -->
   <div class="slide slide--end">
   <section class="section cta" id="contact">
     <div class="wrap">
       <div class="reveal">
         <span class="eyebrow">Étude gratuite</span>
-        <h2 style="margin-top:18px">Faisons le point sur votre emplacement.</h2>
-        <p class="cta__lede">Décrivez-nous votre site en quelques lignes. Nous vous répondons pour organiser une visite, vérifier si l'emplacement s'y prête et vous dire franchement ce qu'il en est.</p>
+        <h2 style="margin-top:14px">Votre emplacement peut-il accueillir un distributeur&nbsp;?</h2>
+        <p class="cta__lede">Présentez-nous votre établissement. Nous étudierons gratuitement la faisabilité du projet.</p>
         <ul class="cta__list">
-          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Visite et étude de l'emplacement sans frais</span></li>
-          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Aucun engagement de votre part à ce stade</span></li>
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Étude de l'emplacement gratuite</span></li>
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Sans engagement de votre part</span></li>
           <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Une réponse claire, même si votre site ne s'y prête pas</span></li>
         </ul>
-        <div class="cta__direct">
-          <span>Ou écrivez-nous directement</span>
-          <a href="mailto:clementpiresvalente@gmail.com?subject=Étude%20d'emplacement%20—%20distributeur%20automatique">
-            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-            clementpiresvalente@gmail.com
-          </a>
+
+        <div class="contact-card">
+          <strong class="contact-card__name">CLTDistrib</strong>
+          <span class="contact-card__sub">Distribution automatique — Boissons &amp; Snacks</span>
+          <dl class="contact-card__list">
+            <div>
+              <dt>Téléphone</dt>
+              <!-- TODO : remplacer par le numéro réel, puis supprimer la classe "is-todo" -->
+              <dd class="is-todo">À compléter</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd><a href="mailto:clementpiresvalente@gmail.com">clementpiresvalente@gmail.com</a></dd>
+            </div>
+            <div>
+              <dt>Zone d'intervention</dt>
+              <!-- TODO : remplacer par la zone réelle, puis supprimer la classe "is-todo" -->
+              <dd class="is-todo">À compléter</dd>
+            </div>
+          </dl>
         </div>
       </div>
 
       <div class="form-card reveal">
-        <h3>Demander une étude d'emplacement</h3>
-        <p>Réponse sous 24 à 48 h ouvrées.</p>
+        <h3>Demander une étude gratuite</h3>
+        <p>Décrivez votre établissement, nous revenons vers vous.</p>
         <form class="form-grid" id="leadForm" novalidate>
           <div class="field-row">
             <div class="field">
-              <label for="fNom">Nom et prénom *</label>
-              <input id="fNom" name="nom" type="text" autocomplete="name" placeholder="Ex : Marie Dupont" required>
+              <label for="fPrenom">Prénom *</label>
+              <input id="fPrenom" name="prenom" type="text" autocomplete="given-name" placeholder="Marie" required>
             </div>
             <div class="field">
-              <label for="fSociete">Société / structure *</label>
-              <input id="fSociete" name="societe" type="text" autocomplete="organization" placeholder="Ex : Atelier Dupont SARL" required>
+              <label for="fNom">Nom *</label>
+              <input id="fNom" name="nom" type="text" autocomplete="family-name" placeholder="Dupont" required>
             </div>
           </div>
           <div class="field-row">
             <div class="field">
-              <label for="fEmail">E-mail *</label>
-              <input id="fEmail" name="email" type="email" autocomplete="email" placeholder="marie.dupont@societe.fr" required>
+              <label for="fSociete">Entreprise *</label>
+              <input id="fSociete" name="societe" type="text" autocomplete="organization" placeholder="Nom de l'établissement" required>
+            </div>
+            <div class="field">
+              <label for="fFonction">Fonction</label>
+              <input id="fFonction" name="fonction" type="text" autocomplete="organization-title" placeholder="Ex : responsable des services généraux">
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label for="fEmail">Email professionnel *</label>
+              <input id="fEmail" name="email" type="email" autocomplete="email" placeholder="prenom.nom@entreprise.fr" required>
             </div>
             <div class="field">
               <label for="fTel">Téléphone</label>
@@ -1836,31 +2035,56 @@ html{
           </div>
           <div class="field-row">
             <div class="field">
-              <label for="fType">Type de lieu *</label>
+              <label for="fVille">Ville *</label>
+              <input id="fVille" name="ville" type="text" placeholder="Ville et code postal" required>
+            </div>
+            <div class="field">
+              <label for="fType">Type d'établissement *</label>
               <select id="fType" name="type" required>
                 <option value="">Sélectionner…</option>
-                <option>Entreprise / PME</option>
-                <option>Bureaux / open space</option>
-                <option>Entrepôt / logistique</option>
-                <option>Site industriel / atelier</option>
+                <option>Entreprise / bureaux</option>
+                <option>Usine / atelier</option>
+                <option>Entrepôt / plateforme logistique</option>
                 <option>Salle de sport</option>
-                <option>Hôtel / hébergement</option>
                 <option>Centre de formation</option>
-                <option>Lieu public / accueil</option>
+                <option>Hôtel / résidence</option>
+                <option>Établissement accueillant du public</option>
+                <option>Gare / lieu de passage</option>
                 <option>Autre</option>
               </select>
             </div>
+          </div>
+          <div class="field-row">
             <div class="field">
-              <label for="fVille">Ville / code postal *</label>
-              <input id="fVille" name="ville" type="text" placeholder="Ex : Bonnières-sur-Seine (78)" required>
+              <label for="fEffectif">Personnes présentes sur le site</label>
+              <select id="fEffectif" name="effectif">
+                <option value="">Sélectionner…</option>
+                <option>Moins de 20</option>
+                <option>20 à 50</option>
+                <option>50 à 100</option>
+                <option>100 à 250</option>
+                <option>Plus de 250</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="fExistant">Avez-vous déjà un distributeur&nbsp;?</label>
+              <select id="fExistant" name="existant">
+                <option value="">Sélectionner…</option>
+                <option>Non</option>
+                <option>Oui</option>
+              </select>
             </div>
           </div>
           <div class="field">
-            <label for="fMessage">Décrivez votre site</label>
-            <textarea id="fMessage" name="message" placeholder="Nombre de personnes présentes sur place, horaires, emplacement envisagé, présence de public…"></textarea>
+            <label for="fDispo">Disponibilité pour un échange</label>
+            <input id="fDispo" name="dispo" type="text" placeholder="Ex : en matinée, ou après 17 h">
           </div>
-          <button class="btn btn--primary btn--wide" type="submit">Demander l'étude gratuite</button>
-          <p class="form-note" id="formNote">En envoyant ce formulaire, votre messagerie s'ouvre avec le récapitulatif prêt à partir. Vos informations ne servent qu'à préparer la visite.</p>
+          <div class="field">
+            <label for="fMessage">Description du projet</label>
+            <textarea id="fMessage" name="message" placeholder="Emplacement envisagé, horaires du site, présence de public, contraintes particulières…"></textarea>
+          </div>
+          <button class="btn btn--primary btn--wide" type="submit">Demander une étude gratuite</button>
+          <p class="form-note" id="formNote"><strong>Sans engagement.</strong> En envoyant ce formulaire, votre messagerie s'ouvre avec le récapitulatif prêt à partir. Vos informations ne servent qu'à étudier la faisabilité du projet.</p>
         </form>
       </div>
     </div>
@@ -1869,25 +2093,40 @@ html{
   <footer class="footer">
     <div class="wrap">
       <div class="footer__top">
-        <div>
+        <div class="footer__brand">
           <div class="brand">
             <span class="brand__mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
             <span class="brand__name"><span>CLT</span><span>Distrib</span></span>
           </div>
-          <p class="footer__tag">Installation et exploitation de distributeurs automatiques de boissons et snacks pour les entreprises et les lieux de passage.</p>
+          <p class="footer__tag">Distribution automatique de boissons &amp; snacks. Installation et exploitation de distributeurs pour les entreprises, établissements et lieux accueillant du public.</p>
         </div>
-        <div class="footer__links">
-          <a href="#service">Notre service</a>
-          <a href="#emplacements">Emplacements</a>
-          <a href="#etapes">Comment ça marche</a>
-          <a href="#faq">FAQ</a>
-          <a href="#question">Poser une question</a>
-          <a href="#contact">Contact</a>
+        <div class="footer__cols">
+          <div class="footer__col">
+            <span class="footer__col-title">Le site</span>
+            <a href="#top">Accueil</a>
+            <a href="#offre">Notre solution</a>
+            <a href="#lieux">Pour quels lieux ?</a>
+            <a href="#etapes">Comment ça marche ?</a>
+            <a href="#contact">Contact</a>
+          </div>
+          <div class="footer__col">
+            <span class="footer__col-title">Informations</span>
+            <a href="mentions-legales.html">Mentions légales</a>
+            <a href="politique-confidentialite.html">Politique de confidentialité</a>
+            <a href="#faq">FAQ</a>
+          </div>
+          <div class="footer__col">
+            <span class="footer__col-title">Coordonnées</span>
+            <a href="mailto:clementpiresvalente@gmail.com">clementpiresvalente@gmail.com</a>
+            <!-- TODO : téléphone et zone d'intervention à renseigner -->
+            <span class="footer__todo">Téléphone — à compléter</span>
+            <span class="footer__todo">Zone d'intervention — à compléter</span>
+          </div>
         </div>
       </div>
       <div class="footer__bottom">
         <small>© 2026 CLTDistrib. Tous droits réservés.</small>
-        <small><a href="mentions-legales.html">Mentions légales</a> · <a href="mailto:clementpiresvalente@gmail.com">clementpiresvalente@gmail.com</a></small>
+        <small>Les photographies présentes sur ce site sont des illustrations.</small>
       </div>
     </div>
   </footer>
@@ -2305,7 +2544,7 @@ if(burgerBtn && mobileNav){
   var locked = false, lockTimer = null;
 
   function slides(){
-    return [].slice.call(document.querySelectorAll(".slide, .section, .scroll-step"))
+    return [].slice.call(document.querySelectorAll(".slide, .hero, .section, .scroll-step"))
       .filter(function(el){ return getComputedStyle(el).scrollSnapAlign !== "none"; });
   }
   function targetOf(el){
@@ -2419,24 +2658,26 @@ if(burgerBtn && mobileNav){
   var note = document.getElementById("formNote");
   var MAIL = "clementpiresvalente@gmail.com";
 
+  function val(name){
+    var el = form.elements[name];
+    return el ? String(el.value || "").trim() : "";
+  }
+
   form.addEventListener("submit", function(e){
     e.preventDefault();
-    var data = {
-      nom: form.nom.value.trim(),
-      societe: form.societe.value.trim(),
-      email: form.email.value.trim(),
-      tel: form.tel.value.trim(),
-      type: form.type.value,
-      ville: form.ville.value.trim(),
-      message: form.message.value.trim()
+    var d = {
+      prenom: val("prenom"), nom: val("nom"), societe: val("societe"), fonction: val("fonction"),
+      email: val("email"), tel: val("tel"), ville: val("ville"), type: val("type"),
+      effectif: val("effectif"), existant: val("existant"), dispo: val("dispo"), message: val("message")
     };
 
     var missing = [];
-    if(!data.nom) missing.push("votre nom");
-    if(!data.societe) missing.push("votre société");
-    if(!data.email || data.email.indexOf("@") === -1) missing.push("un e-mail valide");
-    if(!data.type) missing.push("le type de lieu");
-    if(!data.ville) missing.push("la ville");
+    if(!d.prenom) missing.push("votre prénom");
+    if(!d.nom) missing.push("votre nom");
+    if(!d.societe) missing.push("le nom de l'entreprise");
+    if(!d.email || d.email.indexOf("@") === -1) missing.push("un email professionnel valide");
+    if(!d.ville) missing.push("la ville");
+    if(!d.type) missing.push("le type d'établissement");
 
     var old = form.querySelector(".form-error, .form-success");
     if(old) old.remove();
@@ -2446,26 +2687,33 @@ if(burgerBtn && mobileNav){
       err.className = "form-error";
       err.textContent = "Merci de renseigner : " + missing.join(", ") + ".";
       form.insertBefore(err, note);
+      err.scrollIntoView({ block:"nearest" });
       return;
     }
 
+    function line(label, value){ return label + " : " + (value || "non renseigné") + "\n"; }
     var body =
-      "Demande d'étude d'emplacement\n\n" +
-      "Nom : " + data.nom + "\n" +
-      "Société : " + data.societe + "\n" +
-      "E-mail : " + data.email + "\n" +
-      "Téléphone : " + (data.tel || "non renseigné") + "\n" +
-      "Type de lieu : " + data.type + "\n" +
-      "Ville : " + data.ville + "\n\n" +
-      "Description du site :\n" + (data.message || "non renseignée") + "\n";
+      "Demande d'étude d'emplacement — CLTDistrib\n\n" +
+      line("Prénom", d.prenom) +
+      line("Nom", d.nom) +
+      line("Entreprise", d.societe) +
+      line("Fonction", d.fonction) +
+      line("Email", d.email) +
+      line("Téléphone", d.tel) +
+      line("Ville", d.ville) +
+      line("Type d'établissement", d.type) +
+      line("Personnes présentes sur le site", d.effectif) +
+      line("Distributeur déjà présent", d.existant) +
+      line("Disponibilité pour un échange", d.dispo) +
+      "\nDescription du projet :\n" + (d.message || "non renseignée") + "\n";
 
     var href = "mailto:" + MAIL +
-      "?subject=" + encodeURIComponent("Étude d'emplacement — " + data.societe + " (" + data.ville + ")") +
+      "?subject=" + encodeURIComponent("Étude d'emplacement — " + d.societe + " (" + d.ville + ")") +
       "&body=" + encodeURIComponent(body);
 
     var ok = document.createElement("p");
     ok.className = "form-success";
-    ok.textContent = "Votre messagerie s'ouvre avec le récapitulatif. S'il ne s'ouvre pas, écrivez-nous à " + MAIL + ".";
+    ok.textContent = "Votre messagerie s'ouvre avec le récapitulatif. Si elle ne s'ouvre pas, écrivez-nous à " + MAIL + ".";
     form.insertBefore(ok, note);
 
     window.location.href = href;
@@ -2479,32 +2727,32 @@ var parallaxImgEl = null, parallaxSectionEl = null, parallaxZoomPulse = 0, paral
 
 var MACHINE_INFO = {
   emplacement: {
-    code: "A1", stat: "Visite gratuite", title: "L'emplacement", screen: "PRÊT",
-    caption: "Avant toute installation, nous venons repérer le bon mur, la bonne prise et le passage réel. Cette visite ne coûte rien et n'engage à rien."
+    code: "A1", stat: "Avant toute installation", title: "Étude de l'emplacement", screen: "ÉTUDE",
+    caption: "Nous évaluons l'espace disponible, le passage et les contraintes du site."
   },
   produits: {
-    code: "A2", stat: "Adapté au site", title: "Les produits", screen: "FRAIS",
-    caption: "Le premier remplissage part sur une sélection large. Nous l'ajustons ensuite selon ce qui se consomme réellement chez vous."
+    code: "A2", stat: "Adapté au lieu", title: "Choix de la solution", screen: "SÉLECTION",
+    caption: "Nous déterminons le type de distributeur et l'offre de produits les plus adaptés."
   },
   installation: {
-    code: "B1", stat: "Sans interruption", title: "L'installation", screen: "EN SERVICE",
-    caption: "Livraison, mise en place, branchement, test des moyens de paiement : une demi-journée en moyenne, sans arrêter votre activité."
-  },
-  suivi: {
-    code: "B2", stat: "Suivi en ligne", title: "Le suivi des stocks", screen: "EN LIGNE",
-    caption: "Chaque colonne remonte son niveau sur notre tableau de bord. Nous voyons une rupture arriver avant qu'elle ne gêne qui que ce soit."
+    code: "B1", stat: "Sur site", title: "Installation", screen: "EN SERVICE",
+    caption: "Nous organisons l'installation du distributeur sur l'emplacement défini."
   },
   reappro: {
-    code: "C1", stat: "Passages ciblés", title: "Le réapprovisionnement", screen: "RÉAPPRO",
-    caption: "Ouverture, contrôle des dates, réassort, nettoyage, fermeture. Le passage est programmé au moment où le stock le justifie."
+    code: "B2", stat: "Selon les besoins", title: "Approvisionnement", screen: "RÉASSORT",
+    caption: "Les produits sont sélectionnés et réapprovisionnés selon les besoins du site."
   },
   maintenance: {
-    code: "C2", stat: "Réparé, pas remplacé par vous", title: "La panne, et après", screen: "OK",
-    caption: "Une vitre fêlée, un monnayeur bloqué, un écran en erreur : la machine tombe en panne, vous nous le signalez, nous intervenons — et elle repart. Vous n'avez ni pièce à commander ni technicien à chercher."
+    code: "C1", stat: "Propre et fonctionnel", title: "Entretien & maintenance", screen: "OK",
+    caption: "Nous assurons le suivi de la machine afin de maintenir un service propre et fonctionnel."
+  },
+  suivi: {
+    code: "C2", stat: "Dans la durée", title: "Suivi de l'exploitation", screen: "SUIVI",
+    caption: "Les ventes et les besoins du site permettent d'adapter progressivement l'offre."
   }
 };
 
-var MACHINE_ORDER = ["emplacement","produits","installation","suivi","reappro","maintenance"];
+var MACHINE_ORDER = ["emplacement","produits","installation","reappro","maintenance","suivi"];
 
 function initMachineGlow(){
   var glow = document.getElementById("parallaxGlow");
@@ -2558,7 +2806,11 @@ function fillMachineColumns(){
   stepsWrap.innerHTML = MACHINE_ORDER.map(function(key, i){
     var data = MACHINE_INFO[key];
     var sideClass = i % 2 === 1 ? " is-right" : "";
-    return '<div class="scroll-step' + sideClass + '" data-key="' + key + '">' +
+    var head = i === 0
+      ? '<span class="eyebrow">Une solution clé en main</span>' +
+        '<h2 class="scroll-title">Une gestion complète, de l\'installation au réassort.</h2>'
+      : '';
+    return '<div class="scroll-step' + sideClass + '" data-key="' + key + '">' + head +
       '<div class="scroll-step__icon-wrap"><svg class="scroll-step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + ICON_PATHS[key] + '</svg></div>' +
       '<span class="scroll-step__stat mono">' + data.stat + '</span>' +
       '<div class="scroll-step__meta">' +
@@ -2671,32 +2923,34 @@ function initParallax(){
    QUESTIONS COURANTES (réponses locales, sans API)
    ============================================================ */
 var CHAT_FAQ = [
-  { keys:["install","pose","mise en place","mettre en place","brancher"],
-    reply:"L'installation dure une demi-journée en moyenne : livraison, positionnement, branchement et test des moyens de paiement. Nous convenons de la date ensemble après la visite de l'emplacement." },
-  { keys:["produit","boisson","snack","offre","choix","varié","manger","boire"],
-    reply:"Boissons fraîches (eaux, sodas, jus, thés glacés), snacks salés et snacks sucrés. Nous partons d'une sélection large puis nous l'ajustons selon ce qui se consomme réellement chez vous." },
-  { keys:["maintenance","panne","entretien","répar","repar","incident","cass","bloqu"],
-    reply:"Vous nous signalez le problème et nous intervenons. La majorité des incidents (bourrage, monnayeur, réglage) se règlent sur place. Pour une intervention lourde, nous prenons en charge le retour constructeur et la remise en service." },
-  { keys:["stock","réappro","reappro","rupture","remplir","vide"],
-    reply:"Les niveaux de chaque colonne sont suivis sur notre tableau de bord. Nous programmons les passages en fonction du stock réel, pas d'un calendrier fixe." },
-  { keys:["nettoy","propre","hygiène","hygiene"],
-    reply:"À chaque passage, nous nettoyons la façade, la vitre et la zone de service. La machine reste présentable, y compris dans un espace vu par vos clients." },
-  { keys:["paiement","carte","cb","especes","espèces","monnaie","sans contact","billet"],
-    reply:"Carte bancaire, sans contact (carte, téléphone, montre) et pièces avec rendu de monnaie. Les billets ne sont pas acceptés. L'encaissement est géré de notre côté." },
-  { keys:["prix","tarif","coût","cout","investissement","payer","gratuit","frais","louer","location","acheter"],
-    reply:"Rien n'est à votre charge : la machine, l'installation, l'approvisionnement et l'entretien sont financés par CLTDistrib. Nous ne vendons pas de distributeurs — nous restons propriétaires de la machine et nous l'exploitons chez vous." },
-  { keys:["emplacement","où","ou mettre","lieu","site","place","prise","électri","electri"],
-    reply:"Il faut environ un mètre carré au sec, une prise électrique standard à proximité et un accès pour la livraison et les passages de réassort. Nous vérifions tout cela lors de la visite, qui est gratuite." },
-  { keys:["délai","delai","combien de temps","rapide","quand"],
-    reply:"Après la visite de l'emplacement, nous fixons ensemble une date de mise en service. La pose elle-même prend une demi-journée environ." },
-  { keys:["rdv","rendez-vous","rendez vous","visite","venir","passer","étude","etude"],
-    reply:"Avec plaisir. Remplissez le formulaire en bas de page ou écrivez-nous à clementpiresvalente@gmail.com avec la ville et le type de lieu : nous revenons vers vous pour organiser la visite." },
-  { keys:["retirer","arrêter","arreter","résilier","resilier","engagement"],
-    reply:"Si le distributeur ne trouve pas son public, nous venons le récupérer. Vous n'êtes pas immobilisé par un matériel qui vous appartiendrait." },
+  { keys:["fournit","fourni","proprietaire","propriétaire","acheter","achat","vendez","vend","vente","louer","location"],
+    reply:"CLTDistrib fournit le distributeur. Nous ne vendons pas de machines : nous exploitons un service de distribution automatique sur votre site. Vous n'avez aucun matériel à acheter." },
+  { keys:["réappro","reappro","remplir","remplissage","stock","rupture","vide","approvision"],
+    reply:"CLTDistrib s'occupe du réapprovisionnement. Le réassort est organisé selon les besoins constatés sur l'emplacement : vos équipes n'ont ni commandes à passer ni stock à gérer." },
+  { keys:["entretien","nettoy","propre","hygiène","hygiene","maintenance","panne","répar","repar","dysfonction","incident"],
+    reply:"CLTDistrib assure le nettoyage de la machine et intervient en cas de dysfonctionnement. Vous signalez le problème, nous prenons le relais. Les modalités précises sont définies avec vous lors de la mise en place." },
+  { keys:["paiement","carte","cb","sans contact","monnaie","especes","espèces","payer","billet"],
+    reply:"Les moyens de paiement sont gérés par CLTDistrib : carte bancaire et paiement sans contact. Les moyens disponibles sur une machine donnée sont confirmés lors de l'étude du projet." },
+  { keys:["produit","boisson","snack","offre","choix","manger","boire","eau","chips","barre"],
+    reply:"Des boissons (eau, eaux gazeuses, sodas, jus, thés glacés, boissons énergisantes) et des snacks (chips, biscuits, barres chocolatées, barres céréalières, confiseries). L'offre est construite selon le public du lieu et peut évoluer." },
+  { keys:["place","espace","dimension","taille","encombrement","m2","mètre","metre","prise","électri","electri","branch"],
+    reply:"Il faut un emplacement stable et accessible, avec le dégagement nécessaire à l'utilisation, ainsi qu'une alimentation électrique adaptée. Les besoins techniques exacts dépendent du modèle retenu et sont vérifiés lors de l'étude de l'emplacement." },
+  { keys:["prix","tarif","coût","cout","combien","frais","investissement","gratuit","facture"],
+    reply:"L'étude de l'emplacement est gratuite et sans engagement. Les conditions d'installation et d'exploitation sont ensuite définies au cas par cas, selon le type de lieu, sa fréquentation et les contraintes techniques — et vous sont présentées avant toute décision." },
+  { keys:["partenariat","condition","contrat","commission","rémunér","remuner","gagne"],
+    reply:"Chaque emplacement est différent : les conditions de partenariat sont étudiées selon le type de lieu, sa fréquentation, l'espace disponible, les contraintes techniques et les besoins des utilisateurs. L'objectif est un fonctionnement clair pour les deux parties." },
+  { keys:["adapté","adapte","eligible","éligible","accepté","accepte","refus","convient","possible chez"],
+    reply:"Toutes les demandes ne débouchent pas sur une installation : un emplacement doit réunir un passage suffisant, un espace disponible et des contraintes techniques compatibles. Décrivez-nous votre site via le formulaire, nous vous répondrons franchement." },
+  { keys:["installation","installer","délai","delai","combien de temps","quand","mise en service"],
+    reply:"Après l'étude de l'emplacement, nous définissons ensemble la solution adaptée puis nous organisons l'installation à une date convenue avec vous." },
+  { keys:["lieu","entreprise","bureau","usine","atelier","entrepot","entrepôt","sport","hotel","hôtel","formation","gare","public"],
+    reply:"Le service s'adresse aux entreprises et bureaux, usines et ateliers, entrepôts et plateformes logistiques, salles de sport, centres de formation, hôtels et résidences, établissements accueillant du public et lieux de passage. Chaque site fait l'objet d'une étude." },
+  { keys:["rdv","rendez-vous","rendez vous","visite","échange","echange","contacter","contact","devis","étude","etude"],
+    reply:"Avec plaisir. Remplissez le formulaire en bas de page avec votre ville et le type d'établissement, ou écrivez à clementpiresvalente@gmail.com : nous revenons vers vous pour organiser l'échange." },
   { keys:["bonjour","salut","hello","bonsoir"],
-    reply:"Bonjour ! Posez-moi vos questions sur l'emplacement, les produits, l'installation, le suivi des stocks, la maintenance ou les paiements." }
+    reply:"Bonjour ! Posez-moi vos questions sur l'emplacement, les produits, l'installation, le réassort, l'entretien, la maintenance ou les moyens de paiement." }
 ];
-var CHAT_FALLBACK = "Je n'ai pas de réponse toute prête pour cette question. Le plus simple est de nous écrire à clementpiresvalente@gmail.com, ou d'utiliser le formulaire d'étude d'emplacement en bas de page.";
+var CHAT_FALLBACK = "Je n'ai pas de réponse toute prête pour cette question. Le plus simple est d'utiliser le formulaire d'étude d'emplacement en bas de page, ou d'écrire à clementpiresvalente@gmail.com.";
 
 function findFaqReply(text){
   var norm = text.toLowerCase();
@@ -2735,7 +2989,7 @@ if(chatMessagesEl && chatInput && chatSendBtn){
       if(el) el.remove();
     }
 
-    addMessage("assistant", "Bonjour ! Posez-moi vos questions sur l'emplacement, les produits, l'installation, le suivi des stocks, la maintenance ou les moyens de paiement.");
+    addMessage("assistant", "Bonjour ! Posez-moi vos questions sur l'emplacement, les produits, l'installation, le réassort, l'entretien ou les moyens de paiement.");
 
     function autoResize(){
       chatInput.style.height = "auto";
