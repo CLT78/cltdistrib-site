@@ -607,7 +607,18 @@ img{ max-width:100%; display:block; }
 .draw-machine__wrench{ width:100%; height:100%; display:block; }
 
 @media (max-width:900px){
-  .draw-machine{ max-width:78vw; }
+  /* Sur téléphone : la machine occupe le haut de l'écran, le texte passe dessous */
+  .draw-machine{ top:33%; width:252px; max-width:66vw; }
+  .draw-machine__cabinet{ gap:7px; padding:10px; border-radius:14px; }
+  .draw-machine__glass{ min-height:236px; }
+  .draw-machine__side{ width:46px; gap:7px; padding:10px 0; }
+  .draw-machine__screen{ font-size:8px; padding:6px 2px; }
+  .draw-machine__alert{ top:10px; font-size:7.5px; padding:6px 1px; }
+  .draw-machine__keypad span{ width:9px; height:9px; }
+  .draw-machine__legs{ padding:9px 20px 0; }
+  .draw-machine__legs span{ width:11px; height:11px; }
+  .draw-machine__wrench-wrap{ right:-22px; top:-20px; width:28px; height:28px; }
+  .draw-machine__sparks{ right:8px; top:30%; }
   .draw-machine__schema, .draw-machine__pulse{ display:none; }
 }
 
@@ -643,9 +654,25 @@ img{ max-width:100%; display:block; }
 .scroll-step.is-active h3{ opacity:1; transform:translateY(0); }
 .scroll-step.is-active p{ opacity:1; transform:translateY(0); }
 @media (max-width:900px){
-  .parallax-decouvrir__scrim, .parallax-decouvrir__scrim.is-right{ background:linear-gradient(180deg, rgba(12,22,17,.5) 0%, rgba(12,22,17,.9) 55%, rgba(12,22,17,.96) 100%); }
-  .scroll-step, .scroll-step.is-right{ min-height:80vh; max-width:none; margin-left:0; }
-  .scroll-step:first-child{ padding-top:60px; }
+  /* Voile transparent en haut pour laisser voir la machine, opaque en bas pour le texte */
+  .parallax-decouvrir__scrim, .parallax-decouvrir__scrim.is-right{
+    background:linear-gradient(180deg,
+      rgba(12,22,17,0) 0%,
+      rgba(12,22,17,0) 44%,
+      rgba(12,22,17,.72) 54%,
+      rgba(12,22,17,.95) 62%,
+      rgba(12,22,17,.98) 100%);
+  }
+  .scroll-step, .scroll-step.is-right{
+    min-height:100vh; max-width:none; margin-left:0;
+    justify-content:flex-end; padding:0 0 7vh;
+  }
+  .scroll-step:first-child{ padding-top:0; }
+  .scroll-step:last-child{ min-height:100vh; }
+  .scroll-step__icon-wrap{ width:46px; height:46px; border-radius:11px; margin-bottom:14px; }
+  .scroll-step__icon{ width:23px; height:23px; }
+  .scroll-step h3{ font-size:27px; }
+  .scroll-step p{ font-size:16px; max-width:none; }
 }
 
 /* ============================================================
@@ -2173,7 +2200,15 @@ var MACHINE_ORDER = ["emplacement","produits","installation","suivi","reappro","
 
 function initMachineGlow(){
   var glow = document.getElementById("parallaxGlow");
-  if(glow) glow.style.background = "radial-gradient(circle at 50% 46%, rgba(62,156,107,.45), transparent 55%)";
+  if(!glow) return;
+  /* Le halo suit la position de la machine : centrée sur PC, remontée sur téléphone */
+  function place(){
+    var small = window.matchMedia("(max-width:900px)").matches;
+    glow.style.background = "radial-gradient(circle at 50% " + (small ? "33%" : "46%") +
+      ", rgba(62,156,107,.45), transparent " + (small ? "38%" : "55%") + ")";
+  }
+  place();
+  window.addEventListener("resize", place);
 }
 
 var ICON_PATHS = {
@@ -2287,7 +2322,8 @@ function applyParallaxTransform(){
   var total = rect.height + vh;
   if(!total) return;
   var progress = Math.max(0, Math.min(1, (vh - rect.top) / total));
-  var shift = (progress - 0.5) * 110;
+  /* Amplitude réduite sur téléphone : la machine ne doit pas passer sous la barre de navigation */
+  var shift = (progress - 0.5) * (window.innerWidth <= 900 ? 38 : 110);
   var scale = 1.02 + parallaxZoomPulse * 0.05;
   parallaxImgEl.style.transform = "translate(-50%,-50%) translateY(" + shift.toFixed(1) + "px) scale(" + scale.toFixed(3) + ")";
 }
