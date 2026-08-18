@@ -260,17 +260,14 @@ img{ max-width:100%; display:block; }
   content:''; position:absolute; top:-340px; right:-220px; width:820px; height:820px; border-radius:50%;
   background:radial-gradient(circle, rgba(62,156,107,.10), transparent 68%); pointer-events:none;
 }
-/* Titre à droite, reste du texte à gauche, visuel sous le titre.
-   Sur mobile, l'ordre de lecture repasse à : titre, texte, visuel. */
+/* Texte à gauche (titre compris), visuel à droite. */
 .hero .wrap{
-  position:relative; z-index:1; display:grid; grid-template-columns:1fr 1fr;
-  grid-template-areas:"text title" "text visual";
-  gap:clamp(22px,2.6vw,34px) clamp(36px,4.2vw,64px); align-items:center;
+  position:relative; z-index:1; display:grid; grid-template-columns:1.08fr .92fr;
+  gap:clamp(36px,4.2vw,64px); align-items:center;
 }
-.hero__text{ grid-area:text; max-width:610px; }
-.hero__title{ grid-area:title; align-self:end; margin:0; color:var(--teal-dark); }
+.hero__text{ max-width:610px; }
+.hero__title{ margin:20px 0 0; color:var(--teal-dark); }
 .hero__title em{ font-style:normal; color:var(--teal); }
-.hero__visual{ grid-area:visual; }
 .eyebrow{
   display:inline-flex; align-items:center; gap:9px; font-family:var(--font-mono); font-size:12px;
   letter-spacing:.11em; text-transform:uppercase; color:var(--teal); font-weight:500;
@@ -345,14 +342,6 @@ img{ max-width:100%; display:block; }
 .hero__chip--b{ top:38%; right:-8%; --i:1; --depth:1.1; }
 .hero__chip--c{ bottom:16%; left:-11%; --i:2; --depth:1.8; }
 
-/* Titre révélé mot à mot */
-.hero__title .w{ display:inline-block; }
-.js-anim .hero__title .w{
-  opacity:0; transform:translateY(.42em); filter:blur(5px);
-  animation:word-in .75s var(--ease) forwards; animation-delay:calc(120ms + var(--i) * 55ms);
-}
-@keyframes word-in{ to{ opacity:1; transform:translateY(0); filter:blur(0); } }
-
 /* CTA principal : reflet discret qui passe en boucle */
 .hero__cta .btn--primary{ position:relative; overflow:hidden; }
 .hero__cta .btn--primary::after{
@@ -393,8 +382,7 @@ img{ max-width:100%; display:block; }
   .hero__chip--c{ left:-2%; }
 }
 @media (max-width:980px){
-  .hero .wrap{ grid-template-columns:1fr; grid-template-areas:"title" "text" "visual"; gap:26px; }
-  .hero__title{ align-self:start; }
+  .hero .wrap{ grid-template-columns:1fr; gap:44px; }
   .hero__text{ max-width:none; }
   .hero__visual{ max-width:520px; }
   .hero__badge{ left:auto; right:-8px; bottom:22px; }
@@ -1690,28 +1678,21 @@ html{
     <div class="wrap">
       <div class="hero__text">
         <span class="eyebrow reveal-hero" style="--d:0ms">Distribution automatique — boissons &amp; snacks</span>
-        <p class="lede reveal-hero" style="--d:600ms">CLTDistrib installe et exploite des distributeurs automatiques adaptés aux entreprises, établissements et lieux accueillant du personnel ou du public.</p>
-        <div class="hero__cta reveal-hero" style="--d:690ms">
+        <h1 class="hero__title reveal-hero" style="--d:90ms">Une <em>solution clé en main</em> : boissons et snacks sur votre site.</h1>
+        <p class="lede reveal-hero" style="--d:190ms">CLTDistrib installe et exploite des distributeurs automatiques adaptés aux entreprises, établissements et lieux accueillant du personnel ou du public.</p>
+        <div class="hero__cta reveal-hero" style="--d:280ms">
           <a href="#contact" class="btn btn--primary">Étudier mon emplacement</a>
           <a href="#offre" class="btn btn--ghost">Découvrir la solution</a>
         </div>
-        <p class="hero__note reveal-hero" style="--d:770ms">
+        <p class="hero__note reveal-hero" style="--d:360ms">
           <svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
           Étude de l'emplacement gratuite et sans engagement.
         </p>
-        <p class="hero__geo reveal-hero" style="--d:840ms">
+        <p class="hero__geo reveal-hero" style="--d:430ms">
           <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
           Zone d'intervention : <b>Yvelines et alentours</b>
         </p>
       </div>
-
-      <h1 class="hero__title">
-        <span class="w" style="--i:0">Une</span> <em><span class="w" style="--i:1">solution</span>
-        <span class="w" style="--i:2">clé</span> <span class="w" style="--i:3">en</span> <span class="w" style="--i:4">main</span></em>
-        <span class="w" style="--i:5">:</span> <span class="w" style="--i:6">boissons</span>
-        <span class="w" style="--i:7">et</span> <span class="w" style="--i:8">snacks</span>
-        <span class="w" style="--i:9">sur</span> <span class="w" style="--i:10">votre</span> <span class="w" style="--i:11">site</span><span class="w" style="--i:12">.</span>
-      </h1>
 
       <div class="hero__visual reveal-hero" style="--d:200ms">
         <div class="hero__parallax">
