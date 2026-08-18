@@ -1481,7 +1481,9 @@ html{
 .cover__check .icon{ width:18px; height:18px; stroke-width:1.7; }
 .cover:hover .cover__check{ background:var(--teal-dark); color:#fff; }
 .cover strong{ display:block; font-family:var(--font-display); font-size:16px; color:var(--teal-dark); letter-spacing:-0.015em; }
-.cover span{ display:block; font-size:14px; color:var(--ink-soft); margin-top:4px; line-height:1.5; }
+/* Cible le texte descriptif uniquement : viser tous les span écrasait le
+   display:flex de la pastille d'icône, qui se retrouvait décentrée. */
+.cover div span{ display:block; font-size:14px; color:var(--ink-soft); margin-top:4px; line-height:1.5; }
 .covers-foot{ margin-top:20px; text-align:center; font-size:15.5px; color:var(--ink-soft); max-width:70ch; margin-left:auto; margin-right:auto; }
 .covers-foot strong{ color:var(--teal-dark); }
 @media (max-width:1000px){ .covers{ grid-template-columns:1fr 1fr; } }
@@ -1499,7 +1501,7 @@ html{
 }
 .role-item__n .icon{ width:19px; height:19px; stroke-width:1.7; }
 .role-item strong{ display:block; font-family:var(--font-display); font-size:16.5px; color:var(--teal-dark); letter-spacing:-0.015em; }
-.role-item span{ display:block; font-size:14.5px; color:var(--ink-soft); margin-top:4px; line-height:1.5; }
+.role-item div span{ display:block; font-size:14.5px; color:var(--ink-soft); margin-top:4px; line-height:1.5; }
 .role-note{ margin-top:18px; font-size:15px; color:var(--ink-soft); line-height:1.6; }
 
 /* Conditions de partenariat */
@@ -1583,7 +1585,7 @@ html{
   .cover__check{ width:28px; height:28px; border-radius:8px; }
   .cover__check .icon{ width:15px; height:15px; }
   .cover strong{ font-size:14px; }
-  .cover span{ font-size:12px; margin-top:1px; line-height:1.35; }
+  .cover div span{ font-size:12px; margin-top:1px; line-height:1.35; }
   .covers-foot{ margin-top:10px; font-size:12.5px; text-align:left; line-height:1.45; }
   .steps-cta{ margin-top:20px; }
   .steps-cta .btn{ width:100%; }
@@ -1592,7 +1594,7 @@ html{
   .role-item__n{ width:30px; height:30px; border-radius:8px; }
   .role-item__n .icon{ width:16px; height:16px; }
   .role-item strong{ font-size:15px; }
-  .role-item span{ font-size:13px; margin-top:2px; }
+  .role-item div span{ font-size:13px; margin-top:2px; }
   .role-note{ margin-top:10px; font-size:13px; line-height:1.45; }
   .partner-card{ padding:15px 16px; }
   .partner-card h3{ font-size:18px; margin-top:10px; }
