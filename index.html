@@ -1532,16 +1532,31 @@ html{
 .prod-grid--2{ grid-template-columns:1fr 1fr; }
 @media (max-width:760px){ .prod-grid--2{ grid-template-columns:1fr; } }
 
-/* Titre de la section immersive : bloc à part, aligné à droite */
+/* Titre de la section immersive : posé en haut à droite de la première
+   diapositive (celle de l'étude de l'emplacement, dont le texte est à gauche). */
 .scroll-intro{
-  margin-left:auto; text-align:right; padding-top:8vh;
-  max-width:min(360px, calc((100% - var(--machine-zone)) / 2));
+  position:absolute; top:6vh; right:clamp(20px,4vw,40px); z-index:3; text-align:right;
+  max-width:min(400px, calc((100% - 2 * clamp(20px,4vw,40px) - var(--machine-zone)) / 2));
 }
+.scroll-intro .eyebrow{ justify-content:flex-end; }
 .scroll-title{
-  font-size:clamp(22px,2.4vw,30px); color:#fff; margin:8px 0 0; letter-spacing:-0.025em; line-height:1.15;
+  font-family:var(--font-display); font-size:clamp(27px,3.2vw,42px); color:#fff;
+  margin:14px 0 0; letter-spacing:-0.035em; line-height:1.04; font-weight:600;
+  text-wrap:balance;
 }
+.scroll-title em{ font-style:normal; color:var(--teal-light); display:block; }
+/* Filet fin sous le titre, comme signature graphique */
+.scroll-title::after{
+  content:''; display:block; width:64px; height:2px; margin:20px 0 0 auto;
+  background:linear-gradient(90deg, transparent, var(--teal-light));
+}
+
 @media (max-width:900px){
-  .scroll-intro{ margin-left:0; text-align:left; max-width:none; padding-top:4vh; }
+  .scroll-intro{ position:static; text-align:left; max-width:none; padding-top:4vh; }
+  .scroll-intro .eyebrow{ justify-content:flex-start; }
+  .scroll-title{ font-size:clamp(24px,6vw,32px); margin-top:10px; }
+  .scroll-title em{ display:inline; }
+  .scroll-title::after{ margin:16px auto 0 0; }
 }
 
 /* Bloc coordonnées */
@@ -1607,7 +1622,8 @@ html{
   .contact-card__list dd{ font-size:14px; }
   .footer__col{ gap:7px; }
   .footer__col a{ font-size:13.5px; }
-  .scroll-title{ font-size:19px; margin:6px 0 16px; }
+  .scroll-title{ font-size:24px; margin:8px 0 0; }
+  .scroll-title::after{ margin-top:12px; }
 }
 </style>
 </head>
@@ -1938,7 +1954,7 @@ html{
     <div class="wrap parallax-decouvrir__steps" id="scrollSteps">
       <div class="scroll-intro">
         <span class="eyebrow">Une solution clé en main</span>
-        <h2 class="scroll-title">Une gestion complète, de l'installation au réassort.</h2>
+        <h2 class="scroll-title">Une gestion complète,<em>de l'installation au réassort.</em></h2>
       </div>
     </div>
   </section>
