@@ -27,6 +27,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className += " js-anim";</script>
 <style>
 /* ============================================================
    1. TOKENS
@@ -272,10 +273,23 @@ img{ max-width:100%; display:block; }
 .hero__note .icon{ width:16px; height:16px; color:var(--teal); }
 
 .hero__visual{ position:relative; }
+/* Profondeur : un élément = une responsabilité. Le wrapper reçoit la parallaxe
+   (transform posé en JS), l'élément interne porte la lévitation (animation). */
+.hero__parallax{ transition:transform .5s var(--ease); will-change:transform; }
+.hero__float{ animation:hero-float 8s ease-in-out infinite; }
+@keyframes hero-float{ 0%,100%{ margin-top:0; } 50%{ margin-top:-14px; } }
+
 .hero__frame{
   position:relative; border-radius:var(--radius-l); overflow:hidden; background:var(--deep);
   box-shadow:var(--shadow-l); aspect-ratio:4/3.9;
 }
+/* Reflet qui balaie la vitre */
+.hero__sheen{
+  position:absolute; top:0; left:-45%; width:36%; height:100%; z-index:1; pointer-events:none;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.22), transparent);
+  transform:skewX(-14deg); animation:hero-sheen 7.5s ease-in-out infinite;
+}
+@keyframes hero-sheen{ 0%,70%{ left:-45%; } 100%{ left:125%; } }
 .hero__frame img{
   width:100%; height:100%; object-fit:cover; object-position:center 42%; transform:scale(1.02);
   filter:brightness(1.16) saturate(1.06) contrast(1.02); transition:transform 1.4s var(--ease);
@@ -301,11 +315,80 @@ img{ max-width:100%; display:block; }
   font-size:11.5px; letter-spacing:.05em; text-transform:uppercase; opacity:.82;
 }
 
+/* Pastilles flottantes autour du visuel — même langage que .hero__badge */
+.hero__chip-wrap{ position:absolute; z-index:3; transition:transform .5s var(--ease); will-change:transform; }
+.hero__chip{
+  display:inline-flex; align-items:center; gap:9px; white-space:nowrap;
+  background:#fff; border:1px solid var(--line); border-radius:999px;
+  padding:9px 16px 9px 11px; box-shadow:var(--shadow-m);
+  font-size:13.5px; font-weight:600; color:var(--teal-dark); letter-spacing:-.01em;
+}
+.js-anim .hero__chip{
+  opacity:0; animation:hero-in .7s var(--ease) forwards;
+  animation-delay:calc(620ms + var(--i) * 140ms);
+}
+.hero__chip .icon{ width:16px; height:16px; color:var(--teal); flex-shrink:0; }
+.hero__chip .dot{
+  width:9px; height:9px; border-radius:50%; background:var(--teal-light); flex-shrink:0;
+  box-shadow:0 0 0 4px var(--teal-tint);
+}
+.hero__chip--a{ top:8%; left:-9%; --i:0; --depth:1.5; }
+.hero__chip--b{ top:38%; right:-8%; --i:1; --depth:1.1; }
+.hero__chip--c{ bottom:16%; left:-11%; --i:2; --depth:1.8; }
+
+/* Titre révélé mot à mot */
+.hero__title .w{ display:inline-block; }
+.js-anim .hero__title .w{
+  opacity:0; transform:translateY(.42em); filter:blur(5px);
+  animation:word-in .75s var(--ease) forwards; animation-delay:calc(120ms + var(--i) * 55ms);
+}
+@keyframes word-in{ to{ opacity:1; transform:translateY(0); filter:blur(0); } }
+
+/* CTA principal : reflet discret qui passe en boucle */
+.hero__cta .btn--primary{ position:relative; overflow:hidden; }
+.hero__cta .btn--primary::after{
+  content:''; position:absolute; top:0; left:-60%; width:42%; height:100%; pointer-events:none;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,.3), transparent);
+  transform:skewX(-18deg); animation:cta-shine 4.2s ease-in-out infinite;
+}
+@keyframes cta-shine{ 0%,66%{ left:-60%; } 100%{ left:130%; } }
+
+/* Zone d'intervention */
+.hero__geo{
+  display:inline-flex; align-items:center; gap:8px; margin-top:12px;
+  font-size:14px; color:var(--ink-faint);
+}
+.hero__geo .icon{ width:16px; height:16px; color:var(--teal); }
+.hero__geo b{ color:var(--ink-soft); font-weight:600; }
+
+/* Indice de défilement (la page fonctionne par diapositives) */
+.hero__scroll{
+  position:absolute; left:50%; bottom:18px; transform:translateX(-50%); z-index:2;
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  font-family:var(--font-mono); font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--ink-faint); pointer-events:none;
+}
+.js-anim .hero__scroll{ opacity:0; animation:hero-in .8s var(--ease) forwards 1.4s; }
+.hero__scroll i{
+  display:block; width:1px; height:30px; transform-origin:top;
+  background:linear-gradient(180deg, var(--teal-light), transparent);
+  animation:scroll-cue 2.2s ease-in-out infinite;
+}
+@keyframes scroll-cue{ 0%,100%{ transform:scaleY(.35); opacity:.45; } 50%{ transform:scaleY(1); opacity:1; } }
+
+/* Colonnes resserrées : on ramène les pastilles sur les bords du visuel
+   pour qu'aucune ne dépasse de l'écran. */
+@media (max-width:1200px){
+  .hero__chip--a{ left:-2%; }
+  .hero__chip--b{ right:-2%; }
+  .hero__chip--c{ left:-2%; }
+}
 @media (max-width:980px){
   .hero .wrap{ grid-template-columns:1fr; gap:44px; }
   .hero__text{ max-width:none; }
   .hero__visual{ max-width:520px; }
   .hero__badge{ left:auto; right:-8px; bottom:22px; }
+  .hero__scroll{ display:none; }
 }
 @media (max-width:560px){
   .hero{ padding-top:40px; }
@@ -315,6 +398,10 @@ img{ max-width:100%; display:block; }
   .hero .lede{ font-size:16.5px; margin-top:18px; }
   .hero__cta{ margin-top:26px; }
   h1{ font-size:28.5px; }
+  .hero__chip{ font-size:12px; padding:7px 12px 7px 9px; }
+  .hero__chip--a{ top:4%; left:-3%; }
+  .hero__chip--b{ top:auto; bottom:34%; right:-3%; }
+  .hero__chip--c{ display:none; }
 }
 
 /* ============================================================
@@ -1135,10 +1222,12 @@ html{
 /* ============================================================
    20. RÉVÉLATIONS AU DÉFILEMENT
    ============================================================ */
-.reveal{ opacity:0; transform:translateY(22px); transition:opacity .75s var(--ease), transform .75s var(--ease); }
-.reveal.is-visible{ opacity:1; transform:translateY(0); }
+/* Le contenu n'est masqué au départ que si le JS tourne (classe js-anim posée
+   dans le <head>). Sans JS, ou si une animation échoue, la page reste lisible. */
+.js-anim .reveal{ opacity:0; transform:translateY(22px); transition:opacity .75s var(--ease), transform .75s var(--ease); }
+.js-anim .reveal.is-visible{ opacity:1; transform:translateY(0); }
 .reveal[data-i]{ transition-delay:calc(var(--i,0) * 80ms); }
-.reveal-hero{ opacity:0; transform:translateY(14px); animation:hero-in .8s var(--ease) forwards; animation-delay:var(--d,0ms); }
+.js-anim .reveal-hero{ opacity:0; transform:translateY(14px); animation:hero-in .8s var(--ease) forwards; animation-delay:var(--d,0ms); }
 @keyframes hero-in{ to{ opacity:1; transform:translateY(0); } }
 
 /* ============================================================
@@ -1540,25 +1629,52 @@ html{
     <div class="wrap">
       <div class="hero__text">
         <span class="eyebrow reveal-hero" style="--d:0ms">Distribution automatique — boissons &amp; snacks</span>
-        <h1 class="reveal-hero" style="--d:70ms">Des boissons et snacks <em>à portée de main</em>.</h1>
-        <p class="lede reveal-hero" style="--d:150ms">CLTDistrib installe et exploite des distributeurs automatiques adaptés aux entreprises, établissements et lieux accueillant du personnel ou du public.</p>
-        <div class="hero__cta reveal-hero" style="--d:230ms">
+        <h1 class="hero__title">
+          <span class="w" style="--i:0">Des</span> <span class="w" style="--i:1">boissons</span> <span class="w" style="--i:2">et</span>
+          <span class="w" style="--i:3">snacks</span> <em><span class="w" style="--i:4">à</span> <span class="w" style="--i:5">portée</span>
+          <span class="w" style="--i:6">de</span> <span class="w" style="--i:7">main</span></em><span class="w" style="--i:8">.</span>
+        </h1>
+        <p class="lede reveal-hero" style="--d:600ms">CLTDistrib installe et exploite des distributeurs automatiques adaptés aux entreprises, établissements et lieux accueillant du personnel ou du public.</p>
+        <div class="hero__cta reveal-hero" style="--d:690ms">
           <a href="#contact" class="btn btn--primary">Étudier mon emplacement</a>
           <a href="#offre" class="btn btn--ghost">Découvrir la solution</a>
         </div>
-        <p class="hero__note reveal-hero" style="--d:300ms">
+        <p class="hero__note reveal-hero" style="--d:770ms">
           <svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
           Étude de l'emplacement gratuite et sans engagement.
+        </p>
+        <p class="hero__geo reveal-hero" style="--d:840ms">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+          Interventions en <b>Île-de-France</b> · basé dans les <b>Yvelines</b>
         </p>
       </div>
 
       <div class="hero__visual reveal-hero" style="--d:200ms">
-        <div class="hero__frame">
-          <img src="images/distributeur.jpg" alt="Distributeur automatique de boissons et snacks — photo d'illustration" width="900" height="620">
-          <span class="hero__caption">Photo d'illustration</span>
+        <div class="hero__parallax">
+          <div class="hero__float">
+            <div class="hero__frame">
+              <img src="images/distributeur.jpg" alt="Distributeur automatique de boissons et snacks — photo d'illustration" width="900" height="620">
+              <span class="hero__sheen" aria-hidden="true"></span>
+              <span class="hero__caption">Photo d'illustration</span>
+            </div>
+          </div>
         </div>
+
+        <span class="hero__chip-wrap hero__chip--a"><span class="hero__chip">
+          <span class="dot" aria-hidden="true"></span>0 € d'investissement
+        </span></span>
+        <span class="hero__chip-wrap hero__chip--b"><span class="hero__chip">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          CB &amp; sans contact
+        </span></span>
+        <span class="hero__chip-wrap hero__chip--c"><span class="hero__chip">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+          Stock suivi en direct
+        </span></span>
       </div>
     </div>
+
+    <div class="hero__scroll" aria-hidden="true">Découvrir<i></i></div>
   </header>
 
   <!-- 2 — VOUS AVEZ L'EMPLACEMENT ------------------------------- -->
@@ -2517,6 +2633,50 @@ function saveData(){
     if(!ticking){ requestAnimationFrame(update); ticking = true; }
   }, { passive:true });
   update();
+})();
+
+/* ============================================================
+   HERO — profondeur : les plans suivent légèrement la souris
+   ============================================================ */
+(function initHeroParallax(){
+  var hero = document.querySelector(".hero");
+  if(!hero) return;
+  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if(window.matchMedia && window.matchMedia("(hover: none)").matches) return;
+
+  /* Transform posé en pixels depuis le JS : pas de var() en feuille de style
+     sur des éléments déjà animés, où il ne s'appliquerait pas. */
+  var layers = [];
+  var visual = hero.querySelector(".hero__parallax");
+  if(visual) layers.push({ el: visual, amp: 13 });
+  hero.querySelectorAll(".hero__chip-wrap").forEach(function(w){
+    var depth = parseFloat(getComputedStyle(w).getPropertyValue("--depth")) || 1;
+    layers.push({ el: w, amp: 24 * depth });
+  });
+  if(!layers.length) return;
+
+  var rafId = 0, mx = 0, my = 0;
+  function apply(){
+    rafId = 0;
+    for(var i = 0; i < layers.length; i++){
+      var l = layers[i];
+      l.el.style.transform = "translate3d(" + (mx * -l.amp).toFixed(1) + "px," + (my * -l.amp).toFixed(1) + "px,0)";
+    }
+  }
+  /* On annule la frame en attente plutôt que de se verrouiller sur un booléen :
+     si rAF ne tourne pas (onglet en arrière-plan), rien ne reste bloqué. */
+  function schedule(){
+    if(rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(apply);
+  }
+
+  hero.addEventListener("mousemove", function(e){
+    var rect = hero.getBoundingClientRect();
+    mx = (e.clientX - rect.left) / rect.width - 0.5;
+    my = (e.clientY - rect.top) / rect.height - 0.5;
+    schedule();
+  });
+  hero.addEventListener("mouseleave", function(){ mx = 0; my = 0; schedule(); });
 })();
 
 /* ============================================================
