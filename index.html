@@ -160,6 +160,7 @@ img{ max-width:100%; display:block; }
   border-bottom:1px solid transparent; transition:border-color .3s ease, box-shadow .3s ease;
 }
 .nav.is-stuck{ border-bottom-color:var(--line); box-shadow:0 1px 20px rgba(20,31,26,.05); }
+.nav.is-menu-open{ z-index:61; background:#fff; border-bottom-color:var(--line-soft); }
 .nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:78px; gap:24px; }
 .brand{ display:flex; align-items:center; gap:9px; font-family:var(--font-display); font-size:20px; font-weight:700; letter-spacing:-0.03em; flex-shrink:0; }
 .brand__mark{
@@ -177,11 +178,59 @@ img{ max-width:100%; display:block; }
 .nav__link::after{ content:''; position:absolute; left:0; right:100%; bottom:-2px; height:1.5px; background:var(--teal); transition:right .28s var(--ease); }
 .nav__link:hover::after{ right:0; }
 .nav__actions{ display:flex; align-items:center; gap:12px; }
-.nav__burger{ display:none; background:none; border:1px solid var(--line); border-radius:var(--radius-s); padding:9px; color:var(--ink); }
-.nav__mobile{ display:none; position:fixed; inset:78px 0 0 0; background:#fff; z-index:39; padding:14px clamp(20px,4vw,40px) 40px; overflow-y:auto; }
-.nav__mobile.is-open{ display:block; }
-.nav__mobile a{ display:block; padding:17px 0; font-family:var(--font-display); font-size:19px; font-weight:600; color:var(--teal-dark); border-bottom:1px solid var(--line-soft); }
-.nav__mobile .btn{ margin-top:24px; width:100%; }
+/* Bouton menu : plein, contrasté, avec libellé — impossible à manquer */
+.nav__burger{
+  display:none; align-items:center; gap:9px; padding:10px 14px 10px 12px;
+  background:var(--teal-dark); border:none; border-radius:10px; color:#fff;
+  box-shadow:0 2px 10px rgba(18,61,40,.28); transition:background-color .2s var(--ease), transform .15s var(--ease);
+  min-height:44px;
+}
+.nav__burger:hover{ background:#0C2C1D; }
+.nav__burger:active{ transform:scale(.96); }
+.nav__burger-label{ font-family:var(--font-display); font-size:14px; font-weight:600; letter-spacing:-0.01em; }
+.nav__burger-bars{ display:block; position:relative; width:19px; height:14px; flex-shrink:0; }
+.nav__burger-bars span{
+  position:absolute; left:0; right:0; height:2.5px; border-radius:2px; background:#fff;
+  transition:transform .28s var(--ease), opacity .18s ease, top .28s var(--ease);
+}
+.nav__burger-bars span:nth-child(1){ top:0; }
+.nav__burger-bars span:nth-child(2){ top:6px; }
+.nav__burger-bars span:nth-child(3){ top:12px; }
+.nav__burger.is-open .nav__burger-bars span:nth-child(1){ top:6px; transform:rotate(45deg); }
+.nav__burger.is-open .nav__burger-bars span:nth-child(2){ opacity:0; }
+.nav__burger.is-open .nav__burger-bars span:nth-child(3){ top:6px; transform:rotate(-45deg); }
+
+/* Panneau plein écran */
+.nav__mobile{
+  position:fixed; inset:0; z-index:60; background:#fff;
+  display:flex; flex-direction:column; overflow-y:auto;
+  opacity:0; visibility:hidden; transform:translateY(-8px);
+  transition:opacity .26s var(--ease), transform .26s var(--ease), visibility .26s;
+  padding:calc(78px + 12px) clamp(20px,5vw,40px) 28px;
+  -webkit-overflow-scrolling:touch;
+}
+.nav__mobile.is-open{ opacity:1; visibility:visible; transform:translateY(0); }
+.nav__mobile-inner{ display:flex; flex-direction:column; justify-content:space-between; gap:26px; min-height:100%; width:100%; }
+.nav__mobile-links{ display:flex; flex-direction:column; }
+.nav__mobile-links a{
+  display:flex; align-items:center; gap:14px; padding:16px 4px;
+  font-family:var(--font-display); font-size:20px; font-weight:600; letter-spacing:-0.022em;
+  color:var(--teal-dark); border-bottom:1px solid var(--line-soft);
+  transition:color .18s ease, padding-left .22s var(--ease);
+}
+.nav__mobile-links a:active{ color:var(--teal); padding-left:10px; }
+.nav__mobile-n{
+  font-family:var(--font-mono); font-size:11.5px; font-weight:500; color:var(--teal);
+  letter-spacing:.06em; width:22px; flex-shrink:0;
+}
+.nav__mobile-foot{ display:flex; flex-direction:column; gap:12px; }
+.nav__mobile-foot .btn{ min-height:52px; font-size:16px; }
+.nav__mobile-note{ font-size:13px; color:var(--ink-faint); text-align:center; }
+.nav__mobile-mail{
+  display:flex; align-items:center; justify-content:center; gap:9px; padding:12px;
+  font-size:14px; color:var(--ink-soft); border-top:1px solid var(--line-soft); margin-top:4px;
+}
+.nav__mobile-mail .icon{ width:17px; height:17px; color:var(--teal); }
 
 .view-toggle{ display:flex; align-items:center; gap:2px; background:var(--surface-alt); border-radius:var(--radius-s); padding:3px; border:1px solid var(--line-soft); }
 .view-toggle__btn{
@@ -192,7 +241,7 @@ img{ max-width:100%; display:block; }
 .view-toggle__btn:hover{ color:var(--ink); }
 .view-toggle__btn.is-active{ background:#fff; color:var(--teal-dark); box-shadow:var(--shadow-s); }
 
-@media (max-width:1180px){ .nav__links{ display:none; } .nav__burger{ display:block; } }
+@media (max-width:1180px){ .nav__links{ display:none; } .nav__burger{ display:inline-flex; } }
 @media (max-width:1320px){ .nav .wrap{ gap:16px; } .view-toggle{ display:none; } }
 @media (max-width:640px){ .nav__actions .btn--primary{ display:none; } .view-toggle{ display:none; } }
 
@@ -775,7 +824,10 @@ img{ max-width:100%; display:block; }
   content:''; position:absolute; top:-260px; left:-160px; width:760px; height:760px; border-radius:50%;
   background:radial-gradient(circle, rgba(62,156,107,.24), transparent 66%); pointer-events:none;
 }
-.cta .wrap{ position:relative; z-index:1; display:grid; grid-template-columns:.92fr 1.08fr; gap:clamp(40px,5vw,76px); align-items:start; }
+.cta .wrap{ position:relative; z-index:1; display:grid; grid-template-columns:.92fr 1.08fr; gap:clamp(28px,4vw,64px); align-items:start; grid-template-areas:"intro form" "contact form"; }
+.cta__intro{ grid-area:intro; }
+.cta .contact-card{ grid-area:contact; margin-top:0; }
+.cta .form-card{ grid-area:form; }
 .cta h2{ color:#fff; }
 .cta__lede{ margin-top:16px; color:#C3D5C9; font-size:17.5px; line-height:1.62; }
 .cta__list{ margin-top:22px; display:flex; flex-direction:column; gap:11px; }
@@ -803,7 +855,8 @@ img{ max-width:100%; display:block; }
 .form-note{ font-size:13px; color:var(--ink-faint); margin-top:14px; line-height:1.5; }
 .form-success{ background:var(--teal-tint); color:var(--teal-dark); padding:14px 16px; border-radius:var(--radius-s); font-size:14.5px; margin-top:16px; }
 .form-error{ background:var(--red-tint); color:var(--red); padding:12px 15px; border-radius:var(--radius-s); font-size:14px; margin-top:14px; }
-@media (max-width:940px){ .cta .wrap{ grid-template-columns:1fr; } }
+/* Sur petit écran, le formulaire passe avant les coordonnées */
+@media (max-width:940px){ .cta .wrap{ grid-template-columns:1fr; grid-template-areas:"intro" "form" "contact"; } }
 @media (max-width:520px){ .field-row{ gap:10px; } .field label{ font-size:12px; } .field input, .field select{ padding:11px 12px; } }
 
 /* ============================================================
@@ -885,7 +938,13 @@ img{ max-width:100%; display:block; }
   .about__fact{ padding:13px 16px; }
   .about__quote{ font-size:20px; }
   .about__body p{ font-size:15.5px; line-height:1.6; }
-  .faq__q{ padding:15px 40px 15px 0; }
+  /* Cibles tactiles : au moins 44 px de haut */
+  .faq__q{ padding:16px 40px 16px 0; min-height:46px; }
+  .brand{ padding:8px 0; }
+  .footer__col a{ padding:10px 0; min-height:42px; display:flex; align-items:center; }
+  .footer__todo{ margin:2px 0; }
+  .contact-card__list dd a{ display:inline-block; padding:10px 0; }
+  .nav__mobile-mail{ min-height:48px; }
   .faq__a-inner{ padding-bottom:16px; font-size:15px; }
   .chatpanel__messages{ max-height:230px; }
   .cta__lede{ font-size:16px; }
@@ -1005,11 +1064,11 @@ html{
   .service-note .icon{ width:16px; height:16px; margin-top:2px; }
 
   /* Emplacements */
-  .place{ padding:12px 11px 13px; }
-  .place .icon{ width:19px; height:19px; }
-  .place h3{ font-size:13.5px; margin-top:7px; }
-  .place p{ font-size:12px; line-height:1.35; margin-top:4px; }
-  .places-foot{ margin-top:12px; font-size:13px; }
+  .place{ padding:9px 10px 10px; }
+  .place .icon{ width:17px; height:17px; }
+  .place h3{ font-size:13px; margin-top:5px; line-height:1.2; }
+  .place p{ font-size:11.5px; line-height:1.25; margin-top:3px; }
+  .places-foot{ margin-top:9px; font-size:12.5px; line-height:1.45; }
 
   /* Étapes */
   .step, .step:not(:last-child){ padding:14px 0 4px; }
@@ -1054,15 +1113,15 @@ html{
 
   /* Contact */
   .cta__lede{ font-size:14.5px; margin-top:12px; }
-  .cta__list{ margin-top:14px; gap:8px; }
+  .cta__list{ margin-top:12px; gap:7px; }
   .cta__list li{ font-size:13.5px; }
   .cta__direct{ margin-top:16px; padding-top:14px; }
   .cta__direct a{ font-size:14.5px; }
-  .form-card{ padding:16px; }
+  .form-card{ padding:15px; }
   .form-card h3{ font-size:17px; }
   .form-card > p{ font-size:13px; }
   .form-grid{ margin-top:12px; }
-  .field{ margin-bottom:9px; }
+  .field{ margin-bottom:8px; }
   .field label{ font-size:11.5px; margin-bottom:4px; }
   .field input, .field select{ padding:9px 11px; font-size:14px; }
   .field textarea{ min-height:56px; font-size:14px; padding:9px 11px; }
@@ -1375,24 +1434,31 @@ html{
 
 /* Compacité sur téléphone des nouveaux blocs */
 @media (max-width:640px){
-  .cover{ padding:13px 14px; gap:11px; }
+  /* Le bouton flottant recouvrait le contenu du coin bas-droit :
+     le chat a désormais sa propre section, le bouton n'est plus utile ici. */
+  .chatfab{ display:none; }
+  /* Le petit tiret du sur-titre faisait passer le libellé sur deux lignes */
+  .eyebrow{ font-size:10.5px; letter-spacing:.075em; }
+  .eyebrow::before{ display:none; }
+  .section__head--center .eyebrow{ justify-content:center; }
+  .cover{ padding:10px 13px; gap:10px; }
   .cover__check{ width:22px; height:22px; }
   .cover__check .icon{ width:13px; height:13px; }
-  .cover strong{ font-size:14.5px; }
-  .cover span{ font-size:12.5px; margin-top:2px; line-height:1.4; }
-  .covers-foot{ margin-top:14px; font-size:13.5px; text-align:left; }
+  .cover strong{ font-size:14px; }
+  .cover span{ font-size:12px; margin-top:1px; line-height:1.35; }
+  .covers-foot{ margin-top:10px; font-size:12.5px; text-align:left; line-height:1.45; }
   .steps-cta{ margin-top:20px; }
   .steps-cta .btn{ width:100%; }
   .role-list{ margin-top:16px; }
-  .role-item{ padding:13px 14px; gap:12px; }
+  .role-item{ padding:11px 13px; gap:11px; }
   .role-item__n{ width:26px; height:26px; font-size:11px; }
   .role-item strong{ font-size:15px; }
   .role-item span{ font-size:13px; margin-top:2px; }
-  .role-note{ margin-top:12px; font-size:13.5px; }
-  .partner-card{ padding:18px; }
+  .role-note{ margin-top:10px; font-size:13px; line-height:1.45; }
+  .partner-card{ padding:15px 16px; }
   .partner-card h3{ font-size:18px; margin-top:10px; }
-  .partner-card p{ font-size:13.5px; margin-top:10px; line-height:1.5; }
-  .partner-card .btn{ margin-top:16px; width:100%; }
+  .partner-card p{ font-size:13px; margin-top:9px; line-height:1.45; }
+  .partner-card .btn{ margin-top:14px; width:100%; }
   .engagement-foot{ margin-top:16px; font-size:14.5px; gap:8px; text-align:left; }
   .contact-card{ margin-top:18px; padding-top:16px; }
   .contact-card__name{ font-size:16px; }
@@ -1436,22 +1502,38 @@ html{
           </button>
         </div>
         <a href="#contact" class="btn btn--primary btn--sm">Étudier mon emplacement</a>
-        <button class="nav__burger" id="burgerBtn" aria-label="Ouvrir le menu" aria-expanded="false">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+        <button class="nav__burger" id="burgerBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileNav">
+          <span class="nav__burger-bars" aria-hidden="true"><span></span><span></span><span></span></span>
+          <span class="nav__burger-label">Menu</span>
         </button>
       </div>
     </div>
-    <div class="nav__mobile" id="mobileNav">
-      <a href="#top">Accueil</a>
-      <a href="#offre">Notre solution</a>
-      <a href="#lieux">Pour quels lieux ?</a>
-      <a href="#etapes">Comment ça marche ?</a>
-      <a href="#apropos">À propos</a>
-      <a href="#faq">FAQ</a>
-      <a href="#contact">Contact</a>
-      <a href="#contact" class="btn btn--primary">Étudier mon emplacement</a>
-    </div>
   </nav>
+
+  <!-- Le panneau est volontairement hors de <nav> : le backdrop-filter de la
+       barre en ferait le bloc conteneur du positionnement fixe, ce qui écrase
+       le panneau à la hauteur de la barre. -->
+  <div class="nav__mobile" id="mobileNav" role="dialog" aria-modal="true" aria-label="Menu de navigation">
+    <div class="nav__mobile-inner">
+      <nav class="nav__mobile-links">
+        <a href="#top"><span class="nav__mobile-n">01</span> Accueil</a>
+        <a href="#offre"><span class="nav__mobile-n">02</span> Notre solution</a>
+        <a href="#lieux"><span class="nav__mobile-n">03</span> Pour quels lieux&nbsp;?</a>
+        <a href="#etapes"><span class="nav__mobile-n">04</span> Comment ça marche&nbsp;?</a>
+        <a href="#apropos"><span class="nav__mobile-n">05</span> À propos</a>
+        <a href="#faq"><span class="nav__mobile-n">06</span> FAQ</a>
+        <a href="#contact"><span class="nav__mobile-n">07</span> Contact</a>
+      </nav>
+      <div class="nav__mobile-foot">
+        <a href="#contact" class="btn btn--primary btn--wide">Étudier mon emplacement</a>
+        <p class="nav__mobile-note">Étude de l'emplacement gratuite et sans engagement.</p>
+        <a class="nav__mobile-mail" href="mailto:clementpiresvalente@gmail.com">
+          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
+          clementpiresvalente@gmail.com
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- 1 — HERO ------------------------------------------------- -->
   <header class="hero" id="top">
@@ -1967,7 +2049,7 @@ html{
   <div class="slide slide--end">
   <section class="section cta" id="contact">
     <div class="wrap">
-      <div class="reveal">
+      <div class="cta__intro reveal">
         <span class="eyebrow">Étude gratuite</span>
         <h2 style="margin-top:14px">Votre emplacement peut-il accueillir un distributeur&nbsp;?</h2>
         <p class="cta__lede">Présentez-nous votre établissement. Nous étudierons gratuitement la faisabilité du projet.</p>
@@ -1977,26 +2059,6 @@ html{
           <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Une réponse claire, même si votre site ne s'y prête pas</span></li>
         </ul>
 
-        <div class="contact-card">
-          <strong class="contact-card__name">CLTDistrib</strong>
-          <span class="contact-card__sub">Distribution automatique — Boissons &amp; Snacks</span>
-          <dl class="contact-card__list">
-            <div>
-              <dt>Téléphone</dt>
-              <!-- TODO : remplacer par le numéro réel, puis supprimer la classe "is-todo" -->
-              <dd class="is-todo">À compléter</dd>
-            </div>
-            <div>
-              <dt>Email</dt>
-              <dd><a href="mailto:clementpiresvalente@gmail.com">clementpiresvalente@gmail.com</a></dd>
-            </div>
-            <div>
-              <dt>Zone d'intervention</dt>
-              <!-- TODO : remplacer par la zone réelle, puis supprimer la classe "is-todo" -->
-              <dd class="is-todo">À compléter</dd>
-            </div>
-          </dl>
-        </div>
       </div>
 
       <div class="form-card reveal">
@@ -2086,6 +2148,27 @@ html{
           <button class="btn btn--primary btn--wide" type="submit">Demander une étude gratuite</button>
           <p class="form-note" id="formNote"><strong>Sans engagement.</strong> En envoyant ce formulaire, votre messagerie s'ouvre avec le récapitulatif prêt à partir. Vos informations ne servent qu'à étudier la faisabilité du projet.</p>
         </form>
+      </div>
+
+      <div class="contact-card reveal">
+        <strong class="contact-card__name">CLTDistrib</strong>
+        <span class="contact-card__sub">Distribution automatique — Boissons &amp; Snacks</span>
+        <dl class="contact-card__list">
+          <div>
+            <dt>Téléphone</dt>
+            <!-- TODO : remplacer par le numéro réel, puis supprimer la classe "is-todo" -->
+            <dd class="is-todo">À compléter</dd>
+          </div>
+          <div>
+            <dt>Email</dt>
+            <dd><a href="mailto:clementpiresvalente@gmail.com">clementpiresvalente@gmail.com</a></dd>
+          </div>
+          <div>
+            <dt>Zone d'intervention</dt>
+            <!-- TODO : remplacer par la zone réelle, puis supprimer la classe "is-todo" -->
+            <dd class="is-todo">À compléter</dd>
+          </div>
+        </dl>
       </div>
     </div>
   </section>
@@ -2468,17 +2551,56 @@ function saveData(){
 var burgerBtn = document.getElementById("burgerBtn");
 var mobileNav = document.getElementById("mobileNav");
 if(burgerBtn && mobileNav){
-  burgerBtn.addEventListener("click", function(){
-    var open = mobileNav.classList.toggle("is-open");
+  var siteNavEl = document.getElementById("siteNav");
+  var lockedY = 0;
+
+  function setMenu(open){
+    mobileNav.classList.toggle("is-open", open);
+    burgerBtn.classList.toggle("is-open", open);
     burgerBtn.setAttribute("aria-expanded", open ? "true" : "false");
-    document.body.style.overflow = open ? "hidden" : "";
-  });
-  mobileNav.querySelectorAll("a").forEach(function(a){
-    a.addEventListener("click", function(){
-      mobileNav.classList.remove("is-open");
-      burgerBtn.setAttribute("aria-expanded", "false");
+    burgerBtn.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
+    var label = burgerBtn.querySelector(".nav__burger-label");
+    if(label) label.textContent = open ? "Fermer" : "Menu";
+    if(siteNavEl) siteNavEl.classList.toggle("is-menu-open", open);
+
+    var html = document.documentElement;
+    if(open){
+      lockedY = window.scrollY;
+      html.style.overflow = "hidden";
+      document.body.style.overflow = "hidden";
+    } else {
+      html.style.overflow = "";
       document.body.style.overflow = "";
+      window.scrollTo(0, lockedY);
+    }
+  }
+
+  burgerBtn.addEventListener("click", function(){
+    setMenu(!mobileNav.classList.contains("is-open"));
+  });
+
+  /* Un lien ferme le menu, puis on rejoint la section visée */
+  mobileNav.querySelectorAll("a").forEach(function(a){
+    a.addEventListener("click", function(e){
+      var href = a.getAttribute("href") || "";
+      if(href.charAt(0) === "#"){
+        var target = document.querySelector(href);
+        if(target){
+          e.preventDefault();
+          setMenu(false);
+          setTimeout(function(){
+            var top = target.getBoundingClientRect().top + window.scrollY - 78;
+            window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+          }, 60);
+          return;
+        }
+      }
+      setMenu(false);
     });
+  });
+
+  document.addEventListener("keydown", function(e){
+    if(e.key === "Escape" && mobileNav.classList.contains("is-open")) setMenu(false);
   });
 }
 
