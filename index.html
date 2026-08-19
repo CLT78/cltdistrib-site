@@ -1343,6 +1343,20 @@ html{
 .admin-head h2{ font-size:24px; }
 .admin-head p{ color:var(--ink-soft); font-size:14.5px; margin-top:6px; }
 
+/* --- Raccourci vers l'espace pro : n'apparaît que sur un appareil déjà
+       déverrouillé, donc invisible pour les visiteurs --- */
+.pro-shortcut{
+  position:fixed; left:18px; bottom:18px; z-index:45;
+  width:38px; height:38px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(18,61,40,.72); color:#fff; border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(8px); box-shadow:var(--shadow-s);
+  opacity:.4; transition:opacity .2s var(--ease), transform .2s var(--ease), background-color .2s var(--ease);
+}
+.pro-shortcut:hover{ opacity:1; transform:scale(1.08); background:var(--teal-dark); }
+.pro-shortcut svg{ width:17px; height:17px; }
+@media (max-width:640px){ .pro-shortcut{ left:12px; bottom:12px; width:34px; height:34px; } }
+
 /* --- Apparition en cascade, sans glissement --- */
 @keyframes admin-in{ to{ opacity:1; } }
 .admin-anim{ opacity:0; animation:admin-in .45s var(--ease) forwards; animation-delay:calc(var(--i,0) * 55ms); }
@@ -2523,7 +2537,7 @@ html{
     <h3>Espace pro</h3>
     <p>Réservé à l'équipe CLTDistrib. Saisissez votre code d'accès.</p>
     <div class="gate__pass">
-      <input type="password" id="gatePassInput" placeholder="Code d'accès" autocomplete="off">
+      <input type="password" id="gatePassInput" placeholder="Code d'accès" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
       <button type="button" id="gateToggleVis" aria-label="Afficher le code">
         <svg class="icon" id="gateEyeIcon" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
@@ -2827,7 +2841,7 @@ html{
 /* ============================================================
    CONFIG
    ============================================================ */
-var ACCESS_CODE = "1246Aaa78!";
+var ACCESS_CODE = "2205";
 var STORAGE_KEY = "cltdistrib-data";
 
 /* ============================================================
@@ -3723,6 +3737,7 @@ function tryEnter(){
     closeGate();
     try{ localStorage.setItem(PRO_REMEMBER_KEY, "1"); }catch(e){}
     enterAdmin();
+    refreshProShortcut();
   } else {
     gateError.classList.add("is-visible");
   }
@@ -3736,17 +3751,55 @@ document.getElementById("leaveAdminBtn").addEventListener("click", function(){
   clearProHash();
 });
 
-/* Aucun bouton public : l'Espace pro ne s'ouvre que via l'adresse secrète.
-   Une fois le code entré une fois sur cet appareil, il est mémorisé (plus besoin de le retaper). */
+function isProUnlocked(){
+  try{ return localStorage.getItem(PRO_REMEMBER_KEY) === "1"; }catch(e){ return false; }
+}
+
+/* Aucun bouton public : l'Espace pro ne s'ouvre que via l'adresse secrète
+   ou le geste discret sur le logo. Une fois le code entré sur cet appareil,
+   il est mémorisé (plus besoin de le retaper). */
 function checkProAccess(){
   if(location.hash !== PRO_HASH) return;
-  var remembered = false;
-  try{ remembered = localStorage.getItem(PRO_REMEMBER_KEY) === "1"; }catch(e){}
-  if(remembered){ enterAdmin(); } else { openGate(); }
+  if(isProUnlocked()){ enterAdmin(); } else { openGate(); }
 }
 window.addEventListener("hashchange", checkProAccess);
-/* L'appel initial est volontairement placé tout en bas du script : il déclenche
-   le rendu de l'admin, qui a besoin des tableaux déclarés plus loin. */
+
+/* Geste discret : trois clics rapides sur le logo de la barre.
+   Invisible pour un visiteur, immédiat pour vous. */
+(function initLogoTrigger(){
+  var brand = document.querySelector(".nav .brand");
+  if(!brand) return;
+  var clics = 0, minuteur = null;
+  brand.addEventListener("click", function(e){
+    clics++;
+    if(clics >= 3){
+      e.preventDefault();
+      clics = 0;
+      clearTimeout(minuteur);
+      if(isProUnlocked()){ enterAdmin(); } else { openGate(); }
+      return;
+    }
+    clearTimeout(minuteur);
+    minuteur = setTimeout(function(){ clics = 0; }, 1500);
+  });
+})();
+
+/* Raccourci visible uniquement sur l'appareil déjà déverrouillé */
+function refreshProShortcut(){
+  var existing = document.getElementById("proShortcut");
+  if(!isProUnlocked()){ if(existing) existing.remove(); return; }
+  if(existing) return;
+  var b = document.createElement("button");
+  b.id = "proShortcut";
+  b.className = "pro-shortcut";
+  b.type = "button";
+  b.title = "Espace pro";
+  b.setAttribute("aria-label", "Ouvrir l'espace pro");
+  b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+    '<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  b.addEventListener("click", function(){ enterAdmin(); });
+  document.body.appendChild(b);
+}
 
 /* ============================================================
    ADMIN TABS
@@ -4521,6 +4574,7 @@ function renderAll(){
 
 /* Tout est défini : on peut ouvrir l'espace pro si l'adresse le demande. */
 checkProAccess();
+refreshProShortcut();
 
 })();
 </script>
