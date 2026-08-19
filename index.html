@@ -1343,6 +1343,89 @@ html{
 .admin-head h2{ font-size:24px; }
 .admin-head p{ color:var(--ink-soft); font-size:14.5px; margin-top:6px; }
 
+/* --- Apparition en cascade, sans glissement --- */
+@keyframes admin-in{ to{ opacity:1; } }
+.admin-anim{ opacity:0; animation:admin-in .45s var(--ease) forwards; animation-delay:calc(var(--i,0) * 55ms); }
+
+/* --- Avertissement de sécurité, permanent --- */
+.admin-warn{
+  display:flex; gap:14px; align-items:flex-start; margin:22px 0 0;
+  background:var(--amber-tint); border:1px solid rgba(181,130,47,.42); border-left:4px solid var(--amber);
+  border-radius:var(--radius-m); padding:16px 18px;
+}
+.admin-warn .icon{ width:20px; height:20px; color:var(--amber); flex-shrink:0; margin-top:1px; }
+.admin-warn strong{ display:block; font-size:14.5px; color:#6F4E14; }
+.admin-warn p{ margin:5px 0 0; font-size:13.5px; line-height:1.55; color:#7A5C24; }
+
+/* --- Cartes de chiffres clés --- */
+.kpi-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:14px; margin-bottom:26px; }
+.kpi{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); padding:17px 19px;
+  transition:border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.kpi:hover{ border-color:var(--teal-light); box-shadow:var(--shadow-s); }
+.kpi__n{ font-family:var(--font-display); font-size:29px; font-weight:600; color:var(--teal-dark); line-height:1; }
+.kpi__l{ display:block; margin-top:7px; font-size:12.5px; color:var(--ink-faint); }
+.kpi__bar{ height:3px; border-radius:2px; background:var(--surface-sunk); margin-top:12px; overflow:hidden; }
+.kpi__bar span{ display:block; height:100%; width:0; background:var(--teal); border-radius:2px; transition:width .9s var(--ease); }
+
+/* --- Badges de statut --- */
+.badge{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px;
+  font-size:11.5px; font-weight:600; white-space:nowrap; border:1px solid transparent;
+}
+.badge::before{ content:''; width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
+.badge--todo{ background:var(--surface-sunk); color:#5C6B63; border-color:var(--line); }
+.badge--contacte{ background:#EAF1F7; color:#3C6289; border-color:#CBDDEC; }
+.badge--rdv{ background:var(--gold-tint); color:#8A6626; border-color:#E4D3B0; }
+.badge--etude{ background:var(--amber-tint); color:#8A6626; border-color:#E4D3B0; }
+.badge--propo{ background:#F1EAF7; color:#6B4A8A; border-color:#DFCFEC; }
+.badge--signe{ background:var(--teal-tint); color:var(--teal-dark); border-color:#C4DFCF; }
+.badge--perdu{ background:var(--red-tint); color:#8E3A2B; border-color:#EBC8C0; }
+/* Le statut actif "en cours" respire légèrement */
+.badge--rdv::before, .badge--etude::before, .badge--propo::before{ animation:badge-pulse 2s ease-in-out infinite; }
+@keyframes badge-pulse{ 0%,100%{ opacity:.45; } 50%{ opacity:1; } }
+
+/* --- Lignes de fiches (prospects, machines, documents) --- */
+.rec-list{ display:flex; flex-direction:column; gap:10px; }
+.rec{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); padding:16px 18px;
+  display:grid; grid-template-columns:1fr auto; gap:12px 18px; align-items:start;
+  transition:border-color .22s var(--ease), box-shadow .22s var(--ease);
+}
+.rec:hover{ border-color:var(--teal-light); box-shadow:var(--shadow-s); }
+.rec__title{ font-family:var(--font-display); font-weight:600; font-size:15.5px; color:var(--ink); }
+.rec__meta{ margin-top:5px; font-size:13.5px; color:var(--ink-soft); line-height:1.55; }
+.rec__meta b{ color:var(--ink); font-weight:600; }
+.rec__side{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+.rec__note{ grid-column:1/-1; margin-top:2px; padding-top:10px; border-top:1px dashed var(--line); font-size:13.5px; color:var(--ink-soft); white-space:pre-wrap; }
+.rec select{ padding:7px 10px; font-size:13px; border:1px solid var(--line); border-radius:var(--radius-s); background:var(--surface-alt); }
+.rec__del{ background:none; border:none; color:var(--ink-faint); padding:6px; border-radius:var(--radius-s); }
+.rec__del:hover{ color:var(--red); background:var(--red-tint); }
+.rec__del .icon{ width:15px; height:15px; }
+
+/* --- Filtres --- */
+.filters{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px; }
+.filters button{
+  padding:7px 14px; border-radius:999px; border:1px solid var(--line); background:var(--surface);
+  font-size:13px; font-weight:600; color:var(--ink-soft); transition:all .2s var(--ease);
+}
+.filters button:hover{ border-color:var(--teal-light); }
+.filters button.is-active{ background:var(--teal-dark); border-color:var(--teal-dark); color:#fff; }
+
+/* --- État vide --- */
+.rec-empty{
+  border:1px dashed var(--line); border-radius:var(--radius-m); padding:44px 24px; text-align:center;
+  color:var(--ink-faint); font-size:14px; background:var(--surface);
+}
+.rec-empty .icon{ width:30px; height:30px; color:var(--line); margin-bottom:10px; }
+
+@media (max-width:640px){
+  .rec{ grid-template-columns:1fr; }
+  .rec__side{ justify-content:flex-start; }
+  .kpi__n{ font-size:24px; }
+}
+
 /* Map */
 .map-layout{ display:grid; grid-template-columns:1.3fr .9fr; gap:24px; align-items:start; }
 .mapboard{
@@ -2493,6 +2576,18 @@ html{
         <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
         Chiffre d'affaires
       </button>
+      <button class="admin-tabs__btn" data-tab="prospects">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>
+        Prospects
+      </button>
+      <button class="admin-tabs__btn" data-tab="machines">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h4M8 10h4"/><rect x="7" y="16" width="10" height="3" rx="1"/></svg>
+        Machines
+      </button>
+      <button class="admin-tabs__btn" data-tab="documents">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg>
+        Documents
+      </button>
       <button class="admin-tabs__btn" data-tab="notes">
         <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h5"/></svg>
         Notes
@@ -2501,6 +2596,14 @@ html{
   </div>
 
   <div class="wrap">
+    <div class="admin-warn">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+      <div>
+        <strong>Espace caché, mais pas sécurisé.</strong>
+        <p>Le code d'accès est lisible dans le code source du site, qui est public : cet espace protège des visiteurs de passage, pas d'une personne déterminée. Vos saisies restent sur cet appareil uniquement (rien n'est envoyé sur internet), mais elles ne sont pas sauvegardées ailleurs — pensez à <b>Exporter</b> régulièrement. N'y consignez pas de données sensibles sur vos clients.</p>
+      </div>
+    </div>
+
 
     <!-- TAB: CARTE & AVIS -->
     <div class="admin-view is-active" data-view="map">
@@ -2583,6 +2686,121 @@ html{
       <div id="revenueContent"></div>
     </div>
 
+    <!-- TAB: PROSPECTS -->
+    <div class="admin-view" data-view="prospects">
+      <div class="admin-head">
+        <div>
+          <h2>Suivi des prospects</h2>
+          <p>Les établissements contactés et l'avancement de chaque échange.</p>
+        </div>
+        <button class="btn btn--accent btn--sm" id="addProspectBtn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;color:#fff"><path d="M12 5v14M5 12h14"/></svg>
+          Ajouter un prospect
+        </button>
+      </div>
+
+      <div class="kpi-grid" id="prospectKpis"></div>
+
+      <div class="inline-form hidden" id="addProspectForm">
+        <div class="field-row">
+          <div class="field"><label for="pNom">Établissement *</label><input id="pNom" placeholder="ex : Clinique des Ormes"></div>
+          <div class="field"><label for="pVille">Ville</label><input id="pVille" placeholder="ex : Mantes-la-Jolie"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="pContact">Interlocuteur</label><input id="pContact" placeholder="ex : Mme Dupont, services généraux"></div>
+          <div class="field"><label for="pTel">Téléphone / email</label><input id="pTel" placeholder="ex : 01 23 45 67 89"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="pStatut">Statut</label>
+            <select id="pStatut">
+              <option value="todo">À contacter</option>
+              <option value="contacte">Contacté</option>
+              <option value="rdv">Rendez-vous planifié</option>
+              <option value="etude">Étude en cours</option>
+              <option value="propo">Proposition envoyée</option>
+              <option value="signe">Signé</option>
+              <option value="perdu">Sans suite</option>
+            </select>
+          </div>
+          <div class="field"><label for="pRelance">Prochaine relance</label><input id="pRelance" type="date"></div>
+        </div>
+        <div class="field"><label for="pNote">Note</label><textarea id="pNote" rows="2" placeholder="Contexte, points évoqués, éléments à préparer…"></textarea></div>
+        <div class="inline-form__actions">
+          <button class="btn btn--ghost btn--sm" id="cancelProspect">Annuler</button>
+          <button class="btn btn--primary btn--sm" id="confirmProspect">Enregistrer</button>
+        </div>
+      </div>
+
+      <div class="filters" id="prospectFilters"></div>
+      <div class="rec-list" id="prospectList"></div>
+    </div>
+
+    <!-- TAB: MACHINES -->
+    <div class="admin-view" data-view="machines">
+      <div class="admin-head">
+        <div>
+          <h2>Suivi des machines</h2>
+          <p>Le parc de distributeurs : modèle, emplacement, état et dernier entretien.</p>
+        </div>
+        <button class="btn btn--accent btn--sm" id="addMachineBtn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;color:#fff"><path d="M12 5v14M5 12h14"/></svg>
+          Ajouter une machine
+        </button>
+      </div>
+
+      <div class="kpi-grid" id="machineKpis"></div>
+
+      <div class="inline-form hidden" id="addMachineForm">
+        <div class="field-row">
+          <div class="field"><label for="mRef">Référence interne *</label><input id="mRef" placeholder="ex : M-001"></div>
+          <div class="field"><label for="mModele">Modèle</label><input id="mModele" placeholder="ex : Snack + boissons 6 colonnes"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="mSite">Emplacement</label><input id="mSite" placeholder="ex : Clinique des Ormes — hall"></div>
+          <div class="field"><label for="mEtat">État</label>
+            <select id="mEtat">
+              <option value="service">En service</option>
+              <option value="entretien">Entretien à prévoir</option>
+              <option value="panne">En panne</option>
+              <option value="stock">En stock</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="mInstall">Date d'installation</label><input id="mInstall" type="date"></div>
+          <div class="field"><label for="mEntretien">Dernier entretien</label><input id="mEntretien" type="date"></div>
+        </div>
+        <div class="field"><label for="mNote">Note</label><textarea id="mNote" rows="2" placeholder="Numéro de série, particularités, pièces changées…"></textarea></div>
+        <div class="inline-form__actions">
+          <button class="btn btn--ghost btn--sm" id="cancelMachine">Annuler</button>
+          <button class="btn btn--primary btn--sm" id="confirmMachine">Enregistrer</button>
+        </div>
+      </div>
+
+      <div class="rec-list" id="machineList"></div>
+    </div>
+
+    <!-- TAB: DOCUMENTS -->
+    <div class="admin-view" data-view="documents">
+      <div class="admin-head">
+        <div>
+          <h2>Documents commerciaux</h2>
+          <p>Où en est chaque modèle, et où le fichier est rangé. Les fichiers eux-mêmes restent sur votre ordinateur.</p>
+        </div>
+      </div>
+
+      <div class="admin-warn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+        <div>
+          <strong>Ne déposez jamais de contrats ni de données clients dans ce site.</strong>
+          <p>Ce site est public sur GitHub Pages et le code d'accès est lisible dans le code source : tout fichier ajouté au projet devient consultable par n'importe qui. Cet onglet sert uniquement à <b>suivre</b> l'état de vos documents. Gardez les fichiers sur votre ordinateur ou dans un espace privé (Drive, Dropbox, disque chiffré).</p>
+        </div>
+      </div>
+
+      <div class="kpi-grid" id="docKpis" style="margin-top:26px"></div>
+      <div class="rec-list" id="docList"></div>
+    </div>
+
     <!-- TAB: NOTES -->
     <div class="admin-view" data-view="notes">
       <div class="admin-head">
@@ -2615,7 +2833,7 @@ var STORAGE_KEY = "cltdistrib-data";
 /* ============================================================
    STATE
    ============================================================ */
-var appData = { distributeurs: [], notes: [] };
+var appData = { distributeurs: [], notes: [], prospects: [], machines: [], documents: [] };
 var ui = {
   selectedDistribId: null,
   placingMode: false,
@@ -2642,11 +2860,21 @@ function hasLocalStorage(){
   catch(e){ return false; }
 }
 
+/* Les sauvegardes antérieures ne contiennent pas les nouvelles rubriques :
+   on complète les listes manquantes plutôt que de laisser un undefined. */
+function normalizeData(d){
+  d = (d && typeof d === "object") ? d : {};
+  ["distributeurs","notes","prospects","machines","documents"].forEach(function(k){
+    if(!Array.isArray(d[k])) d[k] = [];
+  });
+  return d;
+}
+
 function loadData(){
   if(hasClaudeStorage()){
     window.storage.get(STORAGE_KEY, false).then(function(res){
       if(res && res.value){
-        try{ appData = JSON.parse(res.value); }catch(e){ /* keep default */ }
+        try{ appData = normalizeData(JSON.parse(res.value)); }catch(e){ /* keep default */ }
       }
       renderAll();
     }).catch(function(){ renderAll(); });
@@ -2654,7 +2882,7 @@ function loadData(){
   }
   if(hasLocalStorage()){
     var raw = localStorage.getItem(STORAGE_KEY);
-    if(raw){ try{ appData = JSON.parse(raw); }catch(e){ /* keep default */ } }
+    if(raw){ try{ appData = normalizeData(JSON.parse(raw)); }catch(e){ /* keep default */ } }
   }
   renderAll();
 }
@@ -3516,8 +3744,9 @@ function checkProAccess(){
   try{ remembered = localStorage.getItem(PRO_REMEMBER_KEY) === "1"; }catch(e){}
   if(remembered){ enterAdmin(); } else { openGate(); }
 }
-checkProAccess();
 window.addEventListener("hashchange", checkProAccess);
+/* L'appel initial est volontairement placé tout en bas du script : il déclenche
+   le rendu de l'admin, qui a besoin des tableaux déclarés plus loin. */
 
 /* ============================================================
    ADMIN TABS
@@ -3533,6 +3762,9 @@ document.querySelectorAll(".admin-tabs__btn").forEach(function(btn){
     if(tab === "stocks") renderStocks();
     if(tab === "revenue") renderRevenue();
     if(tab === "notes") renderNotes();
+    if(tab === "prospects") renderProspects();
+    if(tab === "machines") renderMachines();
+    if(tab === "documents") renderDocuments();
   });
 });
 
@@ -3561,7 +3793,7 @@ document.getElementById("importFile").addEventListener("change", function(e){
     try{
       var parsed = JSON.parse(evt.target.result);
       if(parsed && typeof parsed === "object"){
-        appData = { distributeurs: parsed.distributeurs || [], notes: parsed.notes || [] };
+        appData = normalizeData(parsed);
         ui.selectedDistribId = null;
         saveData();
         renderAll();
@@ -3942,6 +4174,338 @@ function renderNotes(){
 }
 
 /* ============================================================
+   PROSPECTS
+   ============================================================ */
+var PROSPECT_STATUTS = [
+  { k:"todo",     l:"À contacter" },
+  { k:"contacte", l:"Contacté" },
+  { k:"rdv",      l:"Rendez-vous planifié" },
+  { k:"etude",    l:"Étude en cours" },
+  { k:"propo",    l:"Proposition envoyée" },
+  { k:"signe",    l:"Signé" },
+  { k:"perdu",    l:"Sans suite" }
+];
+function statutLabel(k){
+  for(var i=0;i<PROSPECT_STATUTS.length;i++){ if(PROSPECT_STATUTS[i].k === k) return PROSPECT_STATUTS[i].l; }
+  return k;
+}
+function formatDate(iso){
+  if(!iso) return "";
+  var p = String(iso).split("-");
+  return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : iso;
+}
+
+var prospectFilter = "tous";
+
+function renderProspects(){
+  var list = document.getElementById("prospectList");
+  var kpis = document.getElementById("prospectKpis");
+  var filters = document.getElementById("prospectFilters");
+  if(!list) return;
+
+  var all = appData.prospects;
+  var enCours = all.filter(function(p){ return ["contacte","rdv","etude","propo"].indexOf(p.statut) !== -1; }).length;
+  var signes = all.filter(function(p){ return p.statut === "signe"; }).length;
+  var taux = all.length ? Math.round((signes / all.length) * 100) : 0;
+
+  kpis.innerHTML =
+    kpiCard(0, all.length, "prospects au total") +
+    kpiCard(1, enCours, "échanges en cours") +
+    kpiCard(2, signes, "signés", taux) +
+    kpiCard(3, all.filter(function(p){ return p.statut === "todo"; }).length, "à contacter");
+  animateBars(kpis);
+
+  filters.innerHTML = ['<button data-f="tous">Tous</button>']
+    .concat(PROSPECT_STATUTS.map(function(s){
+      var n = all.filter(function(p){ return p.statut === s.k; }).length;
+      return '<button data-f="' + s.k + '">' + s.l + ' (' + n + ')</button>';
+    })).join("");
+  filters.querySelectorAll("button").forEach(function(b){
+    b.classList.toggle("is-active", b.getAttribute("data-f") === prospectFilter);
+    b.addEventListener("click", function(){ prospectFilter = b.getAttribute("data-f"); renderProspects(); });
+  });
+
+  var shown = prospectFilter === "tous" ? all : all.filter(function(p){ return p.statut === prospectFilter; });
+  if(!shown.length){
+    list.innerHTML = emptyState("Aucun prospect dans cette vue.",
+      '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>');
+    return;
+  }
+
+  list.innerHTML = shown.slice().reverse().map(function(p, i){
+    var meta = [];
+    if(p.ville)    meta.push(escapeHtml(p.ville));
+    if(p.contact)  meta.push(escapeHtml(p.contact));
+    if(p.tel)      meta.push(escapeHtml(p.tel));
+    if(p.relance)  meta.push("relance le <b>" + formatDate(p.relance) + "</b>");
+    return '<div class="rec admin-anim" style="--i:' + i + '">' +
+      '<div>' +
+        '<div class="rec__title">' + escapeHtml(p.nom) + '</div>' +
+        (meta.length ? '<div class="rec__meta">' + meta.join(" · ") + '</div>' : '') +
+      '</div>' +
+      '<div class="rec__side">' +
+        '<span class="badge badge--' + p.statut + '">' + statutLabel(p.statut) + '</span>' +
+        '<select data-prospect-statut="' + p.id + '">' +
+          PROSPECT_STATUTS.map(function(s){
+            return '<option value="' + s.k + '"' + (s.k === p.statut ? ' selected' : '') + '>' + s.l + '</option>';
+          }).join("") +
+        '</select>' +
+        '<button class="rec__del" data-prospect-del="' + p.id + '" aria-label="Supprimer">' +
+          '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>' +
+        '</button>' +
+      '</div>' +
+      (p.note ? '<div class="rec__note">' + escapeHtml(p.note) + '</div>' : '') +
+    '</div>';
+  }).join("");
+
+  list.querySelectorAll("[data-prospect-statut]").forEach(function(sel){
+    sel.addEventListener("change", function(){
+      var p = appData.prospects.find(function(x){ return x.id === sel.getAttribute("data-prospect-statut"); });
+      if(p){ p.statut = sel.value; saveData(); renderProspects(); }
+    });
+  });
+  list.querySelectorAll("[data-prospect-del]").forEach(function(b){
+    b.addEventListener("click", function(){
+      if(!confirm("Supprimer ce prospect ?")) return;
+      appData.prospects = appData.prospects.filter(function(x){ return x.id !== b.getAttribute("data-prospect-del"); });
+      saveData(); renderProspects();
+    });
+  });
+}
+
+(function initProspectForm(){
+  var form = document.getElementById("addProspectForm");
+  var openBtn = document.getElementById("addProspectBtn");
+  if(!form || !openBtn) return;
+  function close(){ form.classList.add("hidden"); }
+  openBtn.addEventListener("click", function(){
+    form.classList.toggle("hidden");
+    if(!form.classList.contains("hidden")) document.getElementById("pNom").focus();
+  });
+  document.getElementById("cancelProspect").addEventListener("click", close);
+  document.getElementById("confirmProspect").addEventListener("click", function(){
+    var nom = document.getElementById("pNom").value.trim();
+    if(!nom){ document.getElementById("pNom").focus(); return; }
+    appData.prospects.push({
+      id: uid("pros"), nom: nom,
+      ville:   document.getElementById("pVille").value.trim(),
+      contact: document.getElementById("pContact").value.trim(),
+      tel:     document.getElementById("pTel").value.trim(),
+      statut:  document.getElementById("pStatut").value,
+      relance: document.getElementById("pRelance").value,
+      note:    document.getElementById("pNote").value.trim()
+    });
+    ["pNom","pVille","pContact","pTel","pRelance","pNote"].forEach(function(id){ document.getElementById(id).value = ""; });
+    close(); saveData(); renderProspects();
+  });
+})();
+
+/* ============================================================
+   MACHINES
+   ============================================================ */
+var MACHINE_ETATS = {
+  service:   { l:"En service",          b:"signe" },
+  entretien: { l:"Entretien à prévoir", b:"etude" },
+  panne:     { l:"En panne",            b:"perdu" },
+  stock:     { l:"En stock",            b:"todo"  }
+};
+
+function renderMachines(){
+  var list = document.getElementById("machineList");
+  var kpis = document.getElementById("machineKpis");
+  if(!list) return;
+
+  var all = appData.machines;
+  function count(e){ return all.filter(function(m){ return m.etat === e; }).length; }
+  kpis.innerHTML =
+    kpiCard(0, all.length, "machines suivies") +
+    kpiCard(1, count("service"), "en service") +
+    kpiCard(2, count("entretien"), "entretien à prévoir") +
+    kpiCard(3, count("panne"), "en panne");
+  animateBars(kpis);
+
+  if(!all.length){
+    list.innerHTML = emptyState("Aucune machine enregistrée pour le moment.",
+      '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h4M8 10h4"/>');
+    return;
+  }
+
+  list.innerHTML = all.slice().reverse().map(function(m, i){
+    var etat = MACHINE_ETATS[m.etat] || MACHINE_ETATS.service;
+    var meta = [];
+    if(m.modele)    meta.push(escapeHtml(m.modele));
+    if(m.site)      meta.push(escapeHtml(m.site));
+    if(m.install)   meta.push("installée le <b>" + formatDate(m.install) + "</b>");
+    if(m.entretien) meta.push("dernier entretien <b>" + formatDate(m.entretien) + "</b>");
+    return '<div class="rec admin-anim" style="--i:' + i + '">' +
+      '<div>' +
+        '<div class="rec__title">' + escapeHtml(m.ref) + '</div>' +
+        (meta.length ? '<div class="rec__meta">' + meta.join(" · ") + '</div>' : '') +
+      '</div>' +
+      '<div class="rec__side">' +
+        '<span class="badge badge--' + etat.b + '">' + etat.l + '</span>' +
+        '<select data-machine-etat="' + m.id + '">' +
+          Object.keys(MACHINE_ETATS).map(function(k){
+            return '<option value="' + k + '"' + (k === m.etat ? ' selected' : '') + '>' + MACHINE_ETATS[k].l + '</option>';
+          }).join("") +
+        '</select>' +
+        '<button class="rec__del" data-machine-del="' + m.id + '" aria-label="Supprimer">' +
+          '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>' +
+        '</button>' +
+      '</div>' +
+      (m.note ? '<div class="rec__note">' + escapeHtml(m.note) + '</div>' : '') +
+    '</div>';
+  }).join("");
+
+  list.querySelectorAll("[data-machine-etat]").forEach(function(sel){
+    sel.addEventListener("change", function(){
+      var m = appData.machines.find(function(x){ return x.id === sel.getAttribute("data-machine-etat"); });
+      if(m){ m.etat = sel.value; saveData(); renderMachines(); }
+    });
+  });
+  list.querySelectorAll("[data-machine-del]").forEach(function(b){
+    b.addEventListener("click", function(){
+      if(!confirm("Supprimer cette machine ?")) return;
+      appData.machines = appData.machines.filter(function(x){ return x.id !== b.getAttribute("data-machine-del"); });
+      saveData(); renderMachines();
+    });
+  });
+}
+
+(function initMachineForm(){
+  var form = document.getElementById("addMachineForm");
+  var openBtn = document.getElementById("addMachineBtn");
+  if(!form || !openBtn) return;
+  function close(){ form.classList.add("hidden"); }
+  openBtn.addEventListener("click", function(){
+    form.classList.toggle("hidden");
+    if(!form.classList.contains("hidden")) document.getElementById("mRef").focus();
+  });
+  document.getElementById("cancelMachine").addEventListener("click", close);
+  document.getElementById("confirmMachine").addEventListener("click", function(){
+    var ref = document.getElementById("mRef").value.trim();
+    if(!ref){ document.getElementById("mRef").focus(); return; }
+    appData.machines.push({
+      id: uid("mach"), ref: ref,
+      modele:    document.getElementById("mModele").value.trim(),
+      site:      document.getElementById("mSite").value.trim(),
+      etat:      document.getElementById("mEtat").value,
+      install:   document.getElementById("mInstall").value,
+      entretien: document.getElementById("mEntretien").value,
+      note:      document.getElementById("mNote").value.trim()
+    });
+    ["mRef","mModele","mSite","mInstall","mEntretien","mNote"].forEach(function(id){ document.getElementById(id).value = ""; });
+    close(); saveData(); renderMachines();
+  });
+})();
+
+/* ============================================================
+   DOCUMENTS — suivi de l'état des modèles, sans héberger les fichiers
+   ============================================================ */
+var DOC_MODELES = [
+  { id:"conv",     nom:"Convention de mise à disposition", desc:"Machine exploitée par CLTDistrib chez l'établissement." },
+  { id:"location", nom:"Contrat de location",              desc:"Machine louée à l'établissement, mensualisée." },
+  { id:"vente",    nom:"Contrat de vente",                 desc:"L'établissement devient propriétaire de la machine." },
+  { id:"maint",    nom:"Contrat de maintenance",           desc:"Entretien et dépannage, seuls ou en complément." },
+  { id:"cgv",      nom:"Conditions générales",             desc:"Socle commun applicable aux contrats." },
+  { id:"devis",    nom:"Devis type",                       desc:"Trame de chiffrage à personnaliser par projet." },
+  { id:"presenta", nom:"Plaquette de présentation",        desc:"Document commercial neutre envoyé au prospect." },
+  { id:"facture",  nom:"Modèle de facture",                desc:"Trame de facturation et mentions obligatoires." }
+];
+var DOC_ETATS = {
+  todo:   { l:"À rédiger", b:"todo"  },
+  brouil: { l:"Brouillon", b:"etude" },
+  pret:   { l:"Prêt",      b:"signe" }
+};
+
+function docState(id){
+  var found = appData.documents.find(function(d){ return d.id === id; });
+  if(!found){ found = { id:id, etat:"todo", ou:"" }; appData.documents.push(found); }
+  return found;
+}
+
+function renderDocuments(){
+  var list = document.getElementById("docList");
+  var kpis = document.getElementById("docKpis");
+  if(!list) return;
+
+  var etats = DOC_MODELES.map(function(m){ return docState(m.id).etat; });
+  function count(e){ return etats.filter(function(x){ return x === e; }).length; }
+  var prets = count("pret");
+  kpis.innerHTML =
+    kpiCard(0, DOC_MODELES.length, "modèles à tenir") +
+    kpiCard(1, prets, "prêts", Math.round((prets / DOC_MODELES.length) * 100)) +
+    kpiCard(2, count("brouil"), "en brouillon") +
+    kpiCard(3, count("todo"), "à rédiger");
+  animateBars(kpis);
+
+  list.innerHTML = DOC_MODELES.map(function(m, i){
+    var st = docState(m.id);
+    var etat = DOC_ETATS[st.etat] || DOC_ETATS.todo;
+    return '<div class="rec admin-anim" style="--i:' + i + '">' +
+      '<div>' +
+        '<div class="rec__title">' + m.nom + '</div>' +
+        '<div class="rec__meta">' + m.desc + '</div>' +
+        '<div class="rec__meta" style="margin-top:8px">' +
+          '<input type="text" data-doc-ou="' + m.id + '" value="' + escapeHtml(st.ou) + '" ' +
+            'placeholder="Où est rangé le fichier ? (dossier, Drive…)" ' +
+            'style="width:100%;max-width:420px;padding:8px 11px;border:1px solid var(--line);border-radius:var(--radius-s);background:var(--surface-alt);font-size:13.5px">' +
+        '</div>' +
+      '</div>' +
+      '<div class="rec__side">' +
+        '<span class="badge badge--' + etat.b + '">' + etat.l + '</span>' +
+        '<select data-doc-etat="' + m.id + '">' +
+          Object.keys(DOC_ETATS).map(function(k){
+            return '<option value="' + k + '"' + (k === st.etat ? ' selected' : '') + '>' + DOC_ETATS[k].l + '</option>';
+          }).join("") +
+        '</select>' +
+      '</div>' +
+    '</div>';
+  }).join("");
+
+  list.querySelectorAll("[data-doc-etat]").forEach(function(sel){
+    sel.addEventListener("change", function(){
+      docState(sel.getAttribute("data-doc-etat")).etat = sel.value;
+      saveData(); renderDocuments();
+    });
+  });
+  list.querySelectorAll("[data-doc-ou]").forEach(function(inp){
+    inp.addEventListener("change", function(){
+      docState(inp.getAttribute("data-doc-ou")).ou = inp.value.trim();
+      saveData();
+    });
+  });
+}
+
+/* ============================================================
+   PETITS OUTILS D'AFFICHAGE
+   ============================================================ */
+function kpiCard(i, valeur, libelle, pourcent){
+  return '<div class="kpi admin-anim" style="--i:' + i + '">' +
+    '<div class="kpi__n">' + valeur + '</div>' +
+    '<span class="kpi__l">' + libelle + '</span>' +
+    (typeof pourcent === "number"
+      ? '<div class="kpi__bar"><span data-pct="' + Math.max(0, Math.min(100, pourcent)) + '"></span></div>'
+      : '') +
+  '</div>';
+}
+/* La barre part de 0 puis se remplit : sans ce délai, la largeur finale
+   serait posée avant le premier rendu et la transition ne jouerait pas. */
+function animateBars(root){
+  requestAnimationFrame(function(){
+    root.querySelectorAll(".kpi__bar span").forEach(function(b){
+      b.style.width = b.getAttribute("data-pct") + "%";
+    });
+  });
+}
+function emptyState(texte, pathSvg){
+  return '<div class="rec-empty">' +
+    '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + pathSvg + '</svg>' +
+    '<div>' + texte + '</div>' +
+  '</div>';
+}
+
+/* ============================================================
    MASTER RENDER
    ============================================================ */
 function renderAll(){
@@ -3950,7 +4514,13 @@ function renderAll(){
   renderStocks();
   renderRevenue();
   renderNotes();
+  renderProspects();
+  renderMachines();
+  renderDocuments();
 }
+
+/* Tout est défini : on peut ouvrir l'espace pro si l'adresse le demande. */
+checkProAccess();
 
 })();
 </script>
