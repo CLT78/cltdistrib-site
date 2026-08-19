@@ -37,20 +37,24 @@
 :root{
   /* Identité bleue sur fond marine. Les noms --teal* sont conservés parce que
      124 règles s'y réfèrent : seules les valeurs changent, la bascule se fait ici. */
-  --brand:#1F6FEB;
-  --brand-deep:#12408C;
-  --brand-bright:#4F9BFF;
-  --brand-tint:#E9F1FE;
+  /* Bleu électrique · bleu nuit · blanc · gris très clair */
+  /* #1C7BF5 était trop clair : le blanc dessus tombait à 4,04 (seuil 4,5) */
+  --brand:#1670E0;          /* bleu électrique — boutons, accents */
+  --brand-deep:#0B2F6E;     /* bleu profond — cartes et fonds appuyés */
+  --brand-bright:#57A6FF;   /* bleu clair — accents sur fond nuit */
+  --brand-tint:#E7F1FF;     /* bleu très pâle — aplats légers */
+  --navy:#060E1F;           /* bleu nuit — fonds sombres */
+  --navy-2:#0B1730;
 
   --bg:#FFFFFF;
   --surface:#FFFFFF;
-  --surface-alt:#F4F6FA;
-  --surface-sunk:#EBEFF6;
-  --ink:#101725;
-  --ink-soft:#4B5666;
-  --ink-faint:#6C7688;
-  --line:#DFE4EC;
-  --line-soft:#EDF0F5;
+  --surface-alt:#F2F5FA;    /* gris très clair, légèrement bleuté */
+  --surface-sunk:#E8EDF6;
+  --ink:#0C1424;
+  --ink-soft:#495568;
+  --ink-faint:#6B7789;
+  --line:#DCE3EE;
+  --line-soft:#EAEFF7;
 
   --teal:var(--brand);
   --teal-dark:var(--brand-deep);
@@ -64,10 +68,10 @@
   --red:#B14A38;
   --red-tint:#FAEBE7;
 
-  --deep:#070D18;
-  --deep-2:#0C1526;
-  --deep-line:#1C2942;
-  --deep-ink:#A9B8CE;
+  --deep:var(--navy);
+  --deep-2:var(--navy-2);
+  --deep-line:#1B2A47;
+  --deep-ink:#A7B7D0;
 
   --radius-s:6px;
   --radius-m:10px;
@@ -142,8 +146,8 @@ img{ max-width:100%; display:block; }
   transition:background-color .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease), transform .2s var(--ease), box-shadow .25s var(--ease);
   text-align:center; line-height:1.25;
 }
-.btn--primary{ background:var(--teal-dark); color:#fff; box-shadow:0 1px 2px rgba(18,61,40,.2); }
-.btn--primary:hover{ background:#0C2C1D; box-shadow:0 10px 24px rgba(18,61,40,.22); transform:translateY(-2px); }
+.btn--primary{ background:var(--brand); color:#fff; box-shadow:0 2px 10px rgba(28,123,245,.28); }
+.btn--primary:hover{ background:#3B8DFF; box-shadow:0 10px 26px rgba(28,123,245,.42); transform:translateY(-2px); }
 .btn--accent{ background:var(--teal); color:#fff; }
 .btn--accent:hover{ background:var(--teal-dark); box-shadow:0 10px 24px rgba(31,107,68,.25); transform:translateY(-2px); }
 .btn--ghost{ background:transparent; color:var(--teal-dark); border-color:var(--line); }
@@ -173,16 +177,32 @@ img{ max-width:100%; display:block; }
 .nav.is-stuck{ border-bottom-color:rgba(140,175,225,.16); box-shadow:0 1px 24px rgba(0,0,0,.35); }
 .nav.is-menu-open{ z-index:61; background:var(--deep); border-bottom-color:var(--deep-line); }
 .nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:78px; gap:24px; }
-.brand{ display:flex; align-items:center; gap:9px; font-family:var(--font-display); font-size:20px; font-weight:700; letter-spacing:-0.03em; flex-shrink:0; }
-/* Le symbole est un distributeur stylisé dans une pastille bleue */
-.brand__mark{ width:32px; height:32px; flex-shrink:0; display:block; }
+/* Logo en badge, comme sur la maquette : cartouche bordé, distributeur bleu,
+   CLT au-dessus de DISTRIB. Pensé pour être floqué tel quel sur une machine. */
+.brand{
+  display:inline-flex; align-items:center; gap:11px; flex-shrink:0;
+  padding:7px 15px 7px 11px; border-radius:12px;
+  border:1px solid rgba(140,180,240,.34); background:rgba(255,255,255,.035);
+  font-family:var(--font-display); transition:border-color .25s var(--ease), background-color .25s var(--ease);
+}
+.brand:hover{ border-color:rgba(140,180,240,.6); background:rgba(255,255,255,.07); }
+.brand__mark{ width:30px; height:30px; flex-shrink:0; display:block; }
 .brand__mark .bm-plate{ fill:var(--brand); }
 .brand__mark .bm-body{ fill:#fff; }
 .brand__mark .bm-cut{ fill:var(--brand); }
-.brand__name span:first-child{ color:#fff; }
-.brand__name span:last-child{ color:var(--brand-bright); font-weight:500; }
+.brand__name{ display:flex; flex-direction:column; line-height:1; }
+.brand__name span:first-child{
+  color:#fff; font-size:20px; font-weight:700; letter-spacing:-0.02em;
+}
+.brand__name span:last-child{
+  color:var(--brand-bright); font-size:9.5px; font-weight:600;
+  letter-spacing:.30em; text-transform:uppercase; margin-top:4px;
+}
 .nav__links{ display:flex; align-items:center; gap:clamp(14px,1.6vw,26px); }
-.nav__link{ font-size:14px; font-weight:500; color:#B4C3D8; position:relative; padding:4px 0; white-space:nowrap; }
+.nav__link{
+  font-size:12px; font-weight:600; color:#B4C3D8; position:relative; padding:4px 0; white-space:nowrap;
+  text-transform:uppercase; letter-spacing:.085em;
+}
 .nav__link:hover{ color:#fff; }
 .nav__link::after{ content:''; position:absolute; left:0; right:100%; bottom:-2px; height:1.5px; background:var(--teal); transition:right .28s var(--ease); }
 .nav__link:hover::after{ right:0; }
@@ -267,13 +287,24 @@ img{ max-width:100%; display:block; }
   content:''; position:absolute; top:-320px; right:-200px; width:820px; height:820px; border-radius:50%;
   background:radial-gradient(circle, rgba(79,155,255,.22), transparent 66%); pointer-events:none;
 }
-/* Arcs concentriques discrets, repris du visuel */
+/* Arcs concentriques, repris du visuel d'identité */
 .hero::after{
-  content:''; position:absolute; left:-14%; top:50%; width:900px; height:900px;
+  content:''; position:absolute; left:-20%; top:50%; width:1020px; height:1020px;
   transform:translateY(-50%); border-radius:50%; pointer-events:none;
-  border:1px solid rgba(120,170,255,.09);
-  box-shadow:0 0 0 90px rgba(120,170,255,.035), 0 0 0 180px rgba(120,170,255,.02);
+  border:1px solid rgba(120,170,255,.13);
+  box-shadow:
+    0 0 0 1px rgba(120,170,255,.05),
+    inset 0 0 0 130px rgba(120,170,255,.028),
+    inset 0 0 0 131px rgba(120,170,255,.10),
+    inset 0 0 0 265px rgba(120,170,255,.022),
+    inset 0 0 0 266px rgba(120,170,255,.07);
 }
+/* Boutons du hero : capitales espacées, comme sur la maquette */
+.hero__cta .btn{
+  text-transform:uppercase; letter-spacing:.075em; font-size:13.5px; padding:16px 26px;
+}
+.hero__cta .btn--primary{ background:var(--brand); box-shadow:0 10px 30px rgba(28,123,245,.34); }
+.hero__cta .btn--primary:hover{ background:#3B8DFF; box-shadow:0 14px 38px rgba(28,123,245,.46); }
 .hero .wrap{ position:relative; z-index:2; }
 .hero .eyebrow{ color:var(--brand-bright); }
 .hero .eyebrow::before{ background:var(--brand-bright); }
@@ -1838,21 +1869,12 @@ html{
   <header class="hero" id="top">
     <div class="wrap">
       <div class="hero__text">
-        <span class="eyebrow reveal-hero" style="--d:0ms">Distribution automatique — boissons &amp; snacks</span>
-        <h1 class="hero__title reveal-hero" style="--d:90ms">Une <em>solution clé en main</em> : boissons et snacks sur votre site.</h1>
-        <p class="lede reveal-hero" style="--d:190ms">CLTDistrib installe et exploite des distributeurs automatiques adaptés aux entreprises, établissements et lieux accueillant du personnel ou du public.</p>
-        <div class="hero__cta reveal-hero" style="--d:280ms">
-          <a href="#contact" class="btn btn--primary">Étudier mon emplacement</a>
-          <a href="#offre" class="btn btn--ghost">Découvrir la solution</a>
+        <h1 class="hero__title reveal-hero" style="--d:60ms">Votre partenaire<br><em>distribution automatique</em></h1>
+        <p class="lede reveal-hero" style="--d:160ms">Nous installons, approvisionnons et entretenons vos distributeurs de boissons et snacks.</p>
+        <div class="hero__cta reveal-hero" style="--d:250ms">
+          <a href="#contact" class="btn btn--primary">Demander une étude</a>
+          <a href="#offre" class="btn btn--ghost">Nos solutions</a>
         </div>
-        <p class="hero__note reveal-hero" style="--d:360ms">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
-          Étude de l'emplacement gratuite et sans engagement.
-        </p>
-        <p class="hero__geo reveal-hero" style="--d:430ms">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
-          Zone d'intervention : <b>Yvelines et alentours</b>
-        </p>
       </div>
 
       <div class="hero__visual reveal-hero" style="--d:200ms">
