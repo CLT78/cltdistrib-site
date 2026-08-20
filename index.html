@@ -25,7 +25,8 @@
   "areaServed": "Yvelines et alentours"
 }
 </script>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%231F6FEB'/%3E%3Crect x='8.4' y='5.8' width='15.2' height='20.4' rx='3' fill='%23fff'/%3E%3Crect x='10.7' y='8.4' width='6.2' height='10.8' rx='1.3' fill='%231F6FEB'/%3E%3Crect x='18.5' y='12.5' width='2.8' height='6.7' rx='1' fill='%231F6FEB' opacity='.35'/%3E%3Crect x='10.7' y='21.2' width='10.6' height='2.5' rx='1.25' fill='%231F6FEB' opacity='.8'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='56'%20height='56'%20viewBox='0%200%2056%2056'%3E%3Crect%20width='56'%20height='56'%20rx='12'%20fill='%230B1730'/%3E%3Cg%20transform='translate(6,2)%20scale(.95)'%3E%3Cpath%20d='M44.5%207.5A27%2025%200%201%200%2041.7%2050.1L39.3%2042.8A19.5%2017.5%200%201%201%2041.5%2014.6Z'%20fill='%237FB6FF'/%3E%3Crect%20x='19.5'%20y='11'%20width='23'%20height='36'%20rx='2.6'%20fill='%230F1C33'/%3E%3Crect%20x='20.05'%20y='11.55'%20width='21.9'%20height='34.9'%20rx='2.2'%20fill='none'%20stroke='%2341618F'%20stroke-width='1.2'/%3E%3Crect%20x='21.6'%20y='13.2'%20width='13.4'%20height='26'%20rx='1.4'%20fill='%23123563'/%3E%3Crect%20x='22.9'%20y='15.6'%20width='3'%20height='5.4'%20rx='.8'%20fill='%23E4573D'/%3E%3Crect%20x='27'%20y='15.6'%20width='3'%20height='5.4'%20rx='.8'%20fill='%23E8A33D'/%3E%3Crect%20x='31.1'%20y='15.6'%20width='3'%20height='5.4'%20rx='.8'%20fill='%2335C0B0'/%3E%3Crect%20x='22.9'%20y='23.4'%20width='3'%20height='5.4'%20rx='.8'%20fill='%235AA0FF'/%3E%3Crect%20x='27'%20y='23.4'%20width='3'%20height='5.4'%20rx='.8'%20fill='%23E4573D'/%3E%3Crect%20x='31.1'%20y='23.4'%20width='3'%20height='5.4'%20rx='.8'%20fill='%23E8A33D'/%3E%3Crect%20x='22.9'%20y='31.2'%20width='3'%20height='5.4'%20rx='.8'%20fill='%23E8A33D'/%3E%3Crect%20x='27'%20y='31.2'%20width='3'%20height='5.4'%20rx='.8'%20fill='%2335C0B0'/%3E%3Crect%20x='31.1'%20y='31.2'%20width='3'%20height='5.4'%20rx='.8'%20fill='%235AA0FF'/%3E%3Crect%20x='36.3'%20y='13.2'%20width='4.2'%20height='26'%20rx='1.2'%20fill='%231F3253'/%3E%3Crect%20x='37'%20y='15.4'%20width='2.8'%20height='6.4'%20rx='.7'%20fill='%237C97BF'/%3E%3Crect%20x='37'%20y='23.6'%20width='2.8'%20height='2.6'%20rx='.6'%20fill='%235AA0FF'/%3E%3Crect%20x='21.6'%20y='41'%20width='18.9'%20height='4'%20rx='1.3'%20fill='%23050C18'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="apple-touch-icon" href="images/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -177,26 +178,45 @@ img{ max-width:100%; display:block; }
 .nav.is-stuck{ border-bottom-color:rgba(140,175,225,.16); box-shadow:0 1px 24px rgba(0,0,0,.35); }
 .nav.is-menu-open{ z-index:61; background:var(--deep); border-bottom-color:var(--deep-line); }
 .nav .wrap{ display:flex; align-items:center; justify-content:space-between; height:78px; gap:24px; }
-/* Logo en badge, comme sur la maquette : cartouche bordé, distributeur bleu,
-   CLT au-dessus de DISTRIB. Pensé pour être floqué tel quel sur une machine. */
+/* Porte-logo : simple conteneur d'alignement. Le SVG porte toute l'identité. */
 .brand{
-  display:inline-flex; align-items:center; gap:11px; flex-shrink:0;
-  padding:7px 15px 7px 11px; border-radius:12px;
-  border:1px solid rgba(140,180,240,.34); background:rgba(255,255,255,.035);
-  font-family:var(--font-display); transition:border-color .25s var(--ease), background-color .25s var(--ease);
+  display:inline-flex; align-items:center; flex-shrink:0; padding:4px 0;
+  font-family:var(--font-display); transition:opacity .25s var(--ease);
 }
-.brand:hover{ border-color:rgba(140,180,240,.6); background:rgba(255,255,255,.07); }
-.brand__mark{ width:30px; height:30px; flex-shrink:0; display:block; }
-.brand__mark .bm-plate{ fill:var(--brand); }
-.brand__mark .bm-body{ fill:#fff; }
-.brand__mark .bm-cut{ fill:var(--brand); }
-.brand__name{ display:flex; flex-direction:column; line-height:1; }
-.brand__name span:first-child{
-  color:#fff; font-size:20px; font-weight:700; letter-spacing:-0.02em;
-}
-.brand__name span:last-child{
-  color:var(--brand-bright); font-size:9.5px; font-weight:600;
-  letter-spacing:.30em; text-transform:uppercase; margin-top:4px;
+a.brand:hover{ opacity:.82; }
+
+/* ---- Logo officiel CLTDistrib --------------------------------------
+   Le SVG est inline : il hérite des polices du site, se colore via les
+   tokens, et reste net à toute taille. La hauteur pilote, la largeur suit
+   (viewBox + width:auto) : les proportions sont verrouillées, aucune
+   déformation possible quelle que soit la largeur d'écran. */
+.brand__logo{ display:block; height:38px; width:auto; flex-shrink:0; }
+.brand__logo .lg-word{ fill:#fff; font-family:var(--font-display); font-weight:700; }
+.brand__logo .lg-clt{ font-size:46px; letter-spacing:-0.028em; }
+.brand__logo .lg-distrib{ font-size:13px; letter-spacing:.39em; }
+.brand__logo .lg-tag{ fill:#C3D4EE; font-family:var(--font-display); font-weight:600;
+  font-size:7.7px; letter-spacing:.13em; }
+.brand__logo .lg-rule{ fill:var(--brand-bright); }
+.brand__logo .lg-body{ fill:#101D33; }
+.brand__logo .lg-edge{ fill:none; stroke:#3D5A85; stroke-width:1.1; }
+.brand__logo .lg-glass{ fill:#0E1E3A; }
+.brand__logo .lg-glow{ fill:var(--brand); opacity:.28; }
+.brand__logo .lg-panel{ fill:#1B2C4A; }
+.brand__logo .lg-slot{ fill:#050C18; }
+.brand__logo .lg-item{ opacity:.92; }
+
+/* Variante fonds clairs (devis, factures, documents imprimés) */
+.brand__logo--dark .lg-word{ fill:var(--navy); }
+.brand__logo--dark .lg-tag{ fill:var(--ink-soft); }
+.brand__logo--dark .lg-swoosh{ fill:var(--brand); }
+.brand__logo--dark .lg-body{ fill:#0B2F6E; }
+.brand__logo--dark .lg-edge{ stroke:#7FA8DE; }
+.brand__logo--dark .lg-glass{ fill:#0A2352; }
+
+.footer .brand__logo{ height:76px; }
+@media (max-width:600px){
+  .brand__logo{ height:33px; }
+  .footer .brand__logo{ height:64px; }
 }
 .nav__links{ display:flex; align-items:center; gap:clamp(14px,1.6vw,26px); }
 .nav__link{
@@ -474,7 +494,7 @@ img{ max-width:100%; display:block; }
 .trust__item .icon{ color:var(--teal); margin-top:2px; width:19px; height:19px; }
 .trust__item strong{ display:block; font-family:var(--font-display); font-size:14.5px; color:var(--teal-dark); letter-spacing:-0.015em; }
 .trust__item span{ display:block; font-size:13.5px; color:var(--ink-soft); margin-top:2px; line-height:1.45; }
-@media (max-width:900px){
+@media (max-width:600px){
   .trust .wrap{ grid-template-columns:1fr 1fr; }
   .trust__item{ padding:22px 20px 22px 0; }
   .trust__item + .trust__item{ padding-left:20px; }
@@ -849,7 +869,7 @@ img{ max-width:100%; display:block; }
 .draw-machine__wrench-wrap{ position:absolute; right:-30px; top:-26px; width:34px; height:34px; color:var(--teal-light); opacity:0; }
 .draw-machine__wrench{ width:100%; height:100%; display:block; }
 
-@media (max-width:900px){
+@media (max-width:600px){
   /* Sur téléphone : la machine occupe le haut de l'écran, le texte passe dessous */
   .draw-machine{ top:33%; width:252px; max-width:66vw; }
   .draw-machine__cabinet{ gap:7px; padding:10px; border-radius:14px; }
@@ -909,7 +929,7 @@ img{ max-width:100%; display:block; }
 .scroll-step p{ margin-top:14px; color:#BDCBC3; font-size:17px; max-width:42ch; opacity:0; transform:translateY(20px); transition:opacity .6s var(--ease) .1s, transform .6s var(--ease) .1s; }
 .scroll-step.is-active h3{ opacity:1; transform:translateY(0); }
 .scroll-step.is-active p{ opacity:1; transform:translateY(0); }
-@media (max-width:900px){
+@media (max-width:600px){
   /* Voile transparent en haut pour laisser voir la machine, opaque en bas pour le texte */
   .parallax-decouvrir__scrim, .parallax-decouvrir__scrim.is-right{
     background:linear-gradient(180deg,
@@ -1059,8 +1079,6 @@ img{ max-width:100%; display:block; }
    ============================================================ */
 .footer{ padding:38px 0 30px; background:var(--deep); }
 .footer__top{ display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:22px; padding-bottom:24px; border-bottom:1px solid var(--deep-line); }
-.footer .brand__name span:first-child{ color:#fff; }
-.footer .brand__name span:last-child{ color:var(--teal-light); }
 .footer__tag{ margin-top:12px; color:#8794A8; font-size:14.5px; max-width:36ch; line-height:1.55; }
 .footer__links{ display:flex; gap:30px; flex-wrap:wrap; }
 .footer__links a{ color:#AFC0D8; font-size:14.5px; transition:color .2s ease; }
@@ -1388,6 +1406,7 @@ html{
 .admin__bar .wrap{ display:flex; align-items:center; justify-content:space-between; height:70px; gap:20px; flex-wrap:wrap; }
 .admin__brand{ display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:600; font-size:17px; }
 .admin__brand small{ font-family:var(--font-mono); color:#9BAEC8; font-size:11px; display:block; font-weight:400; }
+.admin__brand .brand__logo--mark{ height:30px; }
 .admin__bar-actions{ display:flex; gap:8px; align-items:center; }
 .admin__bar .btn--ghost{ border-color:#33454E; color:#DCE4E6; }
 .admin__bar .btn--ghost:hover{ border-color:#fff; }
@@ -1612,7 +1631,7 @@ html{
 .save-indicator{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); display:flex; align-items:center; gap:6px; }
 .save-indicator .dot{ width:6px; height:6px; border-radius:50%; background:var(--teal); }
 
-@media (max-width:900px){
+@media (max-width:600px){
   .map-layout{ grid-template-columns:1fr; }
   .revenue-layout{ grid-template-columns:1fr; }
 }
@@ -1713,7 +1732,7 @@ html{
   background:linear-gradient(90deg, transparent, var(--teal-light));
 }
 
-@media (max-width:900px){
+@media (max-width:600px){
   .scroll-intro{ position:static; text-align:left; max-width:none; padding-top:4vh; }
   .scroll-intro .eyebrow{ justify-content:flex-start; }
   .scroll-title{ font-size:clamp(24px,6vw,32px); margin-top:10px; }
@@ -1798,16 +1817,48 @@ html{
 
   <nav class="nav" id="siteNav">
     <div class="wrap">
-      <a href="#top" class="brand">
-        <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
-          <rect class="bm-plate" width="32" height="32" rx="9"/>
-          <rect class="bm-body" x="8.4" y="5.8" width="15.2" height="20.4" rx="3"/>
-          <rect class="bm-cut" x="10.7" y="8.4" width="6.2" height="10.8" rx="1.3"/>
-          <rect class="bm-cut" x="18.5" y="8.4" width="2.8" height="2.7" rx=".7" opacity=".55"/>
-          <rect class="bm-cut" x="18.5" y="12.5" width="2.8" height="6.7" rx="1" opacity=".35"/>
-          <rect class="bm-cut" x="10.7" y="21.2" width="10.6" height="2.5" rx="1.25" opacity=".8"/>
+      <a href="#top" class="brand" aria-label="CLTDistrib — accueil">
+        <svg class="brand__logo" viewBox="0 0 144 58" role="img" aria-label="CLTDistrib">
+          <defs>
+            <linearGradient id="lgSwN" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#2F7FEE"/>
+              <stop offset=".5" stop-color="#E4EFFC"/>
+              <stop offset="1" stop-color="#FFFFFF"/>
+            </linearGradient>
+          </defs>
+          <path class="lg-swoosh" d="M44.5 7.5A27 25 0 1 0 41.7 50.1L39.3 42.8A19.5 17.5 0 1 1 41.5 14.6Z" fill="url(#lgSwN)"/>
+          <rect class="lg-body" x="19.5" y="11" width="23" height="36" rx="2.6"/>
+          <rect class="lg-edge" x="20.05" y="11.55" width="21.9" height="34.9" rx="2.2"/>
+          <rect class="lg-glass" x="21.6" y="13.2" width="13.4" height="26" rx="1.4"/>
+          <rect class="lg-glow" x="21.6" y="13.2" width="13.4" height="26" rx="1.4"/>
+          <g class="lg-item">
+            <rect x="22.7" y="15.4" width="2.5" height="5.2" rx=".7" fill="#E4573D"/>
+            <rect x="25.9" y="15.4" width="2.5" height="5.2" rx=".7" fill="#E8A33D"/>
+            <rect x="29.1" y="15.4" width="2.5" height="5.2" rx=".7" fill="#35C0B0"/>
+            <rect x="32.3" y="15.4" width="2.5" height="5.2" rx=".7" fill="#4E8FF0"/>
+            <rect x="22.7" y="23" width="2.5" height="5.2" rx=".7" fill="#4E8FF0"/>
+            <rect x="25.9" y="23" width="2.5" height="5.2" rx=".7" fill="#E4573D"/>
+            <rect x="29.1" y="23" width="2.5" height="5.2" rx=".7" fill="#E8A33D"/>
+            <rect x="32.3" y="23" width="2.5" height="5.2" rx=".7" fill="#35C0B0"/>
+            <rect x="22.7" y="30.6" width="2.5" height="5.2" rx=".7" fill="#E8A33D"/>
+            <rect x="25.9" y="30.6" width="2.5" height="5.2" rx=".7" fill="#35C0B0"/>
+            <rect x="29.1" y="30.6" width="2.5" height="5.2" rx=".7" fill="#4E8FF0"/>
+            <rect x="32.3" y="30.6" width="2.5" height="5.2" rx=".7" fill="#E4573D"/>
+          </g>
+          <rect class="lg-panel" x="36.3" y="13.2" width="4.2" height="26" rx="1.2"/>
+          <g fill="#6E8AB4">
+            <circle cx="37.5" cy="16.2" r=".55"/><circle cx="39.3" cy="16.2" r=".55"/>
+            <circle cx="37.5" cy="18.6" r=".55"/><circle cx="39.3" cy="18.6" r=".55"/>
+            <circle cx="37.5" cy="21" r=".55"/><circle cx="39.3" cy="21" r=".55"/>
+          </g>
+          <rect x="37" y="23.6" width="2.8" height="2.4" rx=".6" fill="#57A6FF" opacity=".7"/>
+          <rect x="37" y="28.2" width="2.8" height=".9" rx=".45" fill="#6E8AB4"/>
+          <rect class="lg-slot" x="21.6" y="41" width="18.9" height="4" rx="1.3"/>
+          <g transform="translate(54,36) skewX(-9)">
+            <text class="lg-word lg-clt" x="0" y="0">CLT</text>
+          </g>
+          <text class="lg-word lg-distrib" x="56" y="52">DISTRIB</text>
         </svg>
-        <span class="brand__name"><span>CLT</span><span>Distrib</span></span>
       </a>
       <div class="nav__links">
         <a class="nav__link" href="#top">Accueil</a>
@@ -2539,15 +2590,51 @@ html{
       <div class="footer__top">
         <div class="footer__brand">
           <div class="brand">
-            <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
-              <rect class="bm-plate" width="32" height="32" rx="9"/>
-              <rect class="bm-body" x="8.4" y="5.8" width="15.2" height="20.4" rx="3"/>
-              <rect class="bm-cut" x="10.7" y="8.4" width="6.2" height="10.8" rx="1.3"/>
-              <rect class="bm-cut" x="18.5" y="8.4" width="2.8" height="2.7" rx=".7" opacity=".55"/>
-              <rect class="bm-cut" x="18.5" y="12.5" width="2.8" height="6.7" rx="1" opacity=".35"/>
-              <rect class="bm-cut" x="10.7" y="21.2" width="10.6" height="2.5" rx="1.25" opacity=".8"/>
+            <svg class="brand__logo" viewBox="0 0 144 80" role="img" aria-label="CLTDistrib — distribution automatique, boissons et snacks">
+              <defs>
+                <linearGradient id="lgSwF" x1="0" y1="1" x2="1" y2="0">
+                  <stop offset="0" stop-color="#2F7FEE"/>
+                  <stop offset=".5" stop-color="#E4EFFC"/>
+                  <stop offset="1" stop-color="#FFFFFF"/>
+                </linearGradient>
+              </defs>
+              <path class="lg-swoosh" d="M44.5 7.5A27 25 0 1 0 41.7 50.1L39.3 42.8A19.5 17.5 0 1 1 41.5 14.6Z" fill="url(#lgSwF)"/>
+              <rect class="lg-body" x="19.5" y="11" width="23" height="36" rx="2.6"/>
+              <rect class="lg-edge" x="20.05" y="11.55" width="21.9" height="34.9" rx="2.2"/>
+              <rect class="lg-glass" x="21.6" y="13.2" width="13.4" height="26" rx="1.4"/>
+              <rect class="lg-glow" x="21.6" y="13.2" width="13.4" height="26" rx="1.4"/>
+              <g class="lg-item">
+                <rect x="22.7" y="15.4" width="2.5" height="5.2" rx=".7" fill="#E4573D"/>
+                <rect x="25.9" y="15.4" width="2.5" height="5.2" rx=".7" fill="#E8A33D"/>
+                <rect x="29.1" y="15.4" width="2.5" height="5.2" rx=".7" fill="#35C0B0"/>
+                <rect x="32.3" y="15.4" width="2.5" height="5.2" rx=".7" fill="#4E8FF0"/>
+                <rect x="22.7" y="23" width="2.5" height="5.2" rx=".7" fill="#4E8FF0"/>
+                <rect x="25.9" y="23" width="2.5" height="5.2" rx=".7" fill="#E4573D"/>
+                <rect x="29.1" y="23" width="2.5" height="5.2" rx=".7" fill="#E8A33D"/>
+                <rect x="32.3" y="23" width="2.5" height="5.2" rx=".7" fill="#35C0B0"/>
+                <rect x="22.7" y="30.6" width="2.5" height="5.2" rx=".7" fill="#E8A33D"/>
+                <rect x="25.9" y="30.6" width="2.5" height="5.2" rx=".7" fill="#35C0B0"/>
+                <rect x="29.1" y="30.6" width="2.5" height="5.2" rx=".7" fill="#4E8FF0"/>
+                <rect x="32.3" y="30.6" width="2.5" height="5.2" rx=".7" fill="#E4573D"/>
+              </g>
+              <rect class="lg-panel" x="36.3" y="13.2" width="4.2" height="26" rx="1.2"/>
+              <g fill="#6E8AB4">
+                <circle cx="37.5" cy="16.2" r=".55"/><circle cx="39.3" cy="16.2" r=".55"/>
+                <circle cx="37.5" cy="18.6" r=".55"/><circle cx="39.3" cy="18.6" r=".55"/>
+                <circle cx="37.5" cy="21" r=".55"/><circle cx="39.3" cy="21" r=".55"/>
+              </g>
+              <rect x="37" y="23.6" width="2.8" height="2.4" rx=".6" fill="#57A6FF" opacity=".7"/>
+              <rect x="37" y="28.2" width="2.8" height=".9" rx=".45" fill="#6E8AB4"/>
+              <rect class="lg-slot" x="21.6" y="41" width="18.9" height="4" rx="1.3"/>
+              <g transform="translate(54,36) skewX(-9)">
+                <text class="lg-word lg-clt" x="0" y="0">CLT</text>
+              </g>
+              <text class="lg-word lg-distrib" x="56" y="52">DISTRIB</text>
+              <text class="lg-tag" x="71" y="67" text-anchor="middle">DISTRIBUTION AUTOMATIQUE</text>
+              <rect class="lg-rule" x="6" y="74.6" width="14" height="1.2" rx=".6"/>
+              <rect class="lg-rule" x="122" y="74.6" width="14" height="1.2" rx=".6"/>
+              <text class="lg-tag" x="71" y="78" text-anchor="middle">BOISSONS &amp; SNACKS</text>
             </svg>
-            <span class="brand__name"><span>CLT</span><span>Distrib</span></span>
           </div>
           <p class="footer__tag">Distribution automatique de boissons &amp; snacks. Installation et exploitation de distributeurs pour les entreprises, établissements et lieux accueillant du public.</p>
         </div>
@@ -2627,7 +2714,35 @@ html{
   <div class="admin__bar">
     <div class="wrap">
       <div class="admin__brand">
-        <svg class="icon" viewBox="0 0 24 24" style="color:var(--teal)"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+        <svg class="brand__logo brand__logo--mark" viewBox="0 0 48 56" role="img" aria-label="CLTDistrib">
+          <defs>
+            <linearGradient id="lgSwA" x1="0" y1="1" x2="1" y2="0">
+              <stop offset="0" stop-color="#2F7FEE"/><stop offset=".5" stop-color="#E4EFFC"/><stop offset="1" stop-color="#FFFFFF"/>
+            </linearGradient>
+          </defs>
+          <g transform="translate(-1,1)">
+            <path class="lg-swoosh" d="M44.5 7.5A27 25 0 1 0 41.7 50.1L39.3 42.8A19.5 17.5 0 1 1 41.5 14.6Z" fill="url(#lgSwA)"/>
+            <rect class="lg-body" x="19.5" y="11" width="23" height="36" rx="2.6"/>
+            <rect class="lg-edge" x="20.05" y="11.55" width="21.9" height="34.9" rx="2.2"/>
+            <rect class="lg-glass" x="21.6" y="13.2" width="13.4" height="26" rx="1.4"/>
+            <rect class="lg-glow" x="21.6" y="13.2" width="13.4" height="26" rx="1.4"/>
+            <g class="lg-item">
+              <rect x="22.9" y="15.6" width="3" height="5.4" rx=".8" fill="#E4573D"/>
+              <rect x="27" y="15.6" width="3" height="5.4" rx=".8" fill="#E8A33D"/>
+              <rect x="31.1" y="15.6" width="3" height="5.4" rx=".8" fill="#35C0B0"/>
+              <rect x="22.9" y="23.4" width="3" height="5.4" rx=".8" fill="#4E8FF0"/>
+              <rect x="27" y="23.4" width="3" height="5.4" rx=".8" fill="#E4573D"/>
+              <rect x="31.1" y="23.4" width="3" height="5.4" rx=".8" fill="#E8A33D"/>
+              <rect x="22.9" y="31.2" width="3" height="5.4" rx=".8" fill="#E8A33D"/>
+              <rect x="27" y="31.2" width="3" height="5.4" rx=".8" fill="#35C0B0"/>
+              <rect x="31.1" y="31.2" width="3" height="5.4" rx=".8" fill="#4E8FF0"/>
+            </g>
+            <rect class="lg-panel" x="36.3" y="13.2" width="4.2" height="26" rx="1.2"/>
+            <rect x="37" y="15.4" width="2.8" height="6.4" rx=".7" fill="#6E8AB4"/>
+            <rect x="37" y="23.6" width="2.8" height="2.6" rx=".6" fill="#57A6FF" opacity=".8"/>
+            <rect class="lg-slot" x="21.6" y="41" width="18.9" height="4" rx="1.3"/>
+          </g>
+        </svg>
         <div>CLTDistrib<small>Espace pro</small></div>
       </div>
       <div class="admin__bar-actions">
