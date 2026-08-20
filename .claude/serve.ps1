@@ -9,7 +9,8 @@ Write-Host "Serving $root on http://localhost:$port/"
 while ($listener.IsListening) {
     $context = $listener.GetContext()
     $reqPath = $context.Request.Url.LocalPath
-    if ($reqPath -eq "/") { $reqPath = "/index.html" }
+    # Comme GitHub Pages : un chemin de dossier sert son index.html
+    if ($reqPath.EndsWith("/")) { $reqPath += "index.html" }
     $filePath = Join-Path $root $reqPath.TrimStart("/")
     if (Test-Path $filePath -PathType Leaf) {
         $bytes = [System.IO.File]::ReadAllBytes($filePath)

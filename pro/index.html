@@ -3,35 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CLTDistrib | Distributeurs automatiques de boissons &amp; snacks</title>
-<meta name="description" content="CLTDistrib propose des solutions de distribution automatique de boissons et snacks pour les entreprises, établissements et lieux accueillant du public. Étude de votre emplacement.">
-<link rel="canonical" href="https://clt78.github.io/cltdistrib-site/">
-<meta name="theme-color" content="#070D18">
-<meta property="og:title" content="CLTDistrib | Distributeurs automatiques de boissons &amp; snacks">
-<meta property="og:description" content="Installation et exploitation de distributeurs automatiques de boissons et snacks en entreprise. Vous avez l'emplacement, CLTDistrib s'occupe du reste.">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="fr_FR">
-<meta property="og:url" content="https://clt78.github.io/cltdistrib-site/">
-<meta name="twitter:card" content="summary_large_image">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "CLTDistrib",
-  "description": "Installation et exploitation de distributeurs automatiques de boissons et snacks pour les entreprises, établissements et lieux accueillant du public.",
-  "url": "https://clt78.github.io/cltdistrib-site/",
-  "email": "clementpiresvalente@gmail.com",
-  "telephone": "+33768661719",
-  "areaServed": "Yvelines et alentours"
-}
-</script>
-<link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96.png">
-<link rel="icon" type="image/png" sizes="48x48" href="images/favicon-48.png">
-<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<title>Espace pro — CLTDistrib</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#050B1A">
+<link rel="icon" type="image/png" sizes="96x96" href="../images/favicon-96.png">
+<link rel="icon" type="image/png" sizes="48x48" href="../images/favicon-48.png">
+<link rel="apple-touch-icon" href="../images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<script>document.documentElement.className += " js-anim";</script>
 <style>
 /* ============================================================
    1. TOKENS
@@ -195,6 +176,7 @@ a.brand:hover{ opacity:.82; }
    La hauteur pilote, la largeur suit : proportions verrouillées. */
 .brand__logo{ display:block; height:46px; width:auto; max-width:100%; }
 .footer .brand__logo{ height:84px; }
+.admin__brand .brand__logo{ height:34px; }
 /* Même spécificité partout, sinon les paliers mobiles seraient neutralisés. */
 @media (max-width:1320px){ .brand__logo{ height:42px; } }
 @media (max-width:600px){ .footer .brand__logo{ height:70px; } }
@@ -1371,6 +1353,282 @@ html{
 .device-preview__close{ position:absolute; top:-52px; right:0; color:#fff; border-color:rgba(255,255,255,.3); }
 .device-preview__close:hover{ color:#fff; border-color:#fff; background:rgba(255,255,255,.09); }
 
+/* ============================================================
+   PRO ACCESS OVERLAY
+   ============================================================ */
+.gate{
+  position:fixed; inset:0; z-index:100; background:rgba(22,35,43,.6); backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center; padding:20px;
+}
+.gate__card{ background:var(--surface); border-radius:var(--radius-l); padding:40px; max-width:400px; width:100%; box-shadow:var(--shadow-m); }
+.gate__card h3{ font-size:22px; }
+.gate__card p{ color:var(--ink-soft); font-size:14.5px; margin-top:8px; }
+.gate__pass{ position:relative; margin-top:22px; }
+.gate__pass input{ width:100%; padding:13px 44px 13px 14px; border:1px solid var(--line); border-radius:var(--radius-s); background:var(--bg); font-family:var(--font-mono); }
+.gate__pass button{ position:absolute; right:6px; top:6px; bottom:6px; background:none; border:none; padding:0 10px; color:var(--ink-faint); }
+.gate__error{ color:var(--red); font-size:13px; margin-top:10px; display:none; }
+.gate__error.is-visible{ display:block; }
+.gate__actions{ display:flex; gap:10px; margin-top:20px; }
+.gate__actions .btn{ flex:1; }
+
+/* ============================================================
+   ADMIN
+   ============================================================ */
+.admin{ min-height:100vh; background:var(--bg); }
+.admin__bar{ background:var(--ink); color:#fff; }
+.admin__bar .wrap{ display:flex; align-items:center; justify-content:space-between; height:70px; gap:20px; flex-wrap:wrap; }
+.admin__brand{ display:flex; align-items:center; gap:10px; font-family:var(--font-display); font-weight:600; font-size:17px; }
+.admin__brand small{ font-family:var(--font-mono); color:#9BAEC8; font-size:11px; display:block; font-weight:400; }
+.admin__brand .brand__logo{ height:34px; }
+.admin__bar-actions{ display:flex; gap:8px; align-items:center; }
+.admin__bar .btn--ghost{ border-color:#33454E; color:#DCE4E6; }
+.admin__bar .btn--ghost:hover{ border-color:#fff; }
+
+.admin-tabs{ background:var(--surface); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:10; }
+.admin-tabs .wrap{ display:flex; gap:4px; overflow-x:auto; }
+.admin-tabs__btn{
+  display:flex; align-items:center; gap:8px; padding:16px 18px; border:none; background:none;
+  font-weight:600; font-size:14px; color:var(--ink-faint); border-bottom:2px solid transparent; white-space:nowrap;
+}
+.admin-tabs__btn:hover{ color:var(--ink); }
+.admin-tabs__btn.is-active{ color:var(--teal-dark); border-bottom-color:var(--teal); }
+
+.admin-view{ display:none; padding:36px 0 80px; }
+.admin-view.is-active{ display:block; }
+.admin-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:20px; margin-bottom:28px; flex-wrap:wrap; }
+.admin-head h2{ font-size:24px; }
+.admin-head p{ color:var(--ink-soft); font-size:14.5px; margin-top:6px; }
+
+/* --- Raccourci vers l'espace pro : n'apparaît que sur un appareil déjà
+       déverrouillé, donc invisible pour les visiteurs --- */
+.pro-shortcut{
+  position:fixed; left:18px; bottom:18px; z-index:45;
+  width:38px; height:38px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(5,20,50,.72); color:#fff; border:1px solid rgba(255,255,255,.18);
+  backdrop-filter:blur(8px); box-shadow:var(--shadow-s);
+  opacity:.4; transition:opacity .2s var(--ease), transform .2s var(--ease), background-color .2s var(--ease);
+}
+.pro-shortcut:hover{ opacity:1; transform:scale(1.08); background:var(--teal-dark); }
+.pro-shortcut svg{ width:17px; height:17px; }
+@media (max-width:640px){ .pro-shortcut{ left:12px; bottom:12px; width:34px; height:34px; } }
+
+/* --- Apparition en cascade, sans glissement --- */
+@keyframes admin-in{ to{ opacity:1; } }
+.admin-anim{ opacity:0; animation:admin-in .45s var(--ease) forwards; animation-delay:calc(var(--i,0) * 55ms); }
+
+/* --- Avertissement de sécurité, permanent --- */
+.admin-warn{
+  display:flex; gap:14px; align-items:flex-start; margin:22px 0 0;
+  background:var(--amber-tint); border:1px solid rgba(181,130,47,.42); border-left:4px solid var(--amber);
+  border-radius:var(--radius-m); padding:16px 18px;
+}
+.admin-warn .icon{ width:20px; height:20px; color:var(--amber); flex-shrink:0; margin-top:1px; }
+.admin-warn strong{ display:block; font-size:14.5px; color:#6F4E14; }
+.admin-warn p{ margin:5px 0 0; font-size:13.5px; line-height:1.55; color:#7A5C24; }
+
+/* Rappel de sauvegarde — les données ne vivent que dans ce navigateur :
+   un cache vidé, et tout disparaît. Le bandeau change de ton avec le retard. */
+.admin-backup{
+  display:flex; align-items:center; gap:13px; margin:14px 0 0;
+  padding:13px 16px; border-radius:var(--radius-m);
+  background:var(--brand-tint); border:1px solid #BBD4FF;
+}
+.admin-backup.hidden{ display:none; }
+.admin-backup .icon{ width:20px; height:20px; color:var(--brand); flex-shrink:0; }
+.admin-backup div{ flex:1; min-width:0; }
+.admin-backup strong{ display:block; font-size:14.5px; color:var(--brand-deep); }
+.admin-backup p{ margin:4px 0 0; font-size:13.5px; line-height:1.5; color:var(--ink-soft); }
+.admin-backup .btn{ flex-shrink:0; }
+.admin-backup--urgent{ background:#FFF2E6; border-color:#F0C89A; }
+.admin-backup--urgent .icon{ color:#B25E12; }
+.admin-backup--urgent strong{ color:#7A4410; }
+@media (max-width:600px){
+  .admin-backup{ flex-wrap:wrap; }
+  .admin-backup .btn{ width:100%; }
+}
+
+/* --- Cartes de chiffres clés --- */
+.kpi-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:14px; margin-bottom:26px; }
+.kpi{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); padding:17px 19px;
+  transition:border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.kpi:hover{ border-color:var(--teal-light); box-shadow:var(--shadow-s); }
+.kpi__n{ font-family:var(--font-display); font-size:29px; font-weight:600; color:var(--teal-dark); line-height:1; }
+.kpi__l{ display:block; margin-top:7px; font-size:12.5px; color:var(--ink-faint); }
+.kpi__bar{ height:3px; border-radius:2px; background:var(--surface-sunk); margin-top:12px; overflow:hidden; }
+.kpi__bar span{ display:block; height:100%; width:0; background:var(--teal); border-radius:2px; transition:width .9s var(--ease); }
+
+/* --- Badges de statut --- */
+.badge{
+  display:inline-flex; align-items:center; gap:6px; padding:4px 10px; border-radius:999px;
+  font-size:11.5px; font-weight:600; white-space:nowrap; border:1px solid transparent;
+}
+.badge::before{ content:''; width:6px; height:6px; border-radius:50%; background:currentColor; flex-shrink:0; }
+.badge--todo{ background:var(--surface-sunk); color:#5C6B63; border-color:var(--line); }
+.badge--contacte{ background:#EAF1F7; color:#3C6289; border-color:#CBDDEC; }
+.badge--rdv{ background:var(--gold-tint); color:#8A6626; border-color:#E4D3B0; }
+.badge--etude{ background:var(--amber-tint); color:#8A6626; border-color:#E4D3B0; }
+.badge--propo{ background:#F1EAF7; color:#6B4A8A; border-color:#DFCFEC; }
+.badge--signe{ background:var(--teal-tint); color:var(--teal-dark); border-color:#BCD5F5; }
+.badge--perdu{ background:var(--red-tint); color:#8E3A2B; border-color:#EBC8C0; }
+/* Le statut actif "en cours" respire légèrement */
+.badge--rdv::before, .badge--etude::before, .badge--propo::before{ animation:badge-pulse 2s ease-in-out infinite; }
+@keyframes badge-pulse{ 0%,100%{ opacity:.45; } 50%{ opacity:1; } }
+
+/* --- Lignes de fiches (prospects, machines, documents) --- */
+.rec-list{ display:flex; flex-direction:column; gap:10px; }
+.rec{
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); padding:16px 18px;
+  display:grid; grid-template-columns:1fr auto; gap:12px 18px; align-items:start;
+  transition:border-color .22s var(--ease), box-shadow .22s var(--ease);
+}
+.rec:hover{ border-color:var(--teal-light); box-shadow:var(--shadow-s); }
+.rec__title{ font-family:var(--font-display); font-weight:600; font-size:15.5px; color:var(--ink); }
+.rec__meta{ margin-top:5px; font-size:13.5px; color:var(--ink-soft); line-height:1.55; }
+.rec__meta b{ color:var(--ink); font-weight:600; }
+.rec__side{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+.rec__note{ grid-column:1/-1; margin-top:2px; padding-top:10px; border-top:1px dashed var(--line); font-size:13.5px; color:var(--ink-soft); white-space:pre-wrap; }
+.rec select{ padding:7px 10px; font-size:13px; border:1px solid var(--line); border-radius:var(--radius-s); background:var(--surface-alt); }
+.rec__del{ background:none; border:none; color:var(--ink-faint); padding:6px; border-radius:var(--radius-s); }
+.rec__del:hover{ color:var(--red); background:var(--red-tint); }
+.rec__del .icon{ width:15px; height:15px; }
+
+/* --- Filtres --- */
+.filters{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:18px; }
+.filters button{
+  padding:7px 14px; border-radius:999px; border:1px solid var(--line); background:var(--surface);
+  font-size:13px; font-weight:600; color:var(--ink-soft); transition:all .2s var(--ease);
+}
+.filters button:hover{ border-color:var(--teal-light); }
+.filters button.is-active{ background:var(--teal-dark); border-color:var(--teal-dark); color:#fff; }
+
+/* --- État vide --- */
+.rec-empty{
+  border:1px dashed var(--line); border-radius:var(--radius-m); padding:44px 24px; text-align:center;
+  color:var(--ink-faint); font-size:14px; background:var(--surface);
+}
+.rec-empty .icon{ width:30px; height:30px; color:var(--line); margin-bottom:10px; }
+
+@media (max-width:640px){
+  .rec{ grid-template-columns:1fr; }
+  .rec__side{ justify-content:flex-start; }
+  .kpi__n{ font-size:24px; }
+}
+
+/* Map */
+.map-layout{ display:grid; grid-template-columns:1.3fr .9fr; gap:24px; align-items:start; }
+.mapboard{
+  position:relative; aspect-ratio:4/3; border-radius:var(--radius-l); overflow:hidden; border:1px solid var(--line);
+  background-color:#E6EAE5;
+  background-image:
+    linear-gradient(rgba(22,35,43,.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22,35,43,.05) 1px, transparent 1px),
+    linear-gradient(rgba(22,35,43,.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(22,35,43,.09) 1px, transparent 1px);
+  background-size:20px 20px,20px 20px,100px 100px,100px 100px;
+  cursor:default;
+}
+.mapboard.is-placing{ cursor:crosshair; }
+.mapboard.is-placing::after{
+  content:'Cliquez sur la carte pour positionner le distributeur';
+  position:absolute; top:12px; left:50%; transform:translateX(-50%);
+  background:var(--ink); color:#fff; font-size:12.5px; padding:8px 14px; border-radius:999px;
+  font-family:var(--font-mono); white-space:nowrap; z-index:5;
+}
+.pin{
+  position:absolute; width:30px; height:30px; margin:-30px 0 0 -15px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; color:#fff; background:var(--ink);
+  border-radius:50% 50% 50% 0; transform:rotate(-45deg); box-shadow:var(--shadow-s);
+  transition:transform .12s ease;
+}
+.pin .icon{ transform:rotate(45deg); width:14px; height:14px; }
+.pin:hover{ transform:rotate(-45deg) scale(1.1); }
+.pin.is-selected{ background:var(--teal); }
+.pin-ghost{
+  position:absolute; width:26px; height:26px; margin:-26px 0 0 -13px; border-radius:50% 50% 50% 0;
+  background:var(--amber); transform:rotate(-45deg); opacity:.85; pointer-events:none;
+}
+.map-empty{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:10px; color:var(--ink-faint); font-size:13.5px; text-align:center; padding:20px; }
+
+.panel{ background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-l); padding:26px; }
+.panel--empty{ display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:10px; padding:60px 26px; color:var(--ink-faint); font-size:14px; min-height:280px; }
+.panel__title{ display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+.panel__title h3{ font-size:19px; }
+.panel__title span{ font-family:var(--font-mono); font-size:12px; color:var(--ink-faint); }
+.panel__addr{ color:var(--ink-soft); font-size:14px; margin-top:6px; }
+.tag{ display:inline-block; font-family:var(--font-mono); font-size:11px; background:var(--teal-tint); color:var(--teal-dark); padding:3px 9px; border-radius:999px; margin-top:10px; }
+.panel__stats{ display:flex; gap:22px; margin-top:18px; padding-top:18px; border-top:1px solid var(--line); }
+.panel__stats div strong{ display:block; font-family:var(--font-mono); font-size:19px; }
+.panel__stats div span{ font-size:11.5px; color:var(--ink-faint); }
+
+.reviews{ margin-top:20px; display:flex; flex-direction:column; gap:12px; max-height:260px; overflow-y:auto; }
+.review{ border:1px solid var(--line); border-radius:var(--radius-s); padding:12px 14px; }
+.review__top{ display:flex; justify-content:space-between; align-items:center; }
+.review__top strong{ font-size:13.5px; }
+.review__stars{ display:flex; gap:2px; color:var(--amber); }
+.review__stars .icon{ width:13px; height:13px; }
+.review p{ font-size:13.5px; color:var(--ink-soft); margin-top:6px; }
+.review small{ color:var(--ink-faint); font-size:11px; }
+
+/* Forms inline (admin) */
+.inline-form{ background:var(--surface-alt); border-radius:var(--radius-m); padding:20px; margin-top:16px; }
+.inline-form .field-row{ grid-template-columns:1fr 1fr; }
+.inline-form .field{ margin-bottom:12px; }
+.inline-form__actions{ display:flex; gap:10px; margin-top:6px; }
+
+/* Stocks */
+.stock-select{ margin-bottom:22px; max-width:340px; }
+.table{ width:100%; border-collapse:collapse; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-m); overflow:hidden; }
+.table th{ text-align:left; font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-faint); padding:12px 16px; background:var(--surface-alt); font-weight:600; }
+.table td{ padding:13px 16px; border-top:1px solid var(--line); font-size:14.5px; }
+.table tr.is-low td{ background:var(--amber-tint); }
+.table tr.is-out td{ background:var(--red-tint); }
+.table td.num{ font-family:var(--font-mono); }
+.status-dot{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:600; }
+.status-dot::before{ content:''; width:7px; height:7px; border-radius:50%; }
+.status-dot.ok{ color:var(--teal-dark); }
+.status-dot.ok::before{ background:var(--teal); }
+.status-dot.low{ color:var(--amber); }
+.status-dot.low::before{ background:var(--amber); }
+.status-dot.out{ color:var(--red); }
+.status-dot.out::before{ background:var(--red); }
+.table-empty{ padding:50px 16px; text-align:center; color:var(--ink-faint); font-size:14px; }
+
+/* Revenue */
+.revenue-layout{ display:grid; grid-template-columns:1fr 1.4fr; gap:24px; align-items:start; }
+.revenue-total{ font-family:var(--font-mono); font-size:34px; margin-top:4px; }
+.chart{ display:flex; align-items:flex-end; gap:14px; height:200px; padding:20px 10px 0; border-bottom:1px solid var(--line); }
+.chart__bar-wrap{ display:flex; flex-direction:column; align-items:center; flex:1; height:100%; justify-content:flex-end; gap:8px; }
+.chart__bar{ width:100%; max-width:38px; background:var(--teal); border-radius:5px 5px 0 0; min-height:3px; transition:height .3s ease; }
+.chart__val{ font-family:var(--font-mono); font-size:11px; color:var(--ink-soft); }
+.chart__lbl{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); margin-top:8px; }
+.rev-list{ margin-top:18px; display:flex; flex-direction:column; gap:8px; }
+.rev-row{ display:flex; justify-content:space-between; align-items:center; padding:10px 14px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-s); font-size:14px; }
+.rev-row span:first-child{ font-family:var(--font-mono); color:var(--ink-soft); }
+.rev-row span.amt{ font-family:var(--font-mono); font-weight:600; }
+
+/* Notes */
+.notes-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px; margin-top:24px; }
+.note-card{ background:#FBF6E4; border-radius:var(--radius-s); padding:18px; min-height:150px; display:flex; flex-direction:column; justify-content:space-between; box-shadow:var(--shadow-s); transform:rotate(var(--r,-1deg)); }
+.note-card:nth-child(2n){ --r:1deg; background:#EAF3E9; }
+.note-card:nth-child(3n){ --r:-0.6deg; background:#E7EEF2; }
+.note-card p{ font-size:14px; white-space:pre-wrap; }
+.note-card__foot{ display:flex; justify-content:space-between; align-items:center; margin-top:14px; }
+.note-card__foot small{ color:var(--ink-faint); font-family:var(--font-mono); font-size:11px; }
+
+/* small helpers */
+.field-inline{ display:flex; gap:10px; }
+.field-inline .field{ flex:1; margin-bottom:0; }
+.empty-icon{ width:34px; height:34px; color:var(--line); }
+.save-indicator{ font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); display:flex; align-items:center; gap:6px; }
+.save-indicator .dot{ width:6px; height:6px; border-radius:50%; background:var(--teal); }
+
+@media (max-width:600px){
+  .map-layout{ grid-template-columns:1fr; }
+  .revenue-layout{ grid-template-columns:1fr; }
+}
 
 /* ============================================================
    SCROLL PROGRESS BAR
@@ -1547,1586 +1805,485 @@ html{
 </style>
 </head>
 <body>
+<!-- ============================================================
+     ESPACE PRO — PORTE D'ACCÈS
+     ============================================================ -->
+<div class="gate hidden" id="gateOverlay">
+  <div class="gate__card">
+    <h3>Espace pro</h3>
+    <p>Réservé à l'équipe CLTDistrib. Saisissez votre code d'accès.</p>
+    <div class="gate__pass">
+      <input type="password" id="gatePassInput" placeholder="Code d'accès" autocomplete="off" inputmode="numeric" pattern="[0-9]*">
+      <button type="button" id="gateToggleVis" aria-label="Afficher le code">
+        <svg class="icon" id="gateEyeIcon" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
+    <p class="gate__error" id="gateError">Code incorrect. Réessayez.</p>
+    <div class="gate__actions">
+      <button class="btn btn--ghost" id="gateCancel">Annuler</button>
+      <button class="btn btn--primary" id="gateSubmit">Accéder</button>
+    </div>
+  </div>
+</div>
 
 <!-- ============================================================
-     SITE PUBLIC
+     ESPACE PRO — TABLEAU DE BORD
      ============================================================ -->
-<div id="publicSite">
-
-  <nav class="nav" id="siteNav">
+<div class="admin hidden" id="adminApp">
+  <div class="admin__bar">
     <div class="wrap">
-      <a href="#top" class="brand" aria-label="CLTDistrib — accueil">
-        <img class="brand__logo" src="images/logo-blanc-compact.png" width="405" height="138" alt="CLTDistrib">
-      </a>
-      <div class="nav__links">
-        <a class="nav__link" href="#top">Accueil</a>
-        <a class="nav__link" href="#offre">Notre solution</a>
-        <a class="nav__link" href="#lieux">Pour quels lieux&nbsp;?</a>
-        <a class="nav__link" href="#etapes">Comment ça marche&nbsp;?</a>
-        <a class="nav__link" href="#apropos">À propos</a>
-        <a class="nav__link" href="#faq">FAQ</a>
-        <a class="nav__link" href="#contact">Contact</a>
+      <div class="admin__brand">
+        <img class="brand__logo" src="../images/logo-marque.png" width="256" height="256" alt="CLTDistrib">
+        <div>CLTDistrib<small>Espace pro</small></div>
       </div>
-      <div class="nav__actions">
-        <div class="view-toggle">
-          <button class="view-toggle__btn is-active" id="viewDesktopBtn" type="button" aria-label="Voir la version PC" title="Version PC">
-            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></svg>
-          </button>
-          <button class="view-toggle__btn" id="viewMobileBtn" type="button" aria-label="Voir la version mobile" title="Version mobile">
-            <svg class="icon" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>
-          </button>
+      <div class="admin__bar-actions">
+        <span class="save-indicator" id="saveIndicator" style="color:#9BAEC8"><span class="dot"></span> Enregistré</span>
+        <button class="btn btn--ghost btn--sm" id="exportBtn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 3v12m0 0-4-4m4 4 4-4"/><path d="M4 21h16"/></svg>
+          Exporter
+        </button>
+        <button class="btn btn--ghost btn--sm" id="importBtn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 21V9m0 0-4 4m4-4 4 4"/><path d="M4 3h16"/></svg>
+          Importer
+        </button>
+        <input type="file" id="importFile" accept="application/json" class="hidden">
+        <button class="btn btn--ghost btn--sm" id="leaveAdminBtn">Quitter</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="admin-tabs">
+    <div class="wrap">
+      <button class="admin-tabs__btn is-active" data-tab="map">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+        Carte &amp; avis
+      </button>
+      <button class="admin-tabs__btn" data-tab="stocks">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>
+        Stocks
+      </button>
+      <button class="admin-tabs__btn" data-tab="revenue">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+        Chiffre d'affaires
+      </button>
+      <button class="admin-tabs__btn" data-tab="prospects">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>
+        Prospects
+      </button>
+      <button class="admin-tabs__btn" data-tab="machines">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h4M8 10h4"/><rect x="7" y="16" width="10" height="3" rx="1"/></svg>
+        Machines
+      </button>
+      <button class="admin-tabs__btn" data-tab="documents">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h4"/></svg>
+        Documents
+      </button>
+      <button class="admin-tabs__btn" data-tab="notes">
+        <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px"><path d="M4 4h16v16H4z"/><path d="M8 9h8M8 13h5"/></svg>
+        Notes
+      </button>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="admin-warn">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+      <div>
+        <strong>Espace séparé, pas encore protégé.</strong>
+        <p>L'espace pro vit désormais dans son propre fichier : le site public ne contient plus ni son interface ni son code d'accès. Mais tant qu'un contrôle d'accès n'est pas posé devant cette adresse, le fichier reste lisible par qui la devine. <b>Vos saisies, elles, ne quittent pas cet appareil</b> — rien n'est envoyé sur internet.</p>
+      </div>
+    </div>
+
+    <!-- Rappel de sauvegarde : rempli par le script -->
+    <div class="admin-backup hidden" id="backupNotice">
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-7"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+      <div>
+        <strong id="backupTitle"></strong>
+        <p id="backupText"></p>
+      </div>
+      <button class="btn btn--primary btn--sm" id="backupNow">Sauvegarder</button>
+    </div>
+
+
+    <!-- TAB: CARTE & AVIS -->
+    <div class="admin-view is-active" data-view="map">
+      <div class="admin-head">
+        <div>
+          <h2>Carte des distributeurs</h2>
+          <p>Positionnez vos distributeurs et consultez les avis laissés pour chacun.</p>
         </div>
-        <a href="#contact" class="btn btn--primary btn--sm">Étudier mon emplacement</a>
-        <button class="nav__burger" id="burgerBtn" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileNav">
-          <span class="nav__burger-bars" aria-hidden="true"><span></span><span></span><span></span></span>
-          <span class="nav__burger-label">Menu</span>
+        <button class="btn btn--accent btn--sm" id="addDistribBtn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;color:#fff"><path d="M12 5v14M5 12h14"/></svg>
+          Ajouter un distributeur
         </button>
       </div>
-    </div>
-  </nav>
 
-  <!-- Le panneau est volontairement hors de <nav> : le backdrop-filter de la
-       barre en ferait le bloc conteneur du positionnement fixe, ce qui écrase
-       le panneau à la hauteur de la barre. -->
-  <div class="nav__mobile" id="mobileNav" role="dialog" aria-modal="true" aria-label="Menu de navigation">
-    <div class="nav__mobile-inner">
-      <nav class="nav__mobile-links">
-        <a href="#top"><span class="nav__mobile-n">01</span> Accueil</a>
-        <a href="#offre"><span class="nav__mobile-n">02</span> Notre solution</a>
-        <a href="#lieux"><span class="nav__mobile-n">03</span> Pour quels lieux&nbsp;?</a>
-        <a href="#etapes"><span class="nav__mobile-n">04</span> Comment ça marche&nbsp;?</a>
-        <a href="#apropos"><span class="nav__mobile-n">05</span> À propos</a>
-        <a href="#faq"><span class="nav__mobile-n">06</span> FAQ</a>
-        <a href="#contact"><span class="nav__mobile-n">07</span> Contact</a>
-      </nav>
-      <div class="nav__mobile-foot">
-        <a href="#contact" class="btn btn--primary btn--wide">Étudier mon emplacement</a>
-        <p class="nav__mobile-note">Étude de l'emplacement gratuite et sans engagement.</p>
-        <a class="nav__mobile-mail" href="tel:+33768661719">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg>
-          07 68 66 17 19
-        </a>
-        <a class="nav__mobile-mail" href="mailto:clementpiresvalente@gmail.com">
-          <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m4 7 8 6 8-6"/></svg>
-          clementpiresvalente@gmail.com
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- 1 — HERO ------------------------------------------------- -->
-  <header class="hero" id="top">
-    <div class="wrap">
-      <div class="hero__text">
-        <h1 class="hero__title reveal-hero" style="--d:60ms">Votre partenaire<br><em>distribution automatique</em></h1>
-        <p class="lede reveal-hero" style="--d:160ms">Nous installons, approvisionnons et entretenons vos distributeurs de boissons et snacks.</p>
-        <div class="hero__cta reveal-hero" style="--d:250ms">
-          <a href="#contact" class="btn btn--primary">Demander une étude</a>
-          <a href="#offre" class="btn btn--ghost">Nos solutions</a>
+      <div class="inline-form hidden" id="addDistribForm">
+        <div class="field-row">
+          <div class="field"><label for="dNom">Nom du distributeur *</label><input id="dNom" placeholder="ex : Site Nord — accueil"></div>
+          <div class="field"><label for="dSecteur">Secteur</label>
+            <select id="dSecteur">
+              <option>Bureaux</option>
+              <option>Site industriel</option>
+              <option>Entrepôt / logistique</option>
+              <option>Zone commerciale</option>
+              <option>Établissement de santé</option>
+              <option>Autre</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="dAdresse">Adresse *</label><input id="dAdresse" placeholder="ex : 14 rue de l'Industrie, Bonnières-sur-Seine"></div>
+        <p class="form-note" id="addDistribHint">Renseignez les champs, puis cliquez sur la carte pour choisir l'emplacement.</p>
+        <div class="inline-form__actions">
+          <button class="btn btn--ghost btn--sm" id="cancelAddDistrib">Annuler</button>
+          <button class="btn btn--primary btn--sm" id="confirmAddDistrib" disabled>Valider l'emplacement</button>
         </div>
       </div>
 
-      <div class="hero__visual reveal-hero" style="--d:200ms">
-        <div class="hero__parallax">
-          <div class="hero__float">
-            <div class="hero__frame">
-              <img src="images/distributeur.jpg" alt="Distributeur automatique de boissons et snacks — photo d'illustration" width="900" height="620">
-              <span class="hero__sheen" aria-hidden="true"></span>
-              <span class="hero__caption">Photo d'illustration</span>
-            </div>
+      <div class="map-layout" style="margin-top:20px">
+        <div class="mapboard" id="mapboard">
+          <div class="map-empty hidden" id="mapEmpty">
+            <svg class="icon empty-icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            Aucun distributeur pour le moment.<br>Cliquez sur « Ajouter un distributeur ».
           </div>
         </div>
-
-        <span class="hero__chip-wrap hero__chip--a"><span class="hero__chip">
-          <span class="dot" aria-hidden="true"></span>0 € d'investissement
-        </span></span>
-        <span class="hero__chip-wrap hero__chip--b"><span class="hero__chip">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-          CB &amp; sans contact
-        </span></span>
-        <span class="hero__chip-wrap hero__chip--c"><span class="hero__chip">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
-          Stock suivi en direct
-        </span></span>
-      </div>
-    </div>
-
-    <div class="hero__scroll" aria-hidden="true">Découvrir<i></i></div>
-  </header>
-
-  <!-- 2 — VOUS AVEZ L'EMPLACEMENT ------------------------------- -->
-  <section class="section section--alt" id="offre">
-    <div class="wrap">
-      <div class="section__head section__head--center reveal">
-        <span class="eyebrow">Notre solution</span>
-        <h2>Vous avez l'emplacement. Nous nous occupons du reste.</h2>
-        <p>CLTDistrib ne vend pas de distributeurs : nous exploitons un service de distribution automatique sur votre site.</p>
-      </div>
-      <div class="covers">
-        <div class="cover reveal" data-i="0">
-          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h4M8 10h4M8 14h4"/><path d="M16 6v5"/><rect x="7" y="17" width="10" height="2.5" rx="1"/></svg></span>
-          <div>
-            <strong>Machine fournie</strong>
-            <span>Le distributeur est mis à disposition par CLTDistrib.</span>
-          </div>
-        </div>
-        <div class="cover reveal" data-i="1">
-          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h11v9H2z"/><path d="M13 10h4l3 3v3h-7z"/><circle cx="6" cy="18.5" r="1.8"/><circle cx="16.5" cy="18.5" r="1.8"/></svg></span>
-          <div>
-            <strong>Installation</strong>
-            <span>Livraison, mise en place et mise en service sur l'emplacement défini.</span>
-          </div>
-        </div>
-        <div class="cover reveal" data-i="2">
-          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3h7l-.7 18a1 1 0 0 1-1 1H5.7a1 1 0 0 1-1-1L4 3z"/><path d="M4.3 9h6.4"/><path d="M15 8h5a1 1 0 0 1 1 1.15l-1.1 11a1 1 0 0 1-1 .85h-2.8a1 1 0 0 1-1-.85l-1.1-11A1 1 0 0 1 15 8z"/></svg></span>
-          <div>
-            <strong>Boissons &amp; snacks</strong>
-            <span>Une sélection de produits construite selon le public du lieu.</span>
-          </div>
-        </div>
-        <div class="cover reveal" data-i="3">
-          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M20.5 12a8.5 8.5 0 1 1-2.9-6.4"/><path d="M20.5 3.5v5h-5"/></svg></span>
-          <div>
-            <strong>Réassort régulier</strong>
-            <span>Le réapprovisionnement est assuré selon les besoins du site.</span>
-          </div>
-        </div>
-        <div class="cover reveal" data-i="4">
-          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg></span>
-          <div>
-            <strong>Entretien &amp; maintenance</strong>
-            <span>Nettoyage de la machine et intervention en cas de dysfonctionnement.</span>
-          </div>
-        </div>
-        <div class="cover reveal" data-i="5">
-          <span class="cover__check"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/><path d="M6 14.5h3"/></svg></span>
-          <div>
-            <strong>Paiement CB &amp; sans contact</strong>
-            <span>Moyens de paiement gérés par CLTDistrib.</span>
-          </div>
-        </div>
-      </div>
-      <p class="covers-foot reveal">Vous n'avez pas à gérer les stocks, les approvisionnements ou l'entretien quotidien de la machine. <strong>CLTDistrib assure le suivi de l'exploitation.</strong></p>
-    </div>
-  </section>
-
-  <!-- 3 — POURQUOI INSTALLER UN DISTRIBUTEUR -------------------- -->
-  <section class="section" id="pourquoi">
-    <div class="wrap split">
-      <div class="reveal">
-        <span class="eyebrow">Pourquoi installer un distributeur</span>
-        <h2>Un service simple pour votre établissement.</h2>
-        <p class="need__lead" style="margin-top:20px">Un distributeur automatique permet de proposer facilement des boissons et snacks aux personnes présentes sur votre site, sans créer de point de vente ni mobiliser votre personnel.</p>
-      </div>
-      <div class="need__list reveal">
-        <div class="need__item">
-          <div class="need__item-top">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.9"/></svg>
-            <h3>Pour vos salariés</h3>
-          </div>
-          <p>Une solution pratique pour les pauses et les petites faims.</p>
-        </div>
-        <div class="need__item">
-          <div class="need__item-top">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M10 21v-5h4v5"/></svg>
-            <h3>Pour vos clients et visiteurs</h3>
-          </div>
-          <p>Un service complémentaire disponible directement sur votre site.</p>
-        </div>
-        <div class="need__item">
-          <div class="need__item-top">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <h3>Pour votre établissement</h3>
-          </div>
-          <p>Une solution gérée par un interlocuteur externe, sans gestion quotidienne des stocks.</p>
-        </div>
-        <div class="need__item">
-          <div class="need__item-top">
-            <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-            <h3>Pour vos espaces</h3>
-          </div>
-          <p>Une installation étudiée selon la configuration, le passage et les besoins du lieu.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4 — POUR QUELS LIEUX ? ------------------------------------ -->
-  <section class="section section--alt" id="lieux">
-    <div class="wrap">
-      <div class="section__head reveal">
-        <span class="eyebrow">Pour quels lieux</span>
-        <h2>Des solutions adaptées à différents lieux</h2>
-        <p>Voici les types d'établissements auxquels notre service s'adresse. Chaque emplacement fait l'objet d'une étude avant toute installation.</p>
-      </div>
-      <div class="places">
-        <div class="place reveal" data-i="0">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M15 9h2a2 2 0 0 1 2 2v10"/><path d="M9 7h2M9 11h2M9 15h2"/></svg>
-          <h3>Entreprises &amp; bureaux</h3>
-          <p>Salle de pause, hall d'accueil ou espace commun.</p>
-        </div>
-        <div class="place reveal" data-i="1">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V10l5-3v14"/><path d="M9 21V7l6-4v18"/><path d="M15 21V11l5 3v7"/><path d="M12 9h.01M12 13h.01"/></svg>
-          <h3>Usines &amp; ateliers</h3>
-          <p>Vestiaires et zones de pause, y compris en horaires décalés.</p>
-        </div>
-        <div class="place reveal" data-i="2">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21V9l9-5 9 5v12"/><path d="M3 13h18"/><path d="M9 21v-5h6v5"/></svg>
-          <h3>Entrepôts &amp; plateformes logistiques</h3>
-          <p>Zones de quai et salles de repos des équipes.</p>
-        </div>
-        <div class="place reveal" data-i="3">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M3 9v6M21 9v6"/><path d="M6.5 6v12M17.5 6v12"/><path d="M6.5 12h11"/></svg>
-          <h3>Salles de sport</h3>
-          <p>Boissons et barres à proximité des zones d'entraînement.</p>
-        </div>
-        <div class="place reveal" data-i="4">
-          <svg class="icon" viewBox="0 0 24 24"><path d="m3 8 9-4 9 4-9 4-9-4z"/><path d="M7 10.5V16c0 1.5 2.5 3 5 3s5-1.5 5-3v-5.5"/><path d="M21 8v6"/></svg>
-          <h3>Centres de formation</h3>
-          <p>Entre deux sessions, pour les stagiaires comme pour les formateurs.</p>
-        </div>
-        <div class="place reveal" data-i="5">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M4 21V6a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v15"/><path d="M15 10h4a1 1 0 0 1 1 1v10"/><path d="M8 9h3M8 13h3M8 17h3"/></svg>
-          <h3>Hôtels &amp; résidences</h3>
-          <p>Halls et étages, accessibles en dehors des horaires de service.</p>
-        </div>
-        <div class="place reveal" data-i="6">
-          <svg class="icon" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M6 21V8l6-4 6 4v13"/><path d="M9 12h6M9 16h6"/></svg>
-          <h3>Établissements accueillant du public</h3>
-          <p>Espaces d'accueil et salles d'attente.</p>
-        </div>
-        <div class="place reveal" data-i="7">
-          <svg class="icon" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="13" rx="2"/><path d="M5 9h14"/><path d="M7 20l2-4M17 20l-2-4"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
-          <h3>Gares &amp; lieux de passage</h3>
-          <p>Zones fréquentées où l'offre sur place est limitée.</p>
-        </div>
-      </div>
-      <p class="places-foot reveal"><strong>Votre établissement ne figure pas dans cette liste&nbsp;?</strong> Présentez-nous votre site : nous vous dirons si l'emplacement s'y prête.</p>
-    </div>
-  </section>
-
-  <!-- 5 — UNE SOLUTION CLÉ EN MAIN (section immersive) ---------- -->
-  <section class="parallax-decouvrir" id="solution">
-    <div class="parallax-decouvrir__bg">
-      <div class="draw-machine" id="parallaxImg">
-        <div class="draw-machine__cabinet">
-          <div class="draw-machine__door" id="machineDoor">
-            <div class="draw-machine__glass">
-              <div class="draw-machine__cols" id="machineCols"></div>
-              <svg class="draw-machine__crack" viewBox="0 0 200 400" preserveAspectRatio="none" aria-hidden="true">
-                <path d="M106 4 L94 92 L124 148 L88 224 L112 300 L80 398"/>
-                <path d="M94 92 L30 116"/>
-                <path d="M94 92 L152 54"/>
-                <path d="M124 148 L188 126"/>
-                <path d="M88 224 L18 248"/>
-                <path d="M112 300 L178 324"/>
-                <path d="M88 224 L138 268"/>
-              </svg>
-              <div class="draw-machine__sweep" aria-hidden="true"></div>
-              <div class="draw-machine__shine" aria-hidden="true"></div>
-            </div>
-          </div>
-          <div class="draw-machine__side">
-            <div class="draw-machine__screen mono" id="machineScreenText">PRÊT</div>
-            <div class="draw-machine__alert mono" aria-hidden="true">ERR E-07</div>
-            <div class="draw-machine__keypad" aria-hidden="true">
-              <span></span><span></span><span></span><span></span><span></span><span></span>
-            </div>
-            <div class="draw-machine__coinslot" aria-hidden="true"></div>
-            <div class="draw-machine__wrench-wrap" aria-hidden="true">
-              <svg class="draw-machine__wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/></svg>
-            </div>
-          </div>
-          <div class="draw-machine__sparks" aria-hidden="true"><span></span><span></span><span></span></div>
-          <div class="draw-machine__fault" aria-hidden="true"></div>
-        </div>
-        <div class="draw-machine__legs" aria-hidden="true"><span></span><span></span></div>
-
-        <div class="dim dim--w" aria-hidden="true">
-          <span class="dim__line"></span>
-          <span class="dim__label">≈ 0,90 m</span>
-        </div>
-        <div class="dim dim--h" aria-hidden="true">
-          <span class="dim__line"></span>
-          <span class="dim__label">≈ 1,83 m</span>
-        </div>
-        <span class="dim dim__note" aria-hidden="true">Encombrement moyen — dimensions indicatives</span>
-
-        <svg class="draw-machine__pulse" viewBox="0 0 150 70" aria-hidden="true">
-          <polyline class="fx-line" points="0,40 30,40 42,15 55,58 68,40 150,40"/>
-          <circle class="fx-dot" r="4" cy="40"><animateMotion dur="2.4s" repeatCount="indefinite" path="M0,0 L30,0 L42,-25 L55,18 L68,0 L150,0"/></circle>
-        </svg>
-      </div>
-      <div class="parallax-decouvrir__glow" id="parallaxGlow" aria-hidden="true"></div>
-      <div class="parallax-decouvrir__scrim" id="parallaxScrim" aria-hidden="true"></div>
-    </div>
-    <div class="wrap parallax-decouvrir__steps" id="scrollSteps">
-      <div class="scroll-intro">
-        <span class="eyebrow">Une solution clé en main</span>
-        <h2 class="scroll-title">Une gestion complète,<em>de l'installation au réassort.</em></h2>
-      </div>
-    </div>
-  </section>
-
-  <!-- 6 — COMMENT ÇA MARCHE ------------------------------------- -->
-  <section class="section" id="etapes">
-    <div class="wrap">
-      <div class="section__head reveal">
-        <span class="eyebrow">Comment ça marche</span>
-        <h2>De votre premier contact à la mise en service.</h2>
-        <p>Un parcours court, qui ne mobilise presque pas votre temps.</p>
-      </div>
-      <div class="steps">
-        <div class="step reveal" data-i="0">
-          <div class="step__num"><em>01</em> Premier contact</div>
-          <h3>Vous nous contactez</h3>
-          <p>Présentez-nous votre établissement et votre besoin.</p>
-        </div>
-        <div class="step reveal" data-i="1">
-          <div class="step__num"><em>02</em> Étude</div>
-          <h3>Nous étudions votre emplacement</h3>
-          <p>Nous échangeons sur l'espace disponible, le passage et les contraintes du site.</p>
-        </div>
-        <div class="step reveal" data-i="2">
-          <div class="step__num"><em>03</em> Préparation</div>
-          <h3>Nous préparons l'installation</h3>
-          <p>Nous définissons ensemble la solution adaptée à votre emplacement.</p>
-        </div>
-        <div class="step reveal" data-i="3">
-          <div class="step__num"><em>04</em> Exploitation</div>
-          <h3>CLTDistrib exploite la machine</h3>
-          <p>Approvisionnement, entretien, suivi et maintenance sont pris en charge selon les conditions définies.</p>
-        </div>
-      </div>
-      <div class="steps-cta reveal">
-        <a href="#contact" class="btn btn--onDark">Parler de votre emplacement</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 7 — VOTRE RÔLE + PARTENARIAT ------------------------------ -->
-  <section class="section" id="role">
-    <div class="wrap split">
-      <div class="reveal">
-        <span class="eyebrow">Ce que vous avez à faire</span>
-        <h2>Votre rôle&nbsp;? Mettre à disposition un emplacement adapté.</h2>
-        <div class="role-list">
-          <div class="role-item">
-            <span class="role-item__n"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></span>
-            <div>
-              <strong>Un espace approprié</strong>
-              <span>Un emplacement stable, accessible et cohérent avec le passage sur votre site.</span>
-            </div>
-          </div>
-          <div class="role-item">
-            <span class="role-item__n"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></span>
-            <div>
-              <strong>Une alimentation électrique adaptée</strong>
-              <span>Le raccordement nécessaire au fonctionnement de la machine.</span>
-            </div>
-          </div>
-        </div>
-        <p class="role-note">Nous étudions ensuite avec vous les conditions d'installation et d'exploitation. Les besoins techniques sont vérifiés au cas par cas lors de l'étude de l'emplacement.</p>
-      </div>
-      <div class="partner-card reveal">
-        <span class="eyebrow">Conditions</span>
-        <h3>Un partenariat étudié au cas par cas.</h3>
-        <p>Chaque emplacement est différent. Les conditions de partenariat sont donc étudiées selon le type de lieu, sa fréquentation, l'espace disponible, les contraintes techniques et les besoins des utilisateurs.</p>
-        <p>Notre objectif est de construire une solution cohérente pour chaque emplacement, avec un fonctionnement clair pour les deux parties.</p>
-        <a href="#contact" class="btn btn--accent">Étudier mon emplacement</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- 8 — PRODUITS ---------------------------------------------- -->
-  <section class="section section--alt" id="produits">
-    <div class="wrap">
-      <div class="section__head reveal">
-        <span class="eyebrow">Les produits</span>
-        <h2>Une offre adaptée à votre public.</h2>
-        <p>Voici les familles de produits que nous pouvons proposer. La sélection définitive est construite avec vous, selon le lieu.</p>
-      </div>
-      <div class="prod-grid prod-grid--2">
-        <article class="prod reveal" data-i="0">
-          <div class="prod__head">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M9.5 2h5v2.2l1.6 2.4A4 4 0 0 1 16.8 9v11a2 2 0 0 1-2 2h-5.6a2 2 0 0 1-2-2V9a4 4 0 0 1 .7-2.4L9.5 4.2V2z"/>
-              <path d="M7.2 12.5h9.6"/>
-            </svg>
-            <h3>Boissons</h3>
-          </div>
-          <div class="chips">
-            <span class="chip">Eau</span><span class="chip">Eaux gazeuses</span><span class="chip">Sodas</span>
-            <span class="chip">Jus et boissons fruitées</span><span class="chip">Thés glacés</span>
-            <span class="chip">Boissons énergisantes</span><span class="chip">Autres références selon le lieu</span>
-          </div>
-        </article>
-        <article class="prod reveal" data-i="1">
-          <div class="prod__head">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M7 2.6 5.2 4.4 7 6.2 5.2 8"/>
-              <path d="M17 2.6 15.2 4.4 17 6.2 15.2 8"/>
-              <path d="M4.6 9h14.8a1 1 0 0 1 1 1.1l-1.1 10a2 2 0 0 1-2 1.9H6.7a2 2 0 0 1-2-1.9l-1.1-10A1 1 0 0 1 4.6 9z"/>
-              <path d="M8.5 13.5h.01M12 16h.01M15.5 12.9h.01M10.6 18.4h.01"/>
-            </svg>
-            <h3>Snacks</h3>
-          </div>
-          <div class="chips">
-            <span class="chip">Chips</span><span class="chip">Biscuits</span><span class="chip">Barres chocolatées</span>
-            <span class="chip">Barres céréalières</span><span class="chip">Confiseries</span>
-            <span class="chip">Produits adaptés à la demande du site</span>
-          </div>
-        </article>
-      </div>
-      <p class="prod-foot reveal">L'offre peut évoluer selon les habitudes de consommation et les besoins du lieu.</p>
-    </div>
-  </section>
-
-  <!-- 9 — ENGAGEMENT -------------------------------------------- -->
-  <section class="section" id="engagement">
-    <div class="wrap">
-      <div class="section__head reveal">
-        <span class="eyebrow">Notre engagement</span>
-        <h2>Pas simplement une machine posée dans un coin.</h2>
-        <p>Notre objectif est de proposer un service suivi et durable. L'exploitation d'un distributeur implique de veiller à sa disponibilité, à sa propreté, à son approvisionnement et à son bon fonctionnement.</p>
-      </div>
-      <div class="adv-grid adv-grid--4">
-        <div class="adv reveal" data-i="0">
-          <h3>Suivi</h3>
-          <p>L'état de la machine et les besoins de l'emplacement sont surveillés dans la durée.</p>
-        </div>
-        <div class="adv reveal" data-i="1">
-          <h3>Réassort</h3>
-          <p>Le réapprovisionnement est organisé en fonction de la consommation constatée sur le site.</p>
-        </div>
-        <div class="adv reveal" data-i="2">
-          <h3>Entretien</h3>
-          <p>La machine est nettoyée pour rester présentable, y compris dans un espace vu par le public.</p>
-        </div>
-        <div class="adv reveal" data-i="3">
-          <h3>Réactivité</h3>
-          <p>En cas de dysfonctionnement, vous nous signalez le problème et nous intervenons.</p>
-        </div>
-      </div>
-      <p class="engagement-foot reveal"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg> <strong>Un interlocuteur unique pour votre emplacement.</strong></p>
-    </div>
-  </section>
-
-  <!-- 10 — À PROPOS --------------------------------------------- -->
-  <section class="section" id="apropos">
-    <div class="wrap split">
-      <div class="reveal">
-        <span class="eyebrow">À propos</span>
-        <h2>Une entreprise indépendante, un interlocuteur unique.</h2>
-        <div class="about__facts">
-          <div class="about__fact">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/></svg>
-            <div><strong>Un contact direct</strong><span>Vous échangez avec la personne qui suit réellement votre emplacement.</span></div>
-          </div>
-          <div class="about__fact">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
-            <div><strong>Un développement local</strong><span>Le service se construit sur un secteur géographique restreint, pour rester disponible.</span></div>
-          </div>
-          <div class="about__fact">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
-            <div><strong>Une approche personnalisée</strong><span>Chaque emplacement est étudié individuellement, sans solution imposée.</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="about__body reveal">
-        <p>CLTDistrib est une jeune entreprise indépendante spécialisée dans le développement d'un service de distribution automatique de boissons et snacks.</p>
-        <p>Le projet est construit avec une volonté simple : proposer aux entreprises et établissements une solution pratique, suivie et adaptée à leur environnement.</p>
-        <p>En tant qu'entrepreneur indépendant, je privilégie une relation directe avec mes partenaires et un suivi attentif de chaque emplacement.</p>
-        <div class="about__sign">
-          <span class="about__avatar" aria-hidden="true">CP</span>
-          <div>
-            <strong>Clément Pires Valente</strong>
-            <span>Fondateur — CLTDistrib</span>
+        <div id="distribPanel">
+          <div class="panel panel--empty">
+            <svg class="icon empty-icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>
+            Sélectionnez un point sur la carte pour voir son détail et ses avis.
           </div>
         </div>
       </div>
     </div>
-  </section>
 
-  <!-- 11 — POURQUOI TRAVAILLER AVEC CLTDISTRIB ------------------ -->
-  <section class="section section--alt" id="confiance">
-    <div class="wrap">
-      <div class="section__head section__head--center reveal">
-        <span class="eyebrow">Confiance</span>
-        <h2>Pourquoi travailler avec CLTDistrib&nbsp;?</h2>
+    <!-- TAB: STOCKS -->
+    <div class="admin-view" data-view="stocks">
+      <div class="admin-head">
+        <div>
+          <h2>Gestion des stocks</h2>
+          <p>Suivez les quantités disponibles pour chaque distributeur.</p>
+        </div>
       </div>
-      <div class="service-grid service-grid--4">
-        <article class="service-card reveal" data-i="0">
-          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9.5" cy="7" r="4"/></svg></div>
-          <h3>Un interlocuteur unique</h3>
-          <p>Un contact direct pour votre emplacement.</p>
-        </article>
-        <article class="service-card reveal" data-i="1">
-          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 14h8"/></svg></div>
-          <h3>Une solution clé en main</h3>
-          <p>Nous prenons en charge l'exploitation de la machine.</p>
-        </article>
-        <article class="service-card reveal" data-i="2">
-          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/></svg></div>
-          <h3>Une offre adaptable</h3>
-          <p>Les produits peuvent évoluer selon les besoins du site.</p>
-        </article>
-        <article class="service-card reveal" data-i="3">
-          <div class="service-card__icon"><svg class="icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg></div>
-          <h3>Une relation de proximité</h3>
-          <p>Une entreprise indépendante qui privilégie un suivi régulier et réactif.</p>
-        </article>
+      <div class="field stock-select">
+        <label for="stockDistribSelect">Distributeur</label>
+        <select id="stockDistribSelect"></select>
       </div>
+      <div id="stocksContent"></div>
     </div>
-  </section>
 
-  <!-- 12 — FAQ --------------------------------------------------- -->
-  <section class="section" id="faq">
-    <div class="wrap">
-      <div class="section__head section__head--center reveal">
-        <span class="eyebrow">Questions fréquentes</span>
-        <h2>Ce que les responsables de site nous demandent.</h2>
-      </div>
-      <div class="faq reveal" id="faqList">
-        <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Qui fournit le distributeur&nbsp;?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">CLTDistrib. Le distributeur est mis à disposition dans le cadre du service d'exploitation : <strong>vous n'achetez pas de machine</strong> et n'avez pas de matériel à financer.</div></div>
-        </div>
-        <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Qui s'occupe du réapprovisionnement&nbsp;?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">CLTDistrib. Le réassort des produits est organisé selon les besoins constatés sur l'emplacement. Vos équipes n'ont ni commandes à passer ni stock à gérer.</div></div>
-        </div>
-        <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Qui entretient la machine&nbsp;?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">CLTDistrib assure le nettoyage de la machine et intervient en cas de dysfonctionnement. Les modalités précises d'intervention sont définies avec vous au moment de la mise en place.</div></div>
-        </div>
-        <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Les utilisateurs peuvent-ils payer par carte bancaire&nbsp;?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Oui. Les moyens de paiement sont gérés par CLTDistrib : carte bancaire et paiement sans contact. Les moyens disponibles sur une machine donnée sont confirmés lors de l'étude du projet.</div></div>
-        </div>
-        <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Quels types de produits peuvent être proposés&nbsp;?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Des boissons (eau, eaux gazeuses, sodas, jus, thés glacés, boissons énergisantes) et des snacks (chips, biscuits, barres chocolatées, barres céréalières, confiseries). L'offre est construite selon le public du lieu et peut évoluer.</div></div>
-        </div>
-        <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Quelle place faut-il prévoir&nbsp;?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Cela dépend du modèle de distributeur retenu. Il faut un emplacement stable et accessible, avec le dégagement nécessaire à l'utilisation et à l'intervention. L'espace exact est déterminé lors de l'étude de l'emplacement.</div></div>
-        </div>
-        <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Combien coûte l'installation pour l'entreprise&nbsp;?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">L'étude de l'emplacement est <strong>gratuite et sans engagement</strong>. Les conditions d'installation et d'exploitation sont ensuite définies au cas par cas, selon le type de lieu, sa fréquentation et les contraintes techniques. Elles vous sont présentées clairement avant toute décision.</div></div>
-        </div>
-        <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Est-ce que toutes les demandes d'installation sont acceptées&nbsp;?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">Non. Un emplacement doit réunir certaines conditions pour qu'un distributeur ait du sens : passage suffisant, espace disponible, accès et contraintes techniques compatibles. Si votre site ne s'y prête pas, nous vous le disons directement.</div></div>
-        </div>
-        <div class="faq__item">
-          <h3><button class="faq__q" type="button" aria-expanded="false">Comment savoir si mon emplacement est adapté&nbsp;?</button></h3>
-          <div class="faq__a"><div class="faq__a-inner">En nous décrivant votre établissement via le formulaire en bas de page. Nous revenons vers vous pour étudier la faisabilité du projet, gratuitement et sans engagement de votre part.</div></div>
+    <!-- TAB: CHIFFRE D'AFFAIRES -->
+    <div class="admin-view" data-view="revenue">
+      <div class="admin-head">
+        <div>
+          <h2>Chiffre d'affaires</h2>
+          <p>Suivez les revenus mensuels générés par chaque distributeur.</p>
         </div>
       </div>
+      <div class="field stock-select">
+        <label for="revenueDistribSelect">Distributeur</label>
+        <select id="revenueDistribSelect"></select>
+      </div>
+      <div id="revenueContent"></div>
     </div>
-  </section>
 
-  <!-- 13 — POSER UNE QUESTION ----------------------------------- -->
-  <section class="section section--alt" id="question">
-    <div class="wrap">
-      <div class="section__head section__head--center reveal">
-        <span class="eyebrow">Une autre question</span>
-        <h2>Posez-la, la réponse est immédiate.</h2>
-        <p>Emplacement, produits, installation, réassort, maintenance, paiements : demandez ce que vous souhaitez savoir.</p>
-      </div>
-      <div class="chatpanel reveal" id="chatBlock">
-        <div class="chatpanel__messages" id="chatMessages"></div>
-        <div class="chatpanel__suggest" id="chatSuggest" aria-label="Questions fréquentes"></div>
-        <div class="chatpanel__inputrow">
-          <textarea id="chatInput" rows="1" placeholder="Ex : qui s'occupe du réapprovisionnement ?" aria-label="Votre question"></textarea>
-          <button class="btn btn--accent btn--icon" id="chatSend" aria-label="Envoyer la question">
-            <svg class="icon" viewBox="0 0 24 24" style="color:#fff"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg>
-          </button>
+    <!-- TAB: PROSPECTS -->
+    <div class="admin-view" data-view="prospects">
+      <div class="admin-head">
+        <div>
+          <h2>Suivi des prospects</h2>
+          <p>Les établissements contactés et l'avancement de chaque échange.</p>
         </div>
-        <p class="form-note">Pour un projet précis, utilisez le formulaire ci-dessous : nous revenons vers vous pour étudier votre emplacement.</p>
+        <button class="btn btn--accent btn--sm" id="addProspectBtn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;color:#fff"><path d="M12 5v14M5 12h14"/></svg>
+          Ajouter un prospect
+        </button>
       </div>
+
+      <div class="kpi-grid" id="prospectKpis"></div>
+
+      <div class="inline-form hidden" id="addProspectForm">
+        <div class="field-row">
+          <div class="field"><label for="pNom">Établissement *</label><input id="pNom" placeholder="ex : Clinique des Ormes"></div>
+          <div class="field"><label for="pVille">Ville</label><input id="pVille" placeholder="ex : Mantes-la-Jolie"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="pContact">Interlocuteur</label><input id="pContact" placeholder="ex : Mme Dupont, services généraux"></div>
+          <div class="field"><label for="pTel">Téléphone / email</label><input id="pTel" placeholder="ex : 01 23 45 67 89"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="pStatut">Statut</label>
+            <select id="pStatut">
+              <option value="todo">À contacter</option>
+              <option value="contacte">Contacté</option>
+              <option value="rdv">Rendez-vous planifié</option>
+              <option value="etude">Étude en cours</option>
+              <option value="propo">Proposition envoyée</option>
+              <option value="signe">Signé</option>
+              <option value="perdu">Sans suite</option>
+            </select>
+          </div>
+          <div class="field"><label for="pRelance">Prochaine relance</label><input id="pRelance" type="date"></div>
+        </div>
+        <div class="field"><label for="pNote">Note</label><textarea id="pNote" rows="2" placeholder="Contexte, points évoqués, éléments à préparer…"></textarea></div>
+        <div class="inline-form__actions">
+          <button class="btn btn--ghost btn--sm" id="cancelProspect">Annuler</button>
+          <button class="btn btn--primary btn--sm" id="confirmProspect">Enregistrer</button>
+        </div>
+      </div>
+
+      <div class="filters" id="prospectFilters"></div>
+      <div class="rec-list" id="prospectList"></div>
     </div>
-  </section>
 
-  <!-- 14 — FORMULAIRE + CONTACT + FOOTER ------------------------ -->
-  <div class="slide slide--end">
-  <section class="section cta" id="contact">
-    <div class="wrap">
-      <div class="cta__intro reveal">
-        <span class="eyebrow">Étude gratuite</span>
-        <h2 style="margin-top:14px">Votre emplacement peut-il accueillir un distributeur&nbsp;?</h2>
-        <p class="cta__lede">Présentez-nous votre établissement. Nous étudierons gratuitement la faisabilité du projet.</p>
-        <ul class="cta__list">
-          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Étude de l'emplacement gratuite</span></li>
-          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Sans engagement de votre part</span></li>
-          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg><span>Une réponse claire, même si votre site ne s'y prête pas</span></li>
-        </ul>
-        <div class="cta__direct">
-          <span>Préférez-vous appeler&nbsp;?</span>
-          <a href="tel:+33768661719">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2z"/></svg>
-            07 68 66 17 19
-          </a>
-          <p class="cta__direct-note">Laissez un message si nous ne répondons pas, nous vous rappelons. Zone d'intervention&nbsp;: Yvelines et alentours.</p>
+    <!-- TAB: MACHINES -->
+    <div class="admin-view" data-view="machines">
+      <div class="admin-head">
+        <div>
+          <h2>Suivi des machines</h2>
+          <p>Le parc de distributeurs : modèle, emplacement, état et dernier entretien.</p>
+        </div>
+        <button class="btn btn--accent btn--sm" id="addMachineBtn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;color:#fff"><path d="M12 5v14M5 12h14"/></svg>
+          Ajouter une machine
+        </button>
+      </div>
+
+      <div class="kpi-grid" id="machineKpis"></div>
+
+      <div class="inline-form hidden" id="addMachineForm">
+        <div class="field-row">
+          <div class="field"><label for="mRef">Référence interne *</label><input id="mRef" placeholder="ex : M-001"></div>
+          <div class="field"><label for="mModele">Modèle</label><input id="mModele" placeholder="ex : Snack + boissons 6 colonnes"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="mSite">Emplacement</label><input id="mSite" placeholder="ex : Clinique des Ormes — hall"></div>
+          <div class="field"><label for="mEtat">État</label>
+            <select id="mEtat">
+              <option value="service">En service</option>
+              <option value="entretien">Entretien à prévoir</option>
+              <option value="panne">En panne</option>
+              <option value="stock">En stock</option>
+            </select>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label for="mInstall">Date d'installation</label><input id="mInstall" type="date"></div>
+          <div class="field"><label for="mEntretien">Dernier entretien</label><input id="mEntretien" type="date"></div>
+        </div>
+        <div class="field"><label for="mNote">Note</label><textarea id="mNote" rows="2" placeholder="Numéro de série, particularités, pièces changées…"></textarea></div>
+        <div class="inline-form__actions">
+          <button class="btn btn--ghost btn--sm" id="cancelMachine">Annuler</button>
+          <button class="btn btn--primary btn--sm" id="confirmMachine">Enregistrer</button>
         </div>
       </div>
 
-      <div class="form-card reveal">
-        <h3>Demander une étude gratuite</h3>
-        <p>Décrivez votre établissement, nous revenons vers vous.</p>
-        <form class="form-grid" id="leadForm" novalidate>
-          <div class="field-row">
-            <div class="field">
-              <label for="fPrenom">Prénom *</label>
-              <input id="fPrenom" name="prenom" type="text" autocomplete="given-name" placeholder="Marie" required>
-            </div>
-            <div class="field">
-              <label for="fNom">Nom *</label>
-              <input id="fNom" name="nom" type="text" autocomplete="family-name" placeholder="Dupont" required>
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="fSociete">Entreprise *</label>
-              <input id="fSociete" name="societe" type="text" autocomplete="organization" placeholder="Nom de l'établissement" required>
-            </div>
-            <div class="field">
-              <label for="fFonction">Fonction</label>
-              <input id="fFonction" name="fonction" type="text" autocomplete="organization-title" placeholder="Ex : responsable des services généraux">
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="fEmail">Email professionnel *</label>
-              <input id="fEmail" name="email" type="email" autocomplete="email" placeholder="prenom.nom@entreprise.fr" required>
-            </div>
-            <div class="field">
-              <label for="fTel">Téléphone</label>
-              <input id="fTel" name="tel" type="tel" autocomplete="tel" placeholder="06 00 00 00 00">
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="fVille">Ville *</label>
-              <input id="fVille" name="ville" type="text" placeholder="Ville et code postal" required>
-            </div>
-            <div class="field">
-              <label for="fType">Type d'établissement *</label>
-              <select id="fType" name="type" required>
-                <option value="">Sélectionner…</option>
-                <option>Entreprise / bureaux</option>
-                <option>Usine / atelier</option>
-                <option>Entrepôt / plateforme logistique</option>
-                <option>Salle de sport</option>
-                <option>Centre de formation</option>
-                <option>Hôtel / résidence</option>
-                <option>Établissement accueillant du public</option>
-                <option>Gare / lieu de passage</option>
-                <option>Autre</option>
-              </select>
-            </div>
-          </div>
-          <div class="field-row">
-            <div class="field">
-              <label for="fEffectif">Personnes présentes sur le site</label>
-              <select id="fEffectif" name="effectif">
-                <option value="">Sélectionner…</option>
-                <option>Moins de 20</option>
-                <option>20 à 50</option>
-                <option>50 à 100</option>
-                <option>100 à 250</option>
-                <option>Plus de 250</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="fExistant">Avez-vous déjà un distributeur&nbsp;?</label>
-              <select id="fExistant" name="existant">
-                <option value="">Sélectionner…</option>
-                <option>Non</option>
-                <option>Oui</option>
-              </select>
-            </div>
-          </div>
-          <div class="field">
-            <label for="fDispo">Disponibilité pour un échange</label>
-            <input id="fDispo" name="dispo" type="text" placeholder="Ex : en matinée, ou après 17 h">
-          </div>
-          <div class="field">
-            <label for="fMessage">Description du projet</label>
-            <textarea id="fMessage" name="message" placeholder="Emplacement envisagé, horaires du site, présence de public, contraintes particulières…"></textarea>
-          </div>
-          <button class="btn btn--primary btn--wide" type="submit">Demander une étude gratuite</button>
-          <p class="form-note" id="formNote"><strong>Sans engagement.</strong> En envoyant ce formulaire, votre messagerie s'ouvre avec le récapitulatif prêt à partir. Vos informations ne servent qu'à étudier la faisabilité du projet.</p>
-        </form>
-      </div>
-
-      <div class="contact-card reveal">
-        <strong class="contact-card__name">CLTDistrib</strong>
-        <span class="contact-card__sub">Distribution automatique — Boissons &amp; Snacks</span>
-        <dl class="contact-card__list">
-          <div>
-            <dt>Téléphone</dt>
-            <dd><a href="tel:+33768661719">07 68 66 17 19</a><span class="contact-card__hint">Un message si nous ne répondons pas, nous vous rappelons.</span></dd>
-          </div>
-          <div>
-            <dt>Email</dt>
-            <dd><a href="mailto:clementpiresvalente@gmail.com">clementpiresvalente@gmail.com</a></dd>
-          </div>
-          <div>
-            <dt>Zone d'intervention</dt>
-            <dd>Yvelines et alentours</dd>
-          </div>
-        </dl>
-      </div>
+      <div class="rec-list" id="machineList"></div>
     </div>
-  </section>
 
-  <footer class="footer">
-    <div class="wrap">
-      <div class="footer__top">
-        <div class="footer__brand">
-          <div class="brand">
-            <img class="brand__logo" src="images/logo-blanc.png" width="545" height="190" alt="CLTDistrib — distribution automatique, boissons et snacks">
-          </div>
-          <p class="footer__tag">Distribution automatique de boissons &amp; snacks. Installation et exploitation de distributeurs pour les entreprises, établissements et lieux accueillant du public.</p>
-        </div>
-        <div class="footer__cols">
-          <div class="footer__col">
-            <span class="footer__col-title">Le site</span>
-            <a href="#top">Accueil</a>
-            <a href="#offre">Notre solution</a>
-            <a href="#lieux">Pour quels lieux ?</a>
-            <a href="#etapes">Comment ça marche ?</a>
-            <a href="#contact">Contact</a>
-          </div>
-          <div class="footer__col">
-            <span class="footer__col-title">Informations</span>
-            <a href="mentions-legales.html">Mentions légales</a>
-            <a href="politique-confidentialite.html">Politique de confidentialité</a>
-            <a href="#faq">FAQ</a>
-          </div>
-          <div class="footer__col">
-            <span class="footer__col-title">Coordonnées</span>
-            <a href="mailto:clementpiresvalente@gmail.com">clementpiresvalente@gmail.com</a>
-            <a href="tel:+33768661719">07 68 66 17 19</a>
-            <span class="footer__zone">Yvelines et alentours</span>
-          </div>
+    <!-- TAB: DOCUMENTS -->
+    <div class="admin-view" data-view="documents">
+      <div class="admin-head">
+        <div>
+          <h2>Documents commerciaux</h2>
+          <p>Où en est chaque modèle, et où le fichier est rangé. Les fichiers eux-mêmes restent sur votre ordinateur.</p>
         </div>
       </div>
-      <div class="footer__bottom">
-        <small>© 2026 CLTDistrib. Tous droits réservés.</small>
-        <small>Les photographies présentes sur ce site sont des illustrations.</small>
+
+      <div class="admin-warn">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+        <div>
+          <strong>Ne déposez jamais de contrats ni de données clients dans ce site.</strong>
+          <p>Ce site est public sur GitHub Pages et le code d'accès est lisible dans le code source : tout fichier ajouté au projet devient consultable par n'importe qui. Cet onglet sert uniquement à <b>suivre</b> l'état de vos documents. Gardez les fichiers sur votre ordinateur ou dans un espace privé (Drive, Dropbox, disque chiffré).</p>
+        </div>
       </div>
+
+      <div class="kpi-grid" id="docKpis" style="margin-top:26px"></div>
+      <div class="rec-list" id="docList"></div>
     </div>
-  </footer>
-  </div>
 
-</div>
+    <!-- TAB: NOTES -->
+    <div class="admin-view" data-view="notes">
+      <div class="admin-head">
+        <div>
+          <h2>Notes administratives</h2>
+          <p>Un pense-bête libre pour votre gestion au quotidien.</p>
+        </div>
+      </div>
+      <div class="form-card" style="padding:20px">
+        <div class="field" style="margin-bottom:12px"><textarea id="noteInput" rows="2" placeholder="Écrire une note..."></textarea></div>
+        <button class="btn btn--primary btn--sm" id="addNoteBtn">Ajouter la note</button>
+      </div>
+      <div class="notes-grid" id="notesGrid"></div>
+    </div>
 
-<button class="chatfab" id="chatFab" aria-label="Poser une question">
-  <svg class="icon" viewBox="0 0 24 24" style="color:#fff;width:23px;height:23px"><path d="M21 11.5a8.5 8.5 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg>
-</button>
-<div class="scrollbar-progress" id="scrollProgress"></div>
-
-<!-- ============================================================
-     APERÇU MOBILE (bouton "Version mobile" depuis un écran PC)
-     ============================================================ -->
-<div class="device-preview hidden" id="devicePreview">
-  <div class="device-preview__frame">
-    <button class="btn btn--ghost btn--sm device-preview__close" id="closeDevicePreview">Fermer</button>
-    <iframe id="devicePreviewFrame" title="Aperçu mobile du site"></iframe>
   </div>
 </div>
-
-
 
 <script>
 (function(){
 "use strict";
 
 /* ============================================================
-   BARRE DE PROGRESSION DE LECTURE
+   CONFIG
    ============================================================ */
-(function initScrollProgress(){
-  var bar = document.getElementById("scrollProgress");
-  if(!bar) return;
-  var ticking = false;
-  function update(){
-    var h = document.documentElement;
-    var max = h.scrollHeight - h.clientHeight;
-    bar.style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
-    ticking = false;
-  }
-  window.addEventListener("scroll", function(){
-    if(!ticking){ requestAnimationFrame(update); ticking = true; }
-  }, { passive:true });
-  update();
-})();
+var ACCESS_CODE = "2205";
+var STORAGE_KEY = "cltdistrib-data";
 
 /* ============================================================
-   NAVIGATION — ombre au défilement
+   STATE
    ============================================================ */
-(function initNavShadow(){
-  var nav = document.getElementById("siteNav");
-  if(!nav) return;
-  var ticking = false;
-  function update(){
-    nav.classList.toggle("is-stuck", window.scrollY > 12);
-    ticking = false;
-  }
-  window.addEventListener("scroll", function(){
-    if(!ticking){ requestAnimationFrame(update); ticking = true; }
-  }, { passive:true });
-  update();
-})();
+var appData = { distributeurs: [], notes: [], prospects: [], machines: [], documents: [] };
+var ui = {
+  selectedDistribId: null,
+  placingMode: false,
+  pendingPos: null,
+  activeTab: "map",
+  stockDistribId: null,
+  revenueDistribId: null
+};
+var saveTimer = null;
+
+function uid(prefix){
+  return prefix + "-" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+}
 
 /* ============================================================
-   HERO — profondeur : les plans suivent légèrement la souris
+   STORAGE (window.storage quand disponible — sandbox Claude.ai —,
+   sinon localStorage du navigateur ; Exporter/Importer en secours)
    ============================================================ */
-(function initHeroParallax(){
-  var hero = document.querySelector(".hero");
-  if(!hero) return;
-  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  if(window.matchMedia && window.matchMedia("(hover: none)").matches) return;
+function hasClaudeStorage(){
+  return typeof window.storage !== "undefined" && window.storage;
+}
+function hasLocalStorage(){
+  try{ var k = "__test__"; localStorage.setItem(k,"1"); localStorage.removeItem(k); return true; }
+  catch(e){ return false; }
+}
 
-  /* Le relief ne porte que sur la photo. Les pastilles contiennent du texte :
-     déplacées en continu à la souris, elles le font rééchantillonner à chaque
-     image — c'est ce tremblement qui était visible. Elles restent fixes. */
-  var layers = [];
-  var visual = hero.querySelector(".hero__parallax");
-  if(visual) layers.push({ el: visual, amp: 13 });
-  if(!layers.length) return;
-
-  var rafId = 0, mx = 0, my = 0;
-  function apply(){
-    rafId = 0;
-    for(var i = 0; i < layers.length; i++){
-      var l = layers[i];
-      /* Pixels entiers : une valeur fractionnaire suffit à faire vibrer le rendu. */
-      l.el.style.transform = "translate3d(" + Math.round(mx * -l.amp) + "px," + Math.round(my * -l.amp) + "px,0)";
-    }
-  }
-  /* On annule la frame en attente plutôt que de se verrouiller sur un booléen :
-     si rAF ne tourne pas (onglet en arrière-plan), rien ne reste bloqué. */
-  function schedule(){
-    if(rafId) cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(apply);
-  }
-
-  hero.addEventListener("mousemove", function(e){
-    var rect = hero.getBoundingClientRect();
-    mx = (e.clientX - rect.left) / rect.width - 0.5;
-    my = (e.clientY - rect.top) / rect.height - 0.5;
-    schedule();
+/* Les sauvegardes antérieures ne contiennent pas les nouvelles rubriques :
+   on complète les listes manquantes plutôt que de laisser un undefined. */
+function normalizeData(d){
+  d = (d && typeof d === "object") ? d : {};
+  ["distributeurs","notes","prospects","machines","documents"].forEach(function(k){
+    if(!Array.isArray(d[k])) d[k] = [];
   });
-  hero.addEventListener("mouseleave", function(){ mx = 0; my = 0; schedule(); });
-})();
+  return d;
+}
 
-/* ============================================================
-   APPARITIONS AU DÉFILEMENT
-   ============================================================ */
-(function initReveal(){
-  var items = document.querySelectorAll(".reveal");
-  items.forEach(function(el){
-    var i = el.getAttribute("data-i");
-    if(i !== null) el.style.setProperty("--i", i);
-  });
-  document.querySelectorAll(".steps .step").forEach(function(el, i){ el.style.setProperty("--i", i); });
-
-  if(!("IntersectionObserver" in window)){
-    items.forEach(function(el){ el.classList.add("is-visible"); });
+function loadData(){
+  if(hasClaudeStorage()){
+    window.storage.get(STORAGE_KEY, false).then(function(res){
+      if(res && res.value){
+        try{ appData = normalizeData(JSON.parse(res.value)); }catch(e){ /* keep default */ }
+      }
+      renderAll();
+    }).catch(function(){ renderAll(); });
     return;
   }
-  var observer = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting){
-        entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
+  if(hasLocalStorage()){
+    var raw = localStorage.getItem(STORAGE_KEY);
+    if(raw){ try{ appData = normalizeData(JSON.parse(raw)); }catch(e){ /* keep default */ } }
+  }
+  renderAll();
+}
+
+function saveData(){
+  var indicator = document.getElementById("saveIndicator");
+  if(indicator){ indicator.innerHTML = '<span class="dot" style="background:#C98A2B"></span> Enregistrement...'; }
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function(){
+    if(hasClaudeStorage()){
+      window.storage.set(STORAGE_KEY, JSON.stringify(appData), false).then(function(){
+        if(indicator){ indicator.innerHTML = '<span class="dot"></span> Enregistré'; }
+      }).catch(function(){
+        if(indicator){ indicator.innerHTML = '<span class="dot" style="background:#BE5340"></span> Non sauvegardé — pensez à exporter'; }
+      });
+    } else if(hasLocalStorage()){
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+        if(indicator){ indicator.innerHTML = '<span class="dot"></span> Enregistré sur cet appareil'; }
+      }catch(e){
+        if(indicator){ indicator.innerHTML = '<span class="dot" style="background:#BE5340"></span> Non sauvegardé — pensez à exporter'; }
       }
-    });
-  }, { threshold: 0.12, rootMargin: "0px 0px -50px 0px" });
-  items.forEach(function(el){ observer.observe(el); });
-})();
-
-/* ============================================================
-   MENU MOBILE
-   ============================================================ */
-var burgerBtn = document.getElementById("burgerBtn");
-var mobileNav = document.getElementById("mobileNav");
-if(burgerBtn && mobileNav){
-  var siteNavEl = document.getElementById("siteNav");
-  var lockedY = 0;
-
-  function setMenu(open){
-    mobileNav.classList.toggle("is-open", open);
-    burgerBtn.classList.toggle("is-open", open);
-    burgerBtn.setAttribute("aria-expanded", open ? "true" : "false");
-    burgerBtn.setAttribute("aria-label", open ? "Fermer le menu" : "Ouvrir le menu");
-    var label = burgerBtn.querySelector(".nav__burger-label");
-    if(label) label.textContent = open ? "Fermer" : "Menu";
-    if(siteNavEl) siteNavEl.classList.toggle("is-menu-open", open);
-
-    var html = document.documentElement;
-    if(open){
-      lockedY = window.scrollY;
-      html.style.overflow = "hidden";
-      document.body.style.overflow = "hidden";
     } else {
-      html.style.overflow = "";
-      document.body.style.overflow = "";
-      window.scrollTo(0, lockedY);
+      if(indicator){ indicator.innerHTML = '<span class="dot" style="background:#C98A2B"></span> Session uniquement — pensez à exporter'; }
     }
-  }
-
-  burgerBtn.addEventListener("click", function(){
-    setMenu(!mobileNav.classList.contains("is-open"));
-  });
-
-  /* Un lien ferme le menu, puis on rejoint la section visée */
-  mobileNav.querySelectorAll("a").forEach(function(a){
-    a.addEventListener("click", function(e){
-      var href = a.getAttribute("href") || "";
-      if(href.charAt(0) === "#"){
-        var target = document.querySelector(href);
-        if(target){
-          e.preventDefault();
-          setMenu(false);
-          setTimeout(function(){
-            var top = target.getBoundingClientRect().top + window.scrollY - 78;
-            window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
-          }, 60);
-          return;
-        }
-      }
-      setMenu(false);
-    });
-  });
-
-  document.addEventListener("keydown", function(e){
-    if(e.key === "Escape" && mobileNav.classList.contains("is-open")) setMenu(false);
-  });
+  }, 400);
 }
 
 /* ============================================================
-   BASCULE VUE PC / VUE MOBILE
-   Sur PC : "mobile" ouvre un aperçu dans un cadre de téléphone.
-   Sur téléphone : "PC" force une largeur de page fixe.
+   ACCESS GATE
    ============================================================ */
-(function initViewToggle(){
-  var viewDesktopBtn = document.getElementById("viewDesktopBtn");
-  var viewMobileBtn = document.getElementById("viewMobileBtn");
-  var preview = document.getElementById("devicePreview");
-  var frame = document.getElementById("devicePreviewFrame");
-  var closeBtn = document.getElementById("closeDevicePreview");
-  if(!viewDesktopBtn || !viewMobileBtn || !preview || !frame || !closeBtn) return;
-  var viewportMeta = document.querySelector('meta[name="viewport"]');
-  var DEFAULT_VIEWPORT = "width=device-width, initial-scale=1.0";
-  var WIDE_VIEWPORT = "width=1280";
-  var IS_SMALL_SCREEN = window.innerWidth <= 860;
+var gateOverlay = document.getElementById("gateOverlay");
+var gatePassInput = document.getElementById("gatePassInput");
+var gateError = document.getElementById("gateError");
+/* Page autonome : aucun site public a masquer ici. Un objet inerte evite
+   de toucher a la logique partagee avec la page principale. */
+var publicSite = document.getElementById("publicSite") || { classList:{ add:function(){}, remove:function(){} } };
+var adminApp = document.getElementById("adminApp");
+var PRO_HASH = "#pro-clt78";
+var PRO_REMEMBER_KEY = "cltdistrib-pro-unlocked";
 
-  function setActive(key){
-    viewDesktopBtn.classList.toggle("is-active", key === "desktop");
-    viewMobileBtn.classList.toggle("is-active", key === "mobile");
-  }
-  function openMobilePreview(){
-    frame.src = location.pathname + location.search;
-    preview.classList.remove("hidden");
-  }
-  function closeMobilePreview(){
-    preview.classList.add("hidden");
-    frame.src = "about:blank";
-  }
+function openGate(){
+  gateOverlay.classList.remove("hidden");
+  gateError.classList.remove("is-visible");
+  gatePassInput.value = "";
+  setTimeout(function(){ gatePassInput.focus(); }, 50);
+}
+function closeGate(){ gateOverlay.classList.add("hidden"); }
+function clearProHash(){ history.replaceState(null, "", location.pathname + location.search); }
 
-  viewMobileBtn.addEventListener("click", function(){
-    setActive("mobile");
-    if(IS_SMALL_SCREEN){ if(viewportMeta) viewportMeta.setAttribute("content", DEFAULT_VIEWPORT); }
-    else { openMobilePreview(); }
-  });
-  viewDesktopBtn.addEventListener("click", function(){
-    setActive("desktop");
-    closeMobilePreview();
-    if(IS_SMALL_SCREEN && viewportMeta) viewportMeta.setAttribute("content", WIDE_VIEWPORT);
-  });
-  closeBtn.addEventListener("click", function(){ closeMobilePreview(); setActive("desktop"); });
-  preview.addEventListener("click", function(e){
-    if(e.target === preview){ closeMobilePreview(); setActive("desktop"); }
-  });
-})();
-
-/* ============================================================
-   DÉFILEMENT PAR DIAPOSITIVES (molette et clavier)
-   Un cran de molette = l'information suivante. Si un bloc est plus
-   haut que l'écran, on le parcourt normalement jusqu'au bout avant
-   de passer au suivant.
-   ============================================================ */
-(function initSlideScroll(){
-  var publicSite = document.getElementById("publicSite");
-  if(!publicSite) return;
-  if(!window.matchMedia || !window.matchMedia("(pointer:fine)").matches) return;
-
-  var NAV = 78;
-  var SMOOTH = !(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-  var locked = false, lockTimer = null;
-
-  function slides(){
-    return [].slice.call(document.querySelectorAll(".slide, .hero, .section, .scroll-step"))
-      .filter(function(el){ return getComputedStyle(el).scrollSnapAlign !== "none"; });
-  }
-  function targetOf(el){
-    return Math.round(el.getBoundingClientRect().top + window.scrollY - NAV);
-  }
-  function currentIndex(list){
-    var y = window.scrollY, best = 0, bestD = Infinity;
-    for(var i=0;i<list.length;i++){
-      var d = Math.abs(targetOf(list[i]) - y);
-      if(d < bestD){ bestD = d; best = i; }
-    }
-    return best;
-  }
-  function lock(){
-    locked = true;
-    clearTimeout(lockTimer);
-    lockTimer = setTimeout(function(){ locked = false; }, SMOOTH ? 780 : 120);
-  }
-  function goTo(el){
-    lock();
-    var top = Math.max(0, targetOf(el));
-    window.scrollTo({ top: top, behavior: SMOOTH ? "smooth" : "auto" });
-  }
-
-  function step(dir){
-    var list = slides();
-    if(!list.length) return false;
-    var i = currentIndex(list);
-    var rect = list[i].getBoundingClientRect();
-    /* Bloc plus haut que l'écran : on laisse le défilement normal
-       tant qu'il reste du contenu à lire dans ce bloc. */
-    if(dir > 0 && rect.bottom - window.innerHeight > 4) return false;
-    if(dir < 0 && rect.top - NAV < -4) return false;
-    var next = i + dir;
-    if(next < 0 || next >= list.length) return false;
-    goTo(list[next]);
-    return true;
-  }
-
-  window.addEventListener("wheel", function(e){
-    if(publicSite.classList.contains("hidden")) return;
-    if(e.ctrlKey) return;                                   /* zoom navigateur */
-    if(e.target.closest && e.target.closest(".chatpanel__messages, .nav__mobile, textarea, select")) return;
-    if(Math.abs(e.deltaY) < 6) return;
-    if(locked){ e.preventDefault(); return; }
-    if(step(e.deltaY > 0 ? 1 : -1)) e.preventDefault();
-  }, { passive:false });
-
-  window.addEventListener("keydown", function(e){
-    if(publicSite.classList.contains("hidden")) return;
-    var t = e.target;
-    if(t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT")) return;
-    var dir = 0;
-    if(e.key === "PageDown" || e.key === "ArrowDown") dir = 1;
-    else if(e.key === "PageUp" || e.key === "ArrowUp") dir = -1;
-    else return;
-    if(locked){ e.preventDefault(); return; }
-    if(step(dir)) e.preventDefault();
-  });
-})();
-
-/* ============================================================
-   FAQ — accordéon
-   ============================================================ */
-(function initFaq(){
-  var list = document.getElementById("faqList");
-  if(!list) return;
-  var items = list.querySelectorAll(".faq__item");
-
-  function close(item){
-    var panel = item.querySelector(".faq__a");
-    var btn = item.querySelector(".faq__q");
-    panel.style.height = panel.scrollHeight + "px";
-    requestAnimationFrame(function(){ panel.style.height = "0px"; });
-    item.classList.remove("is-open");
-    btn.setAttribute("aria-expanded", "false");
-  }
-  function open(item){
-    var panel = item.querySelector(".faq__a");
-    var btn = item.querySelector(".faq__q");
-    var inner = panel.firstElementChild;
-    panel.style.height = inner.offsetHeight + "px";
-    item.classList.add("is-open");
-    btn.setAttribute("aria-expanded", "true");
-  }
-
-  items.forEach(function(item){
-    item.querySelector(".faq__q").addEventListener("click", function(){
-      var isOpen = item.classList.contains("is-open");
-      items.forEach(function(other){ if(other !== item && other.classList.contains("is-open")) close(other); });
-      if(isOpen){ close(item); } else { open(item); }
-    });
-  });
-
-  window.addEventListener("resize", function(){
-    items.forEach(function(item){
-      if(item.classList.contains("is-open")){
-        var panel = item.querySelector(".faq__a");
-        panel.style.height = panel.firstElementChild.offsetHeight + "px";
-      }
-    });
-  });
-})();
-
-/* ============================================================
-   FORMULAIRE — récapitulatif prêt à envoyer par e-mail
-   ============================================================ */
-(function initLeadForm(){
-  var form = document.getElementById("leadForm");
-  if(!form) return;
-  var note = document.getElementById("formNote");
-  var MAIL = "clementpiresvalente@gmail.com";
-
-  function val(name){
-    var el = form.elements[name];
-    return el ? String(el.value || "").trim() : "";
-  }
-
-  form.addEventListener("submit", function(e){
-    e.preventDefault();
-    var d = {
-      prenom: val("prenom"), nom: val("nom"), societe: val("societe"), fonction: val("fonction"),
-      email: val("email"), tel: val("tel"), ville: val("ville"), type: val("type"),
-      effectif: val("effectif"), existant: val("existant"), dispo: val("dispo"), message: val("message")
-    };
-
-    var missing = [];
-    if(!d.prenom) missing.push("votre prénom");
-    if(!d.nom) missing.push("votre nom");
-    if(!d.societe) missing.push("le nom de l'entreprise");
-    if(!d.email || d.email.indexOf("@") === -1) missing.push("un email professionnel valide");
-    if(!d.ville) missing.push("la ville");
-    if(!d.type) missing.push("le type d'établissement");
-
-    var old = form.querySelector(".form-error, .form-success");
-    if(old) old.remove();
-
-    if(missing.length){
-      var err = document.createElement("p");
-      err.className = "form-error";
-      err.textContent = "Merci de renseigner : " + missing.join(", ") + ".";
-      form.insertBefore(err, note);
-      err.scrollIntoView({ block:"nearest" });
-      return;
-    }
-
-    function line(label, value){ return label + " : " + (value || "non renseigné") + "\n"; }
-    var body =
-      "Demande d'étude d'emplacement — CLTDistrib\n\n" +
-      line("Prénom", d.prenom) +
-      line("Nom", d.nom) +
-      line("Entreprise", d.societe) +
-      line("Fonction", d.fonction) +
-      line("Email", d.email) +
-      line("Téléphone", d.tel) +
-      line("Ville", d.ville) +
-      line("Type d'établissement", d.type) +
-      line("Personnes présentes sur le site", d.effectif) +
-      line("Distributeur déjà présent", d.existant) +
-      line("Disponibilité pour un échange", d.dispo) +
-      "\nDescription du projet :\n" + (d.message || "non renseignée") + "\n";
-
-    var href = "mailto:" + MAIL +
-      "?subject=" + encodeURIComponent("Étude d'emplacement — " + d.societe + " (" + d.ville + ")") +
-      "&body=" + encodeURIComponent(body);
-
-    var ok = document.createElement("p");
-    ok.className = "form-success";
-    ok.textContent = "Votre messagerie s'ouvre avec le récapitulatif. Si elle ne s'ouvre pas, écrivez-nous à " + MAIL + ".";
-    form.insertBefore(ok, note);
-
-    window.location.href = href;
-  });
-})();
-
-/* ============================================================
-   DISTRIBUTEUR ANIMÉ — scrollytelling + parallaxe
-   ============================================================ */
-var parallaxImgEl = null, parallaxSectionEl = null, parallaxZoomPulse = 0, parallaxZoomRaf = null;
-
-var MACHINE_INFO = {
-  emplacement: {
-    code: "A1", stat: "Avant toute installation", title: "Étude de l'emplacement", screen: "ÉTUDE",
-    caption: "Nous évaluons l'espace disponible, le passage et les contraintes du site."
-  },
-  produits: {
-    code: "A2", stat: "Adapté au lieu", title: "Choix de la solution", screen: "SÉLECTION",
-    caption: "Nous déterminons le type de distributeur et l'offre de produits les plus adaptés."
-  },
-  installation: {
-    code: "B1", stat: "Sur site", title: "Installation", screen: "EN SERVICE",
-    caption: "Nous organisons l'installation du distributeur sur l'emplacement défini."
-  },
-  reappro: {
-    code: "B2", stat: "Selon les besoins", title: "Approvisionnement", screen: "RÉASSORT",
-    caption: "Les produits sont sélectionnés et réapprovisionnés selon les besoins du site."
-  },
-  maintenance: {
-    code: "C1", stat: "Propre et fonctionnel", title: "Entretien & maintenance", screen: "OK",
-    caption: "Nous assurons le suivi de la machine afin de maintenir un service propre et fonctionnel."
-  },
-  suivi: {
-    code: "C2", stat: "Dans la durée", title: "Suivi de l'exploitation", screen: "SUIVI",
-    caption: "Les ventes et les besoins du site permettent d'adapter progressivement l'offre."
-  }
-};
-
-var MACHINE_ORDER = ["emplacement","produits","installation","reappro","maintenance","suivi"];
-
-function initMachineGlow(){
-  var glow = document.getElementById("parallaxGlow");
-  if(!glow) return;
-  /* Le halo suit la position de la machine : centrée sur PC, remontée sur téléphone */
-  function place(){
-    var small = window.matchMedia("(max-width:900px)").matches;
-    glow.style.background = "radial-gradient(circle at 50% " + (small ? "33%" : "46%") +
-      ", rgba(77,163,255,.45), transparent " + (small ? "38%" : "55%") + ")";
-  }
-  place();
-  window.addEventListener("resize", place);
+function enterAdmin(){
+  publicSite.classList.add("hidden");
+  adminApp.classList.remove("hidden");
+  loadData();
 }
 
-var ICON_PATHS = {
-  emplacement:  '<path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/>',
-  produits:     '<rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/>',
-  installation: '<path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-6h6v6"/>',
-  suivi:        '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
-  reappro:      '<path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 3v5h-5"/>',
-  maintenance:  '<path d="M21 7.5a4.5 4.5 0 0 1-6.2 4.2L9 17.5 6.5 15l5.8-5.8A4.5 4.5 0 0 1 18.5 3l-3 3 1.5 1.5 3-3c.6.7 1 1.6 1 2.5z"/>'
-};
+/* Page dédiée : annuler, c'est repartir vers le site public — sinon on resterait
+   devant une page vide. */
+document.getElementById("gateCancel").addEventListener("click", function(){ location.href = "../"; });
 
-var PRODUCT_KINDS = ["can","can","bottle","can","bag"];
-var PRODUCT_COLORS = ["#E4573D","#F0A93A","#2FA8E0","#35C0B0","#E8C547","#4E8FF0","#C0453A"];
+document.getElementById("gateToggleVis").addEventListener("click", function(){
+  var isPass = gatePassInput.type === "password";
+  gatePassInput.type = isPass ? "text" : "password";
+  document.getElementById("gateEyeIcon").innerHTML = isPass
+    ? '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/><path d="M4 4l16 16"/>'
+    : '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>';
+});
 
-function fillMachineColumns(){
-  var wrap = document.getElementById("machineCols");
-  if(!wrap) return;
-  var seed = 0;
-  for(var c=0;c<5;c++){
-    var col = document.createElement("div");
-    col.className = "draw-machine__col";
-    for(var r=0;r<5;r++){
-      var kind = PRODUCT_KINDS[seed % PRODUCT_KINDS.length];
-      var color = PRODUCT_COLORS[seed % PRODUCT_COLORS.length];
-      var el = document.createElement("div");
-      el.className = "draw-machine__product draw-machine__product--" + kind;
-      el.style.background = color;
-      el.style.setProperty("--seed", seed);
-      col.appendChild(el);
-      seed++;
-    }
-    wrap.appendChild(col);
-  }
-}
-
-(function initMachine(){
-  var stepsWrap = document.getElementById("scrollSteps");
-  if(!stepsWrap) return;
-  /* On ajoute les étapes à la suite de l'intro déjà présente dans le HTML */
-  stepsWrap.insertAdjacentHTML("beforeend", MACHINE_ORDER.map(function(key, i){
-    var data = MACHINE_INFO[key];
-    var sideClass = i % 2 === 1 ? " is-right" : "";
-    return '<div class="scroll-step' + sideClass + '" data-key="' + key + '">' +
-      '<div class="scroll-step__icon-wrap"><svg class="scroll-step__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + ICON_PATHS[key] + '</svg></div>' +
-      '<span class="scroll-step__stat mono">' + data.stat + '</span>' +
-      '<div class="scroll-step__meta">' +
-        '<span class="scroll-step__num mono">' + (i+1) + '</span>' +
-        '<span class="scroll-step__code mono">Casier ' + data.code + '</span>' +
-        '<span class="scroll-step__track"><span></span></span>' +
-      '</div>' +
-      '<h3>' + data.title + '</h3>' +
-      '<p>' + data.caption + '</p>' +
-    '</div>';
-  }).join(""));
-
-  fillMachineColumns();
-  initMachineGlow();
-  selectMachineFeature("emplacement");
-  initScrollytell();
-  initParallax();
-})();
-
-function initScrollytell(){
-  var steps = document.querySelectorAll(".scroll-step");
-  if(!steps.length) return;
-  if(!("IntersectionObserver" in window)){
-    if(steps[0]) steps[0].classList.add("is-active");
-    return;
-  }
-  var observer = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting){ selectMachineFeature(entry.target.getAttribute("data-key")); }
-    });
-  }, { rootMargin: "-45% 0px -45% 0px", threshold: 0 });
-  steps.forEach(function(s){ observer.observe(s); });
-}
-
-var MACHINE_ACTIVE_KEY = null;
-
-function selectMachineFeature(key){
-  var data = MACHINE_INFO[key];
-  if(!data || key === MACHINE_ACTIVE_KEY) return;
-  MACHINE_ACTIVE_KEY = key;
-  var isRight = MACHINE_ORDER.indexOf(key) % 2 === 1;
-
-  document.querySelectorAll(".scroll-step").forEach(function(step){
-    step.classList.toggle("is-active", step.getAttribute("data-key") === key);
-  });
-
-  var machine = document.getElementById("parallaxImg");
-  if(machine){
-    MACHINE_ORDER.forEach(function(k){ machine.classList.remove("is-active-" + k); });
-    machine.classList.add("is-active-" + key);
-  }
-
-  var screenEl = document.getElementById("machineScreenText");
-  if(screenEl) screenEl.textContent = data.screen;
-
-  var scrim = document.getElementById("parallaxScrim");
-  if(scrim) scrim.classList.toggle("is-right", isRight);
-
-  triggerZoomPulse();
-}
-
-var parallaxTicking = false;
-
-function applyParallaxTransform(){
-  parallaxTicking = false;
-  if(!parallaxImgEl || !parallaxSectionEl) return;
-  var rect = parallaxSectionEl.getBoundingClientRect();
-  var vh = window.innerHeight;
-  var total = rect.height + vh;
-  if(!total) return;
-  var progress = Math.max(0, Math.min(1, (vh - rect.top) / total));
-  /* Amplitude réduite sur téléphone : la machine ne doit pas passer sous la barre de navigation */
-  var shift = (progress - 0.5) * (window.innerWidth <= 900 ? 38 : 110);
-  var scale = 1.02 + parallaxZoomPulse * 0.05;
-  /* Pixels entiers : une valeur fractionnaire fait rééchantillonner le calque à chaque image (scintillement). */
-  parallaxImgEl.style.transform = "translate(-50%,-50%) translateY(" + Math.round(shift) + "px) scale(" + scale.toFixed(2) + ")";
-}
-
-function triggerZoomPulse(){
-  if(!parallaxImgEl) return;
-  parallaxZoomPulse = 1;
-  if(!parallaxZoomRaf) parallaxZoomRaf = requestAnimationFrame(decayZoomPulse);
-}
-function decayZoomPulse(){
-  parallaxZoomPulse *= 0.88;
-  applyParallaxTransform();
-  if(parallaxZoomPulse > 0.01){
-    parallaxZoomRaf = requestAnimationFrame(decayZoomPulse);
+function tryEnter(){
+  if(gatePassInput.value === ACCESS_CODE){
+    closeGate();
+    try{ localStorage.setItem(PRO_REMEMBER_KEY, "1"); }catch(e){}
+    enterAdmin();
+    refreshProShortcut();
   } else {
-    parallaxZoomPulse = 0;
-    parallaxZoomRaf = null;
-    applyParallaxTransform();
+    gateError.classList.add("is-visible");
   }
 }
+document.getElementById("gateSubmit").addEventListener("click", tryEnter);
+gatePassInput.addEventListener("keydown", function(e){ if(e.key === "Enter") tryEnter(); });
 
-function initParallax(){
-  var section = document.querySelector(".parallax-decouvrir");
-  var img = document.getElementById("parallaxImg");
-  if(!section || !img) return;
-  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  parallaxSectionEl = section;
-  parallaxImgEl = img;
-  window.addEventListener("scroll", function(){
-    if(!parallaxTicking){ requestAnimationFrame(applyParallaxTransform); parallaxTicking = true; }
-  }, { passive:true });
-  window.addEventListener("resize", applyParallaxTransform);
-  applyParallaxTransform();
+/* Page autonome : « Quitter » renvoie au site public. */
+document.getElementById("leaveAdminBtn").addEventListener("click", function(){
+  location.href = "../";
+});
+
+function isProUnlocked(){
+  try{ return localStorage.getItem(PRO_REMEMBER_KEY) === "1"; }catch(e){ return false; }
 }
 
-/* ============================================================
-   QUESTIONS COURANTES (réponses locales, sans API)
-   ============================================================ */
-var CHAT_FAQ = [
-  { keys:["fournit","fourni","proprietaire","propriétaire","acheter","achat","vendez","vend","vente","louer","location"],
-    reply:"CLTDistrib fournit le distributeur. Nous ne vendons pas de machines : nous exploitons un service de distribution automatique sur votre site. Vous n'avez aucun matériel à acheter." },
-  { keys:["réappro","reappro","remplir","remplissage","stock","rupture","vide","approvision"],
-    reply:"CLTDistrib s'occupe du réapprovisionnement. Le réassort est organisé selon les besoins constatés sur l'emplacement : vos équipes n'ont ni commandes à passer ni stock à gérer." },
-  { keys:["entretien","nettoy","propre","hygiène","hygiene","maintenance","panne","répar","repar","dysfonction","incident"],
-    reply:"CLTDistrib assure le nettoyage de la machine et intervient en cas de dysfonctionnement. Vous signalez le problème, nous prenons le relais. Les modalités précises sont définies avec vous lors de la mise en place." },
-  { keys:["paiement","carte","cb","sans contact","monnaie","especes","espèces","payer","billet"],
-    reply:"Les moyens de paiement sont gérés par CLTDistrib : carte bancaire et paiement sans contact. Les moyens disponibles sur une machine donnée sont confirmés lors de l'étude du projet." },
-  { keys:["produit","boisson","snack","offre","choix","manger","boire","eau","chips","barre"],
-    reply:"Des boissons (eau, eaux gazeuses, sodas, jus, thés glacés, boissons énergisantes) et des snacks (chips, biscuits, barres chocolatées, barres céréalières, confiseries). L'offre est construite selon le public du lieu et peut évoluer." },
-  { keys:["place","espace","dimension","taille","encombrement","m2","mètre","metre","prise","électri","electri","branch"],
-    reply:"Il faut un emplacement stable et accessible, avec le dégagement nécessaire à l'utilisation, ainsi qu'une alimentation électrique adaptée. Les besoins techniques exacts dépendent du modèle retenu et sont vérifiés lors de l'étude de l'emplacement." },
-  { keys:["prix","tarif","coût","cout","combien","frais","investissement","gratuit","facture"],
-    reply:"L'étude de l'emplacement est gratuite et sans engagement. Les conditions d'installation et d'exploitation sont ensuite définies au cas par cas, selon le type de lieu, sa fréquentation et les contraintes techniques — et vous sont présentées avant toute décision." },
-  { keys:["partenariat","condition","contrat","commission","rémunér","remuner","gagne"],
-    reply:"Chaque emplacement est différent : les conditions de partenariat sont étudiées selon le type de lieu, sa fréquentation, l'espace disponible, les contraintes techniques et les besoins des utilisateurs. L'objectif est un fonctionnement clair pour les deux parties." },
-  { keys:["adapté","adapte","eligible","éligible","accepté","accepte","refus","convient","possible chez"],
-    reply:"Toutes les demandes ne débouchent pas sur une installation : un emplacement doit réunir un passage suffisant, un espace disponible et des contraintes techniques compatibles. Décrivez-nous votre site via le formulaire, nous vous répondrons franchement." },
-  { keys:["installation","installer","délai","delai","combien de temps","quand","mise en service"],
-    reply:"Après l'étude de l'emplacement, nous définissons ensemble la solution adaptée puis nous organisons l'installation à une date convenue avec vous." },
-  { keys:["lieu","entreprise","bureau","usine","atelier","entrepot","entrepôt","sport","hotel","hôtel","formation","gare","public"],
-    reply:"Le service s'adresse aux entreprises et bureaux, usines et ateliers, entrepôts et plateformes logistiques, salles de sport, centres de formation, hôtels et résidences, établissements accueillant du public et lieux de passage. Chaque site fait l'objet d'une étude." },
-  { keys:["rdv","rendez-vous","rendez vous","visite","echange","contacter","contact","devis","etude","joindre","appeler","telephone","numero","mail","email","adresse"],
-    reply:"Par téléphone au 07 68 66 17 19 — laissez un message si nous ne répondons pas, nous vous rappelons. Sinon par email à clementpiresvalente@gmail.com, ou via le formulaire en bas de page." },
-  { keys:["zone","secteur","region","departement","yvelines","78","ile-de-france","ile de france","deplacez","intervenez","loin","distance","ou etes"],
-    reply:"Nous intervenons dans les Yvelines et les alentours. Si votre site est un peu en dehors, dites-le nous quand même : nous vous répondrons franchement selon la distance." },
-  { keys:["horaire","24h","nuit","week-end","weekend","samedi","dimanche","ferme","acces","accessible"],
-    reply:"Le distributeur reste disponible aux heures d'ouverture de votre site : c'est justement un intérêt du service pour les horaires décalés. Les contraintes d'accès sont vues ensemble lors de l'étude de l'emplacement." },
-  { keys:["perime","peremption","dlc","date","fraicheur","frais","qualite"],
-    reply:"Les dates de péremption sont contrôlées à chaque passage de réassort, et les produits concernés sont retirés. C'est inclus dans le suivi de l'exploitation." },
-  { keys:["consommation","electricite","facture edf","cout electrique","branche","prise de courant","kwh"],
-    reply:"La machine se branche sur une prise standard. Les conditions liées à l'alimentation électrique font partie des points vus lors de l'étude de l'emplacement, avant toute installation." },
-  { keys:["salarie","effectif","personne","combien de personne","minimum","petite structure","trop petit","passage"],
-    reply:"Il n'y a pas de seuil unique : ce qui compte est le passage réel sur le site, pas seulement l'effectif. Décrivez-nous votre établissement, nous vous dirons franchement si l'emplacement s'y prête." },
-  { keys:["vol","vandalisme","degradation","casse","securite","abime"],
-    reply:"Le choix de l'emplacement tient compte de ce risque : un endroit visible et fréquenté est privilégié. Les questions de responsabilité sont clarifiées avec vous avant l'installation." },
-  { keys:["bruit","bruyant","sonore","silencieux","ronfle"],
-    reply:"Un distributeur réfrigéré émet un léger bruit de fonctionnement, comparable à celui d'un réfrigérateur. C'est un critère pris en compte au moment de choisir l'emplacement." },
-  { keys:["engagement","duree","resilier","resiliation","arreter","annuler","enlever"],
-    reply:"L'étude de l'emplacement est gratuite et sans engagement. Les modalités de la collaboration, y compris sa durée, sont définies clairement avec vous avant toute installation." },
-  { keys:["bonjour","salut","hello","bonsoir","coucou","bonne journee"],
-    reply:"Bonjour ! Posez-moi vos questions sur l'emplacement, les produits, l'installation, le réassort, l'entretien, la maintenance, les paiements ou notre zone d'intervention." },
-  { keys:["merci","super","parfait","ok merci","nickel"],
-    reply:"Avec plaisir. Si vous souhaitez aller plus loin, le formulaire en bas de page permet de demander une étude gratuite de votre emplacement." }
-];
-var CHAT_FALLBACK = "Je n'ai pas de réponse toute prête sur ce point précis. Le plus simple est d'appeler le 07 68 66 17 19, d'écrire à clementpiresvalente@gmail.com, ou de remplir le formulaire en bas de page — vous aurez une réponse personnalisée.";
-
-/* Questions proposées sous le fil de discussion */
-var CHAT_SUGGESTIONS = [
-  "Qui fournit le distributeur ?",
-  "Qui s'occupe du réapprovisionnement ?",
-  "Quelle est votre zone d'intervention ?",
-  "Quels moyens de paiement ?",
-  "Quel espace faut-il prévoir ?",
-  "Combien ça coûte ?"
-];
-
-/* Insensible aux accents, à la casse et à la ponctuation */
-function normalizeText(s){
-  s = String(s).toLowerCase();
-  /* Retire les signes diacritiques : "délai" et "delai" deviennent identiques */
-  if(s.normalize) s = s.normalize("NFD").replace(new RegExp("[\\u0300-\\u036f]", "g"), "");
-  return " " + s.replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ").trim() + " ";
+/* Aucun bouton public : l'Espace pro ne s'ouvre que via l'adresse secrète
+   ou le geste discret sur le logo. Une fois le code entré sur cet appareil,
+   il est mémorisé (plus besoin de le retaper). */
+function checkProAccess(){
+  if(location.hash !== PRO_HASH) return;
+  if(isProUnlocked()){ enterAdmin(); } else { openGate(); }
 }
+window.addEventListener("hashchange", checkProAccess);
 
-/* On retient l'entrée qui correspond le mieux, pas la première trouvée :
-   chaque mot-clé rapporte un score proportionnel à sa longueur, et un mot
-   entier compte davantage qu'un fragment trouvé au milieu d'un autre mot. */
-function findFaqReply(text){
-  var q = normalizeText(text);
-  if(q.trim().length < 2) return CHAT_FALLBACK;
-
-  var best = null, bestScore = 0;
-  for(var i = 0; i < CHAT_FAQ.length; i++){
-    var entry = CHAT_FAQ[i], score = 0;
-    for(var j = 0; j < entry.keys.length; j++){
-      var k = normalizeText(entry.keys[j]).trim();
-      if(!k) continue;
-      if(q.indexOf(" " + k + " ") !== -1) score += k.length * 2;   /* mot entier */
-      else if(q.indexOf(k) !== -1) score += k.length;              /* fragment */
-    }
-    if(score > bestScore){ bestScore = score; best = entry; }
-  }
-  /* En dessous du seuil, mieux vaut renvoyer vers un contact humain
-     qu'une réponse à côté de la question. */
-  return (best && bestScore >= 8) ? best.reply : CHAT_FALLBACK;
-}
-
-var chatMessagesEl = document.getElementById("chatMessages");
-var chatInput = document.getElementById("chatInput");
-var chatSendBtn = document.getElementById("chatSend");
-
-if(chatMessagesEl && chatInput && chatSendBtn){
-  (function initChat(){
-    function addMessage(role, text){
-      var div = document.createElement("div");
-      div.className = "msg msg--" + role;
-      div.textContent = text;
-      chatMessagesEl.appendChild(div);
-      chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
-    }
-    function addTyping(){
-      var div = document.createElement("div");
-      div.className = "typing";
-      div.id = "typingIndicator";
-      div.innerHTML = "<span></span><span></span><span></span>";
-      chatMessagesEl.appendChild(div);
-      chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
-    }
-    function removeTyping(){
-      var el = document.getElementById("typingIndicator");
-      if(el) el.remove();
-    }
-
-    addMessage("assistant", "Bonjour ! Posez-moi vos questions sur l'emplacement, les produits, l'installation, le réassort, l'entretien, les paiements ou notre zone d'intervention. Vous pouvez aussi cliquer sur une question ci-dessous.");
-
-    function autoResize(){
-      chatInput.style.height = "auto";
-      chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + "px";
-    }
-    var chatBusy = false;
-    function sendChatMessage(forced){
-      var text = (forced || chatInput.value).trim();
-      if(!text || chatBusy) return;
-      addMessage("user", text);
-      chatInput.value = "";
-      autoResize();
-      chatBusy = true;
-      chatSendBtn.disabled = true;
-      addTyping();
-      var reply = findFaqReply(text);
-      setTimeout(function(){
-        removeTyping();
-        chatBusy = false;
-        chatSendBtn.disabled = false;
-        addMessage("assistant", reply);
-      }, 500 + Math.random()*400);
-    }
-
-    chatInput.addEventListener("input", autoResize);
-    chatInput.addEventListener("keydown", function(e){
-      if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendChatMessage(); }
-    });
-    chatSendBtn.addEventListener("click", function(){ sendChatMessage(); });
-
-    /* Questions proposées : un clic pose la question directement */
-    var suggestWrap = document.getElementById("chatSuggest");
-    if(suggestWrap && typeof CHAT_SUGGESTIONS !== "undefined"){
-      CHAT_SUGGESTIONS.forEach(function(q){
-        var b = document.createElement("button");
-        b.type = "button";
-        b.textContent = q;
-        b.addEventListener("click", function(){ sendChatMessage(q); });
-        suggestWrap.appendChild(b);
-      });
-    }
-
-    var fab = document.getElementById("chatFab");
-    if(fab){
-      fab.addEventListener("click", function(){
-        var block = document.getElementById("chatBlock");
-        if(block) block.scrollIntoView({ behavior:"smooth", block:"center" });
-        setTimeout(function(){ chatInput.focus(); }, 600);
-      });
-    }
-  })();
-}
-
-
-/* ============================================================
-   ACCÈS À L'ESPACE PRO
-   ============================================================ */
-/* L'espace pro vit dans un fichier séparé (pro/index.html). Cette page
-   n'en charge plus une seule ligne : ni son interface, ni ses styles, ni
-   ses données. C'est aussi ce découpage par URL qui permet de poser un
-   vrai contrôle d'accès côté serveur devant /pro. */
-(function initProAccess(){
-  var PRO_URL = "pro/";
-  if(location.hash === "#pro-clt78"){ location.replace(PRO_URL); return; }
+/* Geste discret : trois clics rapides sur le logo de la barre.
+   Invisible pour un visiteur, immédiat pour vous. */
+(function initLogoTrigger(){
   var brand = document.querySelector(".nav .brand");
   if(!brand) return;
   var clics = 0, minuteur = null;
@@ -3136,13 +2293,876 @@ if(chatMessagesEl && chatInput && chatSendBtn){
       e.preventDefault();
       clics = 0;
       clearTimeout(minuteur);
-      location.href = PRO_URL;
+      if(isProUnlocked()){ enterAdmin(); } else { openGate(); }
       return;
     }
     clearTimeout(minuteur);
     minuteur = setTimeout(function(){ clics = 0; }, 1500);
   });
 })();
+
+/* Raccourci visible uniquement sur l'appareil déjà déverrouillé */
+function refreshProShortcut(){
+  var existing = document.getElementById("proShortcut");
+  if(!isProUnlocked()){ if(existing) existing.remove(); return; }
+  if(existing) return;
+  var b = document.createElement("button");
+  b.id = "proShortcut";
+  b.className = "pro-shortcut";
+  b.type = "button";
+  b.title = "Espace pro";
+  b.setAttribute("aria-label", "Ouvrir l'espace pro");
+  b.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
+    '<rect x="3" y="11" width="18" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>';
+  b.addEventListener("click", function(){ enterAdmin(); });
+  document.body.appendChild(b);
+}
+
+/* ============================================================
+   ADMIN TABS
+   ============================================================ */
+document.querySelectorAll(".admin-tabs__btn").forEach(function(btn){
+  btn.addEventListener("click", function(){
+    document.querySelectorAll(".admin-tabs__btn").forEach(function(b){ b.classList.remove("is-active"); });
+    document.querySelectorAll(".admin-view").forEach(function(v){ v.classList.remove("is-active"); });
+    btn.classList.add("is-active");
+    var tab = btn.getAttribute("data-tab");
+    document.querySelector('.admin-view[data-view="' + tab + '"]').classList.add("is-active");
+    ui.activeTab = tab;
+    if(tab === "stocks") renderStocks();
+    if(tab === "revenue") renderRevenue();
+    if(tab === "notes") renderNotes();
+    if(tab === "prospects") renderProspects();
+    if(tab === "machines") renderMachines();
+    if(tab === "documents") renderDocuments();
+  });
+});
+
+/* ============================================================
+   EXPORT / IMPORT
+   ============================================================ */
+
+/* ============================================================
+   RAPPEL DE SAUVEGARDE
+   ============================================================ */
+/* Les données ne vivent que dans le stockage local de ce navigateur.
+   Un cache vidé, un profil changé, un autre ordinateur : tout est perdu.
+   L'export est la seule sauvegarde qui existe — le bandeau le rappelle,
+   et insiste au-delà de deux semaines. */
+var LAST_EXPORT_KEY = "cltdistrib-dernier-export";
+
+function joursDepuis(iso){
+  if(!iso) return null;
+  var d = new Date(iso);
+  if(isNaN(d)) return null;
+  return Math.floor((Date.now() - d.getTime()) / 86400000);
+}
+
+function contenuNonVide(){
+  var saisi = ["distributeurs","notes","prospects","machines"]
+    .some(function(k){ return (appData[k] || []).length > 0; });
+  if(saisi) return true;
+  /* La liste des documents est pré-remplie par l'affichage lui-même : elle
+     ne compte que si vous en avez changé l'état ou noté un emplacement. */
+  return (appData.documents || []).some(function(d){
+    return (d.etat && d.etat !== "todo") || (d.ou && String(d.ou).trim());
+  });
+}
+
+function renderBackupNotice(){
+  var box = document.getElementById("backupNotice");
+  if(!box) return;
+  /* Rien à sauvegarder : pas de rappel, ce serait du bruit. */
+  if(!contenuNonVide()){ box.classList.add("hidden"); return; }
+
+  var last = null;
+  try{ last = localStorage.getItem(LAST_EXPORT_KEY); }catch(e){}
+  var j = joursDepuis(last);
+  var titre = document.getElementById("backupTitle");
+  var texte = document.getElementById("backupText");
+
+  box.classList.remove("hidden");
+  box.classList.toggle("admin-backup--urgent", j === null || j >= 14);
+
+  if(j === null){
+    titre.textContent = "Aucune sauvegarde pour l'instant.";
+    texte.textContent = "Vos données n'existent que dans ce navigateur. Un fichier exporté, rangé sur votre ordinateur ou votre cloud, est votre seul filet.";
+  } else if(j === 0){
+    titre.textContent = "Sauvegardé aujourd'hui.";
+    texte.textContent = "Rien à faire. Repassez par ici après vos prochaines saisies.";
+  } else if(j < 14){
+    titre.textContent = "Dernière sauvegarde il y a " + j + (j === 1 ? " jour." : " jours.");
+    texte.textContent = "Tout va bien. Un export après chaque série de modifications suffit.";
+  } else {
+    titre.textContent = "Dernière sauvegarde il y a " + j + " jours.";
+    texte.textContent = "C'est long. Si ce navigateur perd ses données, tout ce qui a été saisi depuis est perdu.";
+  }
+}
+
+function marquerSauvegarde(){
+  try{ localStorage.setItem(LAST_EXPORT_KEY, new Date().toISOString()); }catch(e){}
+  renderBackupNotice();
+}
+
+document.getElementById("backupNow").addEventListener("click", function(){
+  document.getElementById("exportBtn").click();
+});
+
+document.getElementById("exportBtn").addEventListener("click", function(){
+  var blob = new Blob([JSON.stringify(appData, null, 2)], {type:"application/json"});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "cltdistrib-donnees-" + new Date().toISOString().slice(0,10) + ".json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  marquerSauvegarde();
+});
+document.getElementById("importBtn").addEventListener("click", function(){
+  document.getElementById("importFile").click();
+});
+document.getElementById("importFile").addEventListener("change", function(e){
+  var file = e.target.files[0];
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(evt){
+    try{
+      var parsed = JSON.parse(evt.target.result);
+      if(parsed && typeof parsed === "object"){
+        appData = normalizeData(parsed);
+        ui.selectedDistribId = null;
+        saveData();
+        renderAll();
+      }
+    }catch(err){ alert("Fichier invalide."); }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
+/* ============================================================
+   MAP + DISTRIBUTEURS
+   ============================================================ */
+var mapboard = document.getElementById("mapboard");
+var mapEmpty = document.getElementById("mapEmpty");
+var addDistribBtn = document.getElementById("addDistribBtn");
+var addDistribForm = document.getElementById("addDistribForm");
+var confirmAddDistrib = document.getElementById("confirmAddDistrib");
+var addDistribHint = document.getElementById("addDistribHint");
+
+addDistribBtn.addEventListener("click", function(){
+  addDistribForm.classList.remove("hidden");
+  ui.placingMode = true;
+  ui.pendingPos = null;
+  mapboard.classList.add("is-placing");
+  confirmAddDistrib.disabled = true;
+  document.getElementById("dNom").value = "";
+  document.getElementById("dAdresse").value = "";
+});
+document.getElementById("cancelAddDistrib").addEventListener("click", cancelAdd);
+function cancelAdd(){
+  addDistribForm.classList.add("hidden");
+  ui.placingMode = false;
+  ui.pendingPos = null;
+  mapboard.classList.remove("is-placing");
+  var ghost = mapboard.querySelector(".pin-ghost");
+  if(ghost) ghost.remove();
+}
+
+mapboard.addEventListener("click", function(e){
+  if(!ui.placingMode) return;
+  if(e.target.closest(".pin")) return;
+  var rect = mapboard.getBoundingClientRect();
+  var x = ((e.clientX - rect.left) / rect.width) * 100;
+  var y = ((e.clientY - rect.top) / rect.height) * 100;
+  ui.pendingPos = {x: x, y: y};
+  var ghost = mapboard.querySelector(".pin-ghost");
+  if(!ghost){
+    ghost = document.createElement("div");
+    ghost.className = "pin-ghost";
+    mapboard.appendChild(ghost);
+  }
+  ghost.style.left = x + "%";
+  ghost.style.top = y + "%";
+  confirmAddDistrib.disabled = !(document.getElementById("dNom").value.trim() && document.getElementById("dAdresse").value.trim());
+});
+
+["dNom","dAdresse"].forEach(function(id){
+  document.getElementById(id).addEventListener("input", function(){
+    confirmAddDistrib.disabled = !(ui.pendingPos && document.getElementById("dNom").value.trim() && document.getElementById("dAdresse").value.trim());
+  });
+});
+
+confirmAddDistrib.addEventListener("click", function(){
+  if(!ui.pendingPos) return;
+  var nom = document.getElementById("dNom").value.trim();
+  var adresse = document.getElementById("dAdresse").value.trim();
+  var secteur = document.getElementById("dSecteur").value;
+  if(!nom || !adresse) return;
+  var d = {
+    id: uid("dist"), nom: nom, adresse: adresse, secteur: secteur,
+    x: ui.pendingPos.x, y: ui.pendingPos.y,
+    avis: [], stocks: [], revenus: []
+  };
+  appData.distributeurs.push(d);
+  ui.selectedDistribId = d.id;
+  cancelAdd();
+  saveData();
+  renderAll();
+});
+
+function getDistrib(id){
+  return appData.distributeurs.find(function(d){ return d.id === id; });
+}
+
+function renderMap(){
+  mapboard.querySelectorAll(".pin").forEach(function(p){ p.remove(); });
+  if(appData.distributeurs.length === 0){
+    mapEmpty.classList.remove("hidden");
+  } else {
+    mapEmpty.classList.add("hidden");
+  }
+  appData.distributeurs.forEach(function(d){
+    var pin = document.createElement("div");
+    pin.className = "pin" + (d.id === ui.selectedDistribId ? " is-selected" : "");
+    pin.style.left = d.x + "%";
+    pin.style.top = d.y + "%";
+    pin.title = d.nom;
+    pin.innerHTML = '<svg class="icon" viewBox="0 0 24 24" style="stroke:#fff"><circle cx="12" cy="12" r="5"/></svg>';
+    pin.addEventListener("click", function(e){
+      e.stopPropagation();
+      ui.selectedDistribId = d.id;
+      renderMap();
+      renderDistribPanel();
+    });
+    mapboard.appendChild(pin);
+  });
+}
+
+function avgRating(d){
+  if(!d.avis.length) return null;
+  var sum = d.avis.reduce(function(a,r){ return a + r.note; }, 0);
+  return (sum / d.avis.length).toFixed(1);
+}
+
+function starsHtml(n){
+  var full = Math.round(n);
+  var html = "";
+  for(var i=1;i<=5;i++){
+    html += '<svg class="icon icon--fill" viewBox="0 0 24 24" style="' + (i<=full ? '' : 'color:#DBE0DB') + '"><path d="M12 2l2.9 6.4 7.1.6-5.4 4.7 1.7 7-6.3-3.9L5.7 20l1.7-7L2 9l7.1-.6L12 2z"/></svg>';
+  }
+  return html;
+}
+
+function renderDistribPanel(){
+  var panel = document.getElementById("distribPanel");
+  var d = getDistrib(ui.selectedDistribId);
+  if(!d){
+    panel.innerHTML = '<div class="panel panel--empty"><svg class="icon empty-icon" viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.4"/></svg>Sélectionnez un point sur la carte pour voir son détail et ses avis.</div>';
+    return;
+  }
+  var avg = avgRating(d);
+  var totalStock = d.stocks.reduce(function(a,s){ return a + Number(s.quantite||0); }, 0);
+  var totalRev = d.revenus.reduce(function(a,r){ return a + Number(r.montant||0); }, 0);
+
+  var html = '<div class="panel">' +
+    '<div class="panel__title"><div><h3>' + escapeHtml(d.nom) + '</h3><span class="tag">' + escapeHtml(d.secteur) + '</span></div>' +
+    '<button class="btn btn--danger btn--icon" data-remove-distrib="' + d.id + '" aria-label="Supprimer"><svg class="icon" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>' +
+    '<p class="panel__addr">' + escapeHtml(d.adresse) + '</p>' +
+    '<div class="panel__stats">' +
+      '<div><strong>' + (avg ? avg : "—") + '</strong><span>' + d.avis.length + ' avis</span></div>' +
+      '<div><strong class="mono">' + totalStock + '</strong><span>unités en stock</span></div>' +
+      '<div><strong class="mono">' + totalRev.toFixed(0) + ' €</strong><span>revenu cumulé</span></div>' +
+    '</div>' +
+    '<div class="reviews">';
+
+  if(d.avis.length === 0){
+    html += '<p style="color:var(--ink-faint);font-size:13.5px">Aucun avis pour ce distributeur.</p>';
+  } else {
+    d.avis.slice().reverse().forEach(function(r){
+      html += '<div class="review"><div class="review__top"><strong>' + escapeHtml(r.auteur) + '</strong><div class="review__stars">' + starsHtml(r.note) + '</div></div>' +
+        (r.commentaire ? '<p>' + escapeHtml(r.commentaire) + '</p>' : '') +
+        '<small>' + r.date + '</small></div>';
+    });
+  }
+  html += '</div>' +
+    '<div class="inline-form" style="margin-top:16px;padding:16px">' +
+      '<div class="field-row"><div class="field"><label>Auteur</label><input id="avisAuteur" placeholder="ex : Manager de site"></div>' +
+      '<div class="field"><label>Note</label><select id="avisNote"><option value="5">5 — Excellent</option><option value="4">4 — Bien</option><option value="3">3 — Correct</option><option value="2">2 — Décevant</option><option value="1">1 — Mauvais</option></select></div></div>' +
+      '<div class="field"><label>Commentaire</label><textarea id="avisCommentaire" rows="2"></textarea></div>' +
+      '<button class="btn btn--primary btn--sm" id="addAvisBtn">Ajouter l\'avis</button>' +
+    '</div>' +
+  '</div>';
+
+  panel.innerHTML = html;
+
+  panel.querySelector("[data-remove-distrib]").addEventListener("click", function(){
+    if(!confirm("Supprimer ce distributeur et toutes ses données ?")) return;
+    appData.distributeurs = appData.distributeurs.filter(function(x){ return x.id !== d.id; });
+    ui.selectedDistribId = null;
+    saveData();
+    renderAll();
+  });
+  document.getElementById("addAvisBtn").addEventListener("click", function(){
+    var auteur = document.getElementById("avisAuteur").value.trim() || "Anonyme";
+    var note = Number(document.getElementById("avisNote").value);
+    var commentaire = document.getElementById("avisCommentaire").value.trim();
+    d.avis.push({ id: uid("avis"), auteur: auteur, note: note, commentaire: commentaire, date: new Date().toLocaleDateString("fr-FR") });
+    saveData();
+    renderDistribPanel();
+    renderMap();
+  });
+}
+
+function escapeHtml(s){
+  var div = document.createElement("div");
+  div.textContent = s == null ? "" : String(s);
+  return div.innerHTML;
+}
+
+/* ============================================================
+   STOCKS
+   ============================================================ */
+var stockDistribSelect = document.getElementById("stockDistribSelect");
+stockDistribSelect.addEventListener("change", function(){
+  ui.stockDistribId = stockDistribSelect.value;
+  renderStocksContent();
+});
+
+function renderStocks(){
+  var opts = appData.distributeurs.map(function(d){ return '<option value="' + d.id + '">' + escapeHtml(d.nom) + '</option>'; }).join("");
+  stockDistribSelect.innerHTML = opts || '<option value="">Aucun distributeur</option>';
+  if(!ui.stockDistribId || !getDistrib(ui.stockDistribId)){
+    ui.stockDistribId = appData.distributeurs.length ? appData.distributeurs[0].id : null;
+  }
+  if(ui.stockDistribId) stockDistribSelect.value = ui.stockDistribId;
+  renderStocksContent();
+}
+
+function renderStocksContent(){
+  var el = document.getElementById("stocksContent");
+  var d = getDistrib(ui.stockDistribId);
+  if(!d){
+    el.innerHTML = '<div class="panel panel--empty"><svg class="icon empty-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg>Ajoutez d\'abord un distributeur depuis l\'onglet « Carte &amp; avis ».</div>';
+    return;
+  }
+  var rows = d.stocks.map(function(s){
+    var q = Number(s.quantite), seuil = Number(s.seuil);
+    var cls = q <= 0 ? "is-out" : (q <= seuil ? "is-low" : "");
+    var statusHtml = q <= 0 ? '<span class="status-dot out">Rupture</span>' : (q <= seuil ? '<span class="status-dot low">Stock bas</span>' : '<span class="status-dot ok">OK</span>');
+    return '<tr class="' + cls + '"><td>' + escapeHtml(s.produit) + '</td><td class="num">' + q + '</td><td class="num">' + seuil + '</td><td>' + statusHtml + '</td>' +
+      '<td><button class="btn btn--danger btn--icon" data-remove-stock="' + s.id + '" aria-label="Supprimer"><svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 6l12 12M18 6 6 18"/></svg></button></td></tr>';
+  }).join("");
+
+  el.innerHTML =
+    '<table class="table">' +
+      '<thead><tr><th>Produit</th><th>Quantité</th><th>Seuil d\'alerte</th><th>Statut</th><th></th></tr></thead>' +
+      '<tbody>' + (rows || '<tr><td colspan="5" class="table-empty">Aucun produit enregistré.</td></tr>') + '</tbody>' +
+    '</table>' +
+    '<div class="inline-form">' +
+      '<div class="field-row" style="grid-template-columns:1.4fr 1fr 1fr">' +
+        '<div class="field"><label>Produit</label><input id="stockProduit" placeholder="ex : Café gobelet"></div>' +
+        '<div class="field"><label>Quantité</label><input id="stockQuantite" type="number" min="0" value="0"></div>' +
+        '<div class="field"><label>Seuil d\'alerte</label><input id="stockSeuil" type="number" min="0" value="5"></div>' +
+      '</div>' +
+      '<button class="btn btn--primary btn--sm" id="addStockBtn">Ajouter le produit</button>' +
+    '</div>';
+
+  el.querySelectorAll("[data-remove-stock]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      d.stocks = d.stocks.filter(function(s){ return s.id !== btn.getAttribute("data-remove-stock"); });
+      saveData();
+      renderStocksContent();
+      if(ui.selectedDistribId === d.id) renderDistribPanel();
+    });
+  });
+  document.getElementById("addStockBtn").addEventListener("click", function(){
+    var produit = document.getElementById("stockProduit").value.trim();
+    if(!produit) return;
+    d.stocks.push({
+      id: uid("stock"), produit: produit,
+      quantite: Number(document.getElementById("stockQuantite").value) || 0,
+      seuil: Number(document.getElementById("stockSeuil").value) || 0
+    });
+    saveData();
+    renderStocksContent();
+    if(ui.selectedDistribId === d.id) renderDistribPanel();
+  });
+}
+
+/* ============================================================
+   REVENUS
+   ============================================================ */
+var revenueDistribSelect = document.getElementById("revenueDistribSelect");
+revenueDistribSelect.addEventListener("change", function(){
+  ui.revenueDistribId = revenueDistribSelect.value;
+  renderRevenueContent();
+});
+
+function renderRevenue(){
+  var opts = appData.distributeurs.map(function(d){ return '<option value="' + d.id + '">' + escapeHtml(d.nom) + '</option>'; }).join("");
+  revenueDistribSelect.innerHTML = opts || '<option value="">Aucun distributeur</option>';
+  if(!ui.revenueDistribId || !getDistrib(ui.revenueDistribId)){
+    ui.revenueDistribId = appData.distributeurs.length ? appData.distributeurs[0].id : null;
+  }
+  if(ui.revenueDistribId) revenueDistribSelect.value = ui.revenueDistribId;
+  renderRevenueContent();
+}
+
+function renderRevenueContent(){
+  var el = document.getElementById("revenueContent");
+  var d = getDistrib(ui.revenueDistribId);
+  if(!d){
+    el.innerHTML = '<div class="panel panel--empty"><svg class="icon empty-icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>Ajoutez d\'abord un distributeur depuis l\'onglet « Carte &amp; avis ».</div>';
+    return;
+  }
+  var entries = d.revenus.slice().sort(function(a,b){ return a.mois.localeCompare(b.mois); });
+  var total = entries.reduce(function(a,r){ return a + Number(r.montant||0); }, 0);
+  var max = entries.reduce(function(a,r){ return Math.max(a, Number(r.montant||0)); }, 0) || 1;
+
+  var bars = entries.map(function(r){
+    var h = Math.max(4, (Number(r.montant)/max) * 160);
+    return '<div class="chart__bar-wrap"><span class="chart__val">' + Number(r.montant).toFixed(0) + '€</span><div class="chart__bar" style="height:' + h + 'px"></div><span class="chart__lbl">' + formatMois(r.mois) + '</span></div>';
+  }).join("");
+
+  var rows = entries.slice().reverse().map(function(r){
+    return '<div class="rev-row"><span>' + formatMois(r.mois) + '</span><span class="amt">' + Number(r.montant).toFixed(2) + ' €</span>' +
+      '<button class="btn btn--danger btn--icon" data-remove-rev="' + r.id + '" aria-label="Supprimer" style="margin-left:auto"><svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>';
+  }).join("");
+
+  el.innerHTML =
+    '<div class="revenue-layout">' +
+      '<div class="panel">' +
+        '<span class="section__kicker">Total cumulé</span>' +
+        '<div class="revenue-total">' + total.toFixed(2) + ' €</div>' +
+        '<div class="inline-form" style="margin-top:20px">' +
+          '<div class="field-row">' +
+            '<div class="field"><label>Mois</label><input type="month" id="revMois" value="' + new Date().toISOString().slice(0,7) + '"></div>' +
+            '<div class="field"><label>Montant (€)</label><input type="number" id="revMontant" min="0" step="0.01" placeholder="0.00"></div>' +
+          '</div>' +
+          '<button class="btn btn--primary btn--sm" id="addRevBtn">Ajouter</button>' +
+        '</div>' +
+        '<div class="rev-list">' + (rows || '<p style="color:var(--ink-faint);font-size:13.5px">Aucune entrée.</p>') + '</div>' +
+      '</div>' +
+      '<div class="panel">' +
+        '<span class="section__kicker">Évolution mensuelle</span>' +
+        (entries.length ? '<div class="chart">' + bars + '</div>' : '<p style="color:var(--ink-faint);font-size:13.5px;margin-top:14px">Ajoutez des entrées pour voir le graphique.</p>') +
+      '</div>' +
+    '</div>';
+
+  el.querySelectorAll("[data-remove-rev]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      d.revenus = d.revenus.filter(function(r){ return r.id !== btn.getAttribute("data-remove-rev"); });
+      saveData();
+      renderRevenueContent();
+      if(ui.selectedDistribId === d.id) renderDistribPanel();
+    });
+  });
+  document.getElementById("addRevBtn").addEventListener("click", function(){
+    var mois = document.getElementById("revMois").value;
+    var montant = Number(document.getElementById("revMontant").value);
+    if(!mois || !montant) return;
+    var existing = d.revenus.find(function(r){ return r.mois === mois; });
+    if(existing){ existing.montant = montant; }
+    else{ d.revenus.push({ id: uid("rev"), mois: mois, montant: montant }); }
+    saveData();
+    renderRevenueContent();
+    if(ui.selectedDistribId === d.id) renderDistribPanel();
+  });
+}
+
+function formatMois(m){
+  var parts = m.split("-");
+  var noms = ["Jan","Fév","Mar","Avr","Mai","Juin","Juil","Août","Sep","Oct","Nov","Déc"];
+  return noms[Number(parts[1])-1] + " " + parts[0];
+}
+
+/* ============================================================
+   NOTES
+   ============================================================ */
+document.getElementById("addNoteBtn").addEventListener("click", function(){
+  var input = document.getElementById("noteInput");
+  var texte = input.value.trim();
+  if(!texte) return;
+  appData.notes.push({ id: uid("note"), texte: texte, date: new Date().toLocaleString("fr-FR") });
+  input.value = "";
+  saveData();
+  renderNotes();
+});
+
+function renderNotes(){
+  var grid = document.getElementById("notesGrid");
+  if(!appData.notes.length){
+    grid.innerHTML = '<p style="color:var(--ink-faint);font-size:14px;grid-column:1/-1">Aucune note pour le moment.</p>';
+    return;
+  }
+  grid.innerHTML = appData.notes.slice().reverse().map(function(n){
+    return '<div class="note-card"><p>' + escapeHtml(n.texte) + '</p><div class="note-card__foot"><small>' + n.date + '</small>' +
+      '<button class="btn btn--danger btn--icon" data-remove-note="' + n.id + '" aria-label="Supprimer"><svg class="icon" viewBox="0 0 24 24" style="width:14px;height:14px"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div></div>';
+  }).join("");
+  grid.querySelectorAll("[data-remove-note]").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      appData.notes = appData.notes.filter(function(n){ return n.id !== btn.getAttribute("data-remove-note"); });
+      saveData();
+      renderNotes();
+    });
+  });
+}
+
+/* ============================================================
+   PROSPECTS
+   ============================================================ */
+var PROSPECT_STATUTS = [
+  { k:"todo",     l:"À contacter" },
+  { k:"contacte", l:"Contacté" },
+  { k:"rdv",      l:"Rendez-vous planifié" },
+  { k:"etude",    l:"Étude en cours" },
+  { k:"propo",    l:"Proposition envoyée" },
+  { k:"signe",    l:"Signé" },
+  { k:"perdu",    l:"Sans suite" }
+];
+function statutLabel(k){
+  for(var i=0;i<PROSPECT_STATUTS.length;i++){ if(PROSPECT_STATUTS[i].k === k) return PROSPECT_STATUTS[i].l; }
+  return k;
+}
+function formatDate(iso){
+  if(!iso) return "";
+  var p = String(iso).split("-");
+  return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : iso;
+}
+
+var prospectFilter = "tous";
+
+function renderProspects(){
+  var list = document.getElementById("prospectList");
+  var kpis = document.getElementById("prospectKpis");
+  var filters = document.getElementById("prospectFilters");
+  if(!list) return;
+
+  var all = appData.prospects;
+  var enCours = all.filter(function(p){ return ["contacte","rdv","etude","propo"].indexOf(p.statut) !== -1; }).length;
+  var signes = all.filter(function(p){ return p.statut === "signe"; }).length;
+  var taux = all.length ? Math.round((signes / all.length) * 100) : 0;
+
+  kpis.innerHTML =
+    kpiCard(0, all.length, "prospects au total") +
+    kpiCard(1, enCours, "échanges en cours") +
+    kpiCard(2, signes, "signés", taux) +
+    kpiCard(3, all.filter(function(p){ return p.statut === "todo"; }).length, "à contacter");
+  animateBars(kpis);
+
+  filters.innerHTML = ['<button data-f="tous">Tous</button>']
+    .concat(PROSPECT_STATUTS.map(function(s){
+      var n = all.filter(function(p){ return p.statut === s.k; }).length;
+      return '<button data-f="' + s.k + '">' + s.l + ' (' + n + ')</button>';
+    })).join("");
+  filters.querySelectorAll("button").forEach(function(b){
+    b.classList.toggle("is-active", b.getAttribute("data-f") === prospectFilter);
+    b.addEventListener("click", function(){ prospectFilter = b.getAttribute("data-f"); renderProspects(); });
+  });
+
+  var shown = prospectFilter === "tous" ? all : all.filter(function(p){ return p.statut === prospectFilter; });
+  if(!shown.length){
+    list.innerHTML = emptyState("Aucun prospect dans cette vue.",
+      '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>');
+    return;
+  }
+
+  list.innerHTML = shown.slice().reverse().map(function(p, i){
+    var meta = [];
+    if(p.ville)    meta.push(escapeHtml(p.ville));
+    if(p.contact)  meta.push(escapeHtml(p.contact));
+    if(p.tel)      meta.push(escapeHtml(p.tel));
+    if(p.relance)  meta.push("relance le <b>" + formatDate(p.relance) + "</b>");
+    return '<div class="rec admin-anim" style="--i:' + i + '">' +
+      '<div>' +
+        '<div class="rec__title">' + escapeHtml(p.nom) + '</div>' +
+        (meta.length ? '<div class="rec__meta">' + meta.join(" · ") + '</div>' : '') +
+      '</div>' +
+      '<div class="rec__side">' +
+        '<span class="badge badge--' + p.statut + '">' + statutLabel(p.statut) + '</span>' +
+        '<select data-prospect-statut="' + p.id + '">' +
+          PROSPECT_STATUTS.map(function(s){
+            return '<option value="' + s.k + '"' + (s.k === p.statut ? ' selected' : '') + '>' + s.l + '</option>';
+          }).join("") +
+        '</select>' +
+        '<button class="rec__del" data-prospect-del="' + p.id + '" aria-label="Supprimer">' +
+          '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>' +
+        '</button>' +
+      '</div>' +
+      (p.note ? '<div class="rec__note">' + escapeHtml(p.note) + '</div>' : '') +
+    '</div>';
+  }).join("");
+
+  list.querySelectorAll("[data-prospect-statut]").forEach(function(sel){
+    sel.addEventListener("change", function(){
+      var p = appData.prospects.find(function(x){ return x.id === sel.getAttribute("data-prospect-statut"); });
+      if(p){ p.statut = sel.value; saveData(); renderProspects(); }
+    });
+  });
+  list.querySelectorAll("[data-prospect-del]").forEach(function(b){
+    b.addEventListener("click", function(){
+      if(!confirm("Supprimer ce prospect ?")) return;
+      appData.prospects = appData.prospects.filter(function(x){ return x.id !== b.getAttribute("data-prospect-del"); });
+      saveData(); renderProspects();
+    });
+  });
+}
+
+(function initProspectForm(){
+  var form = document.getElementById("addProspectForm");
+  var openBtn = document.getElementById("addProspectBtn");
+  if(!form || !openBtn) return;
+  function close(){ form.classList.add("hidden"); }
+  openBtn.addEventListener("click", function(){
+    form.classList.toggle("hidden");
+    if(!form.classList.contains("hidden")) document.getElementById("pNom").focus();
+  });
+  document.getElementById("cancelProspect").addEventListener("click", close);
+  document.getElementById("confirmProspect").addEventListener("click", function(){
+    var nom = document.getElementById("pNom").value.trim();
+    if(!nom){ document.getElementById("pNom").focus(); return; }
+    appData.prospects.push({
+      id: uid("pros"), nom: nom,
+      ville:   document.getElementById("pVille").value.trim(),
+      contact: document.getElementById("pContact").value.trim(),
+      tel:     document.getElementById("pTel").value.trim(),
+      statut:  document.getElementById("pStatut").value,
+      relance: document.getElementById("pRelance").value,
+      note:    document.getElementById("pNote").value.trim()
+    });
+    ["pNom","pVille","pContact","pTel","pRelance","pNote"].forEach(function(id){ document.getElementById(id).value = ""; });
+    close(); saveData(); renderProspects();
+  });
+})();
+
+/* ============================================================
+   MACHINES
+   ============================================================ */
+var MACHINE_ETATS = {
+  service:   { l:"En service",          b:"signe" },
+  entretien: { l:"Entretien à prévoir", b:"etude" },
+  panne:     { l:"En panne",            b:"perdu" },
+  stock:     { l:"En stock",            b:"todo"  }
+};
+
+function renderMachines(){
+  var list = document.getElementById("machineList");
+  var kpis = document.getElementById("machineKpis");
+  if(!list) return;
+
+  var all = appData.machines;
+  function count(e){ return all.filter(function(m){ return m.etat === e; }).length; }
+  kpis.innerHTML =
+    kpiCard(0, all.length, "machines suivies") +
+    kpiCard(1, count("service"), "en service") +
+    kpiCard(2, count("entretien"), "entretien à prévoir") +
+    kpiCard(3, count("panne"), "en panne");
+  animateBars(kpis);
+
+  if(!all.length){
+    list.innerHTML = emptyState("Aucune machine enregistrée pour le moment.",
+      '<rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h4M8 10h4"/>');
+    return;
+  }
+
+  list.innerHTML = all.slice().reverse().map(function(m, i){
+    var etat = MACHINE_ETATS[m.etat] || MACHINE_ETATS.service;
+    var meta = [];
+    if(m.modele)    meta.push(escapeHtml(m.modele));
+    if(m.site)      meta.push(escapeHtml(m.site));
+    if(m.install)   meta.push("installée le <b>" + formatDate(m.install) + "</b>");
+    if(m.entretien) meta.push("dernier entretien <b>" + formatDate(m.entretien) + "</b>");
+    return '<div class="rec admin-anim" style="--i:' + i + '">' +
+      '<div>' +
+        '<div class="rec__title">' + escapeHtml(m.ref) + '</div>' +
+        (meta.length ? '<div class="rec__meta">' + meta.join(" · ") + '</div>' : '') +
+      '</div>' +
+      '<div class="rec__side">' +
+        '<span class="badge badge--' + etat.b + '">' + etat.l + '</span>' +
+        '<select data-machine-etat="' + m.id + '">' +
+          Object.keys(MACHINE_ETATS).map(function(k){
+            return '<option value="' + k + '"' + (k === m.etat ? ' selected' : '') + '>' + MACHINE_ETATS[k].l + '</option>';
+          }).join("") +
+        '</select>' +
+        '<button class="rec__del" data-machine-del="' + m.id + '" aria-label="Supprimer">' +
+          '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>' +
+        '</button>' +
+      '</div>' +
+      (m.note ? '<div class="rec__note">' + escapeHtml(m.note) + '</div>' : '') +
+    '</div>';
+  }).join("");
+
+  list.querySelectorAll("[data-machine-etat]").forEach(function(sel){
+    sel.addEventListener("change", function(){
+      var m = appData.machines.find(function(x){ return x.id === sel.getAttribute("data-machine-etat"); });
+      if(m){ m.etat = sel.value; saveData(); renderMachines(); }
+    });
+  });
+  list.querySelectorAll("[data-machine-del]").forEach(function(b){
+    b.addEventListener("click", function(){
+      if(!confirm("Supprimer cette machine ?")) return;
+      appData.machines = appData.machines.filter(function(x){ return x.id !== b.getAttribute("data-machine-del"); });
+      saveData(); renderMachines();
+    });
+  });
+}
+
+(function initMachineForm(){
+  var form = document.getElementById("addMachineForm");
+  var openBtn = document.getElementById("addMachineBtn");
+  if(!form || !openBtn) return;
+  function close(){ form.classList.add("hidden"); }
+  openBtn.addEventListener("click", function(){
+    form.classList.toggle("hidden");
+    if(!form.classList.contains("hidden")) document.getElementById("mRef").focus();
+  });
+  document.getElementById("cancelMachine").addEventListener("click", close);
+  document.getElementById("confirmMachine").addEventListener("click", function(){
+    var ref = document.getElementById("mRef").value.trim();
+    if(!ref){ document.getElementById("mRef").focus(); return; }
+    appData.machines.push({
+      id: uid("mach"), ref: ref,
+      modele:    document.getElementById("mModele").value.trim(),
+      site:      document.getElementById("mSite").value.trim(),
+      etat:      document.getElementById("mEtat").value,
+      install:   document.getElementById("mInstall").value,
+      entretien: document.getElementById("mEntretien").value,
+      note:      document.getElementById("mNote").value.trim()
+    });
+    ["mRef","mModele","mSite","mInstall","mEntretien","mNote"].forEach(function(id){ document.getElementById(id).value = ""; });
+    close(); saveData(); renderMachines();
+  });
+})();
+
+/* ============================================================
+   DOCUMENTS — suivi de l'état des modèles, sans héberger les fichiers
+   ============================================================ */
+var DOC_MODELES = [
+  { id:"conv",     nom:"Convention de mise à disposition", desc:"Machine exploitée par CLTDistrib chez l'établissement." },
+  { id:"location", nom:"Contrat de location",              desc:"Machine louée à l'établissement, mensualisée." },
+  { id:"vente",    nom:"Contrat de vente",                 desc:"L'établissement devient propriétaire de la machine." },
+  { id:"maint",    nom:"Contrat de maintenance",           desc:"Entretien et dépannage, seuls ou en complément." },
+  { id:"cgv",      nom:"Conditions générales",             desc:"Socle commun applicable aux contrats." },
+  { id:"devis",    nom:"Devis type",                       desc:"Trame de chiffrage à personnaliser par projet." },
+  { id:"presenta", nom:"Plaquette de présentation",        desc:"Document commercial neutre envoyé au prospect." },
+  { id:"facture",  nom:"Modèle de facture",                desc:"Trame de facturation et mentions obligatoires." }
+];
+var DOC_ETATS = {
+  todo:   { l:"À rédiger", b:"todo"  },
+  brouil: { l:"Brouillon", b:"etude" },
+  pret:   { l:"Prêt",      b:"signe" }
+};
+
+function docState(id){
+  var found = appData.documents.find(function(d){ return d.id === id; });
+  if(!found){ found = { id:id, etat:"todo", ou:"" }; appData.documents.push(found); }
+  return found;
+}
+
+function renderDocuments(){
+  var list = document.getElementById("docList");
+  var kpis = document.getElementById("docKpis");
+  if(!list) return;
+
+  var etats = DOC_MODELES.map(function(m){ return docState(m.id).etat; });
+  function count(e){ return etats.filter(function(x){ return x === e; }).length; }
+  var prets = count("pret");
+  kpis.innerHTML =
+    kpiCard(0, DOC_MODELES.length, "modèles à tenir") +
+    kpiCard(1, prets, "prêts", Math.round((prets / DOC_MODELES.length) * 100)) +
+    kpiCard(2, count("brouil"), "en brouillon") +
+    kpiCard(3, count("todo"), "à rédiger");
+  animateBars(kpis);
+
+  list.innerHTML = DOC_MODELES.map(function(m, i){
+    var st = docState(m.id);
+    var etat = DOC_ETATS[st.etat] || DOC_ETATS.todo;
+    return '<div class="rec admin-anim" style="--i:' + i + '">' +
+      '<div>' +
+        '<div class="rec__title">' + m.nom + '</div>' +
+        '<div class="rec__meta">' + m.desc + '</div>' +
+        '<div class="rec__meta" style="margin-top:8px">' +
+          '<input type="text" data-doc-ou="' + m.id + '" value="' + escapeHtml(st.ou) + '" ' +
+            'placeholder="Où est rangé le fichier ? (dossier, Drive…)" ' +
+            'style="width:100%;max-width:420px;padding:8px 11px;border:1px solid var(--line);border-radius:var(--radius-s);background:var(--surface-alt);font-size:13.5px">' +
+        '</div>' +
+      '</div>' +
+      '<div class="rec__side">' +
+        '<span class="badge badge--' + etat.b + '">' + etat.l + '</span>' +
+        '<select data-doc-etat="' + m.id + '">' +
+          Object.keys(DOC_ETATS).map(function(k){
+            return '<option value="' + k + '"' + (k === st.etat ? ' selected' : '') + '>' + DOC_ETATS[k].l + '</option>';
+          }).join("") +
+        '</select>' +
+      '</div>' +
+    '</div>';
+  }).join("");
+
+  list.querySelectorAll("[data-doc-etat]").forEach(function(sel){
+    sel.addEventListener("change", function(){
+      docState(sel.getAttribute("data-doc-etat")).etat = sel.value;
+      saveData(); renderDocuments();
+    });
+  });
+  list.querySelectorAll("[data-doc-ou]").forEach(function(inp){
+    inp.addEventListener("change", function(){
+      docState(inp.getAttribute("data-doc-ou")).ou = inp.value.trim();
+      saveData();
+    });
+  });
+}
+
+/* ============================================================
+   PETITS OUTILS D'AFFICHAGE
+   ============================================================ */
+function kpiCard(i, valeur, libelle, pourcent){
+  return '<div class="kpi admin-anim" style="--i:' + i + '">' +
+    '<div class="kpi__n">' + valeur + '</div>' +
+    '<span class="kpi__l">' + libelle + '</span>' +
+    (typeof pourcent === "number"
+      ? '<div class="kpi__bar"><span data-pct="' + Math.max(0, Math.min(100, pourcent)) + '"></span></div>'
+      : '') +
+  '</div>';
+}
+/* La barre part de 0 puis se remplit : sans ce délai, la largeur finale
+   serait posée avant le premier rendu et la transition ne jouerait pas. */
+function animateBars(root){
+  requestAnimationFrame(function(){
+    root.querySelectorAll(".kpi__bar span").forEach(function(b){
+      b.style.width = b.getAttribute("data-pct") + "%";
+    });
+  });
+}
+function emptyState(texte, pathSvg){
+  return '<div class="rec-empty">' +
+    '<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">' + pathSvg + '</svg>' +
+    '<div>' + texte + '</div>' +
+  '</div>';
+}
+
+/* ============================================================
+   MASTER RENDER
+   ============================================================ */
+function renderAll(){
+  renderMap();
+  renderDistribPanel();
+  renderStocks();
+  renderRevenue();
+  renderNotes();
+  renderProspects();
+  renderMachines();
+  renderDocuments();
+  renderBackupNotice();
+}
+
+/* Page dédiée : on demande le code d'entrée dès l'ouverture, sauf si cet
+   appareil a déjà été déverrouillé. Le raccourci flottant n'a plus lieu d'être
+   ici : on est déjà dans l'espace pro. */
+if(isProUnlocked()){ enterAdmin(); } else { openGate(); }
+
 })();
 </script>
 </body>
