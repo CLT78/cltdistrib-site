@@ -1,0 +1,140 @@
+/* ============================================================
+   Feuille commune aux documents CLTDistrib
+   Pensée pour deux usages : rempli à l'écran puis « Enregistrer au
+   format PDF », ou imprimé vierge et rempli à la main. Les champs
+   sont de vrais <input> : ils s'impriment avec leur contenu.
+   ============================================================ */
+:root{
+  --blue:#0060FC;
+  --navy:#050B1A;
+  --ink:#111823;
+  --ink-soft:#4A5769;
+  --ink-faint:#6B7789;
+  --line:#C9D3E2;
+  --line-soft:#E3E9F3;
+  --sunk:#F4F7FC;
+  --fd:'Inter Tight','Inter',Arial,sans-serif;
+  --fb:'Inter',Arial,sans-serif;
+  --fm:'IBM Plex Mono','Courier New',monospace;
+}
+*,*::before,*::after{ box-sizing:border-box; }
+html{ background:#8A93A3; }
+body{
+  margin:0; font-family:var(--fb); font-size:11pt; line-height:1.5; color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* La page à l'écran imite une feuille A4 */
+.sheet{
+  width:210mm; min-height:297mm; margin:14mm auto; padding:16mm 18mm 20mm;
+  background:#fff; box-shadow:0 6px 30px rgba(0,0,0,.28);
+}
+
+/* ---- En-tête ---- */
+.doc-head{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:16mm;
+  border-bottom:2px solid var(--navy); padding-bottom:5mm; margin-bottom:7mm;
+}
+.doc-head img{ height:20mm; width:auto; display:block; }
+.doc-head .who{ font-size:8.5pt; line-height:1.55; color:var(--ink-soft); text-align:right; }
+.doc-head .who b{ display:block; font-family:var(--fd); font-size:10pt; color:var(--ink); }
+
+.doc-kind{ font-family:var(--fm); font-size:8pt; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--blue); margin:0 0 2mm; }
+h1{ font-family:var(--fd); font-weight:700; font-size:19pt; letter-spacing:-0.02em;
+  margin:0 0 2mm; line-height:1.2; }
+.doc-sub{ margin:0 0 7mm; color:var(--ink-soft); font-size:10pt; }
+
+/* ---- Sections ---- */
+h2{
+  font-family:var(--fd); font-weight:600; font-size:11pt; letter-spacing:.02em;
+  margin:7mm 0 3mm; padding-bottom:1.5mm; border-bottom:1px solid var(--line);
+}
+h2 .n{ font-family:var(--fm); font-size:8.5pt; color:var(--blue); margin-right:2mm; }
+h3{ font-family:var(--fd); font-weight:600; font-size:10pt; margin:5mm 0 2mm; }
+p{ margin:0 0 2.5mm; }
+p.small{ font-size:9.5pt; color:var(--ink-soft); }
+ul{ margin:0 0 3mm; padding-left:5mm; }
+li{ margin-bottom:1.5mm; }
+
+/* ---- Champs à remplir ---- */
+.row{ display:flex; gap:5mm; margin-bottom:3mm; flex-wrap:wrap; }
+.f{ flex:1 1 60mm; min-width:0; }
+.f label{
+  display:block; font-family:var(--fd); font-size:7.5pt; font-weight:600;
+  letter-spacing:.09em; text-transform:uppercase; color:var(--ink-faint); margin-bottom:1mm;
+}
+.f input, .f textarea, .f select{
+  width:100%; font-family:var(--fb); font-size:10.5pt; color:var(--ink);
+  border:none; border-bottom:1px solid var(--line); background:var(--sunk);
+  padding:2mm 2mm 1.5mm; border-radius:1mm 1mm 0 0;
+}
+.f textarea{ resize:vertical; min-height:16mm; line-height:1.5; }
+.f input:focus, .f textarea:focus, .f select:focus{
+  outline:none; border-bottom-color:var(--blue); background:#EDF3FF;
+}
+.f--court{ flex:0 0 38mm; }
+.f--mi{ flex:1 1 40%; }
+
+/* Case à cocher : un carré qui reste visible à l'impression */
+.check{ display:flex; align-items:flex-start; gap:2.5mm; margin-bottom:2mm; font-size:10pt; }
+.check input{ appearance:none; -webkit-appearance:none; flex:0 0 auto;
+  width:4mm; height:4mm; margin-top:.8mm; border:1px solid var(--ink-soft);
+  border-radius:.8mm; background:#fff; position:relative; }
+.check input:checked::after{
+  content:'✕'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-size:3.4mm; line-height:1; color:var(--ink); }
+
+/* ---- Tableau ---- */
+table{ width:100%; border-collapse:collapse; margin:0 0 3mm; font-size:10pt; }
+th, td{ border:1px solid var(--line); padding:2mm 2.5mm; text-align:left; vertical-align:top; }
+th{ background:var(--sunk); font-family:var(--fd); font-size:8pt; font-weight:600;
+  letter-spacing:.07em; text-transform:uppercase; color:var(--ink-soft); }
+td input{ width:100%; border:none; background:none; font-family:var(--fb); font-size:10pt; padding:0; }
+td input:focus{ outline:none; background:#EDF3FF; }
+
+/* ---- Encadré ---- */
+.box{ border:1px solid var(--line); border-left:2.5pt solid var(--blue);
+  background:var(--sunk); padding:3.5mm 4mm; margin:0 0 4mm; font-size:10pt; }
+.box b{ font-family:var(--fd); }
+
+/* ---- Signatures ---- */
+.sign{ display:flex; gap:8mm; margin-top:8mm; page-break-inside:avoid; }
+.sign > div{ flex:1; }
+.sign .lbl{ font-family:var(--fd); font-size:8.5pt; font-weight:600; margin-bottom:1.5mm; }
+.sign .hint{ font-size:8pt; color:var(--ink-faint); margin-bottom:1.5mm; }
+.sign .zone{ height:26mm; border:1px solid var(--line); border-radius:1mm; background:var(--sunk); }
+
+/* ---- Pied de page ---- */
+.doc-foot{ margin-top:8mm; padding-top:3mm; border-top:1px solid var(--line-soft);
+  font-size:8pt; color:var(--ink-faint); display:flex; justify-content:space-between; gap:6mm; }
+
+/* ---- Barre d'actions : écran seulement ---- */
+.bar{
+  position:sticky; top:0; z-index:10; background:var(--navy); color:#fff;
+  padding:3mm 5mm; display:flex; align-items:center; gap:4mm; flex-wrap:wrap;
+  font-family:var(--fd); font-size:10pt;
+}
+.bar a{ color:#BBD4FF; text-decoration:none; font-size:9.5pt; }
+.bar a:hover{ color:#fff; }
+.bar .grow{ flex:1; }
+.bar button{
+  font-family:var(--fd); font-size:9.5pt; font-weight:600; border:none; cursor:pointer;
+  background:var(--blue); color:#fff; padding:2mm 4mm; border-radius:1.5mm;
+}
+.bar button.ghost{ background:none; border:1px solid rgba(255,255,255,.35); color:#fff; }
+.bar button:hover{ opacity:.88; }
+
+/* ---- Impression ---- */
+@page{ size:A4; margin:14mm 15mm; }
+@media print{
+  html{ background:#fff; }
+  .bar, .noprint{ display:none !important; }
+  .sheet{ width:auto; min-height:0; margin:0; padding:0; box-shadow:none; }
+  .f input, .f textarea, .f select{ background:none; border-bottom:1px solid #9AA6B8; }
+  td input{ background:none; }
+  .box{ background:none; }
+  .sign .zone{ background:none; }
+  h2{ page-break-after:avoid; }
+  .sign, table, .box{ page-break-inside:avoid; }
+}

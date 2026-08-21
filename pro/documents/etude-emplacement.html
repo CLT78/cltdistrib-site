@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Étude d'emplacement — CLTDistrib</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<link rel="icon" type="image/png" sizes="96x96" href="../../images/favicon-96.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="documents.css">
+</head>
+<body>
+
+<div class="bar">
+  <a href="index.html">&larr; Documents</a>
+  <span class="grow"></span>
+  <button class="ghost" onclick="viderChamps()">Vider les champs</button>
+  <button onclick="window.print()">Imprimer / PDF</button>
+</div>
+
+<div class="sheet">
+
+  <div class="doc-head">
+    <img src="../../images/logo-fonce-compact.png" alt="CLTDistrib">
+    <div class="who">
+      <b>CLTDistrib</b>
+      Clément Pires-Valente<br>
+      07 68 66 17 19<br>
+      clementpiresvalente@gmail.com<br>
+      Yvelines et alentours
+    </div>
+  </div>
+
+  <p class="doc-kind">Fiche d'étude</p>
+  <h1>Étude d'emplacement</h1>
+  <p class="doc-sub">À remplir avant toute installation. Elle nous permet de dire si votre site convient, et de choisir la machine et l'assortiment adaptés. Elle n'engage à rien.</p>
+
+  <h2><span class="n">01</span>Votre établissement</h2>
+  <div class="row">
+    <div class="f"><label>Raison sociale</label><input></div>
+    <div class="f"><label>Activité</label><input placeholder="bureaux, atelier, salle de sport…"></div>
+  </div>
+  <div class="row">
+    <div class="f"><label>Adresse</label><input></div>
+    <div class="f f--court"><label>Code postal</label><input></div>
+    <div class="f f--court"><label>Ville</label><input></div>
+  </div>
+  <div class="row">
+    <div class="f"><label>Interlocuteur</label><input></div>
+    <div class="f f--court"><label>Fonction</label><input></div>
+    <div class="f"><label>Téléphone</label><input></div>
+    <div class="f"><label>E-mail</label><input></div>
+  </div>
+
+  <h2><span class="n">02</span>Fréquentation</h2>
+  <div class="row">
+    <div class="f f--court"><label>Salariés sur site</label><input></div>
+    <div class="f f--court"><label>Visiteurs / jour</label><input></div>
+    <div class="f"><label>Horaires d'ouverture</label><input placeholder="8 h – 18 h, du lundi au vendredi"></div>
+  </div>
+  <div class="row">
+    <div class="f"><label>Pics de fréquentation</label><input placeholder="pauses, sorties de poste, week-end…"></div>
+  </div>
+  <div class="check"><input type="checkbox"><span>Le site est ouvert le week-end</span></div>
+  <div class="check"><input type="checkbox"><span>Le site fonctionne en horaires décalés ou de nuit</span></div>
+  <div class="check"><input type="checkbox"><span>Le site ferme plusieurs semaines dans l'année <span class="small">(congés, saisonnalité)</span></span></div>
+
+  <h2><span class="n">03</span>L'emplacement envisagé</h2>
+  <div class="row">
+    <div class="f"><label>Où</label><input placeholder="salle de pause, hall d'accueil, couloir…"></div>
+    <div class="f f--court"><label>Étage</label><input></div>
+  </div>
+  <p class="small">Un distributeur standard occupe environ <b>90 cm de large, 85 cm de profondeur portes ouvertes, 185 cm de haut</b>. Il lui faut un sol plan et un dégagement suffisant devant.</p>
+  <table>
+    <tr><th style="width:45%">Point à vérifier</th><th style="width:20%">Oui</th><th>Précision</th></tr>
+    <tr><td>Largeur disponible ≥ 100 cm</td><td><input></td><td><input></td></tr>
+    <tr><td>Hauteur sous plafond ≥ 200 cm</td><td><input></td><td><input></td></tr>
+    <tr><td>Sol plan et stable</td><td><input></td><td><input></td></tr>
+    <tr><td>Prise 230 V à moins de 2 m</td><td><input></td><td><input></td></tr>
+    <tr><td>Emplacement à l'abri des intempéries</td><td><input></td><td><input></td></tr>
+    <tr><td>Passage suffisant pour la livraison</td><td><input></td><td><input></td></tr>
+  </table>
+  <div class="row">
+    <div class="f"><label>Contraintes d'accès pour la livraison</label><input placeholder="escaliers, ascenseur, portes étroites, quai…"></div>
+  </div>
+
+  <h2><span class="n">04</span>Existant</h2>
+  <div class="check"><input type="checkbox"><span>Aucun distributeur sur le site actuellement</span></div>
+  <div class="check"><input type="checkbox"><span>Un distributeur est déjà en place — exploité par&nbsp;: <input style="border:none;border-bottom:1px solid var(--line);background:var(--sunk);width:60mm;font-size:10pt;padding:1mm"></span></span></div>
+  <div class="row">
+    <div class="f"><label>Si oui, échéance du contrat en cours</label><input></div>
+    <div class="f"><label>Ce qui vous convient ou non aujourd'hui</label><input></div>
+  </div>
+
+  <h2><span class="n">05</span>Attentes</h2>
+  <div class="row">
+    <div class="f"><label>Types de produits souhaités</label><input placeholder="boissons fraîches, chaudes, snacks salés, sucrés…"></div>
+  </div>
+  <div class="row">
+    <div class="f"><label>Demandes particulières</label><textarea placeholder="produits sans gluten, bio, régime alimentaire, gamme locale…"></textarea></div>
+  </div>
+  <div class="check"><input type="checkbox"><span>Paiement par carte bancaire et sans contact souhaité</span></div>
+  <div class="check"><input type="checkbox"><span>Un affichage à nos couleurs est envisageable sur la machine</span></div>
+
+  <h2><span class="n">06</span>Réservé à CLTDistrib</h2>
+  <div class="box">
+    <b>Cette partie est remplie lors de la visite.</b> Elle ne concerne pas l'établissement.
+  </div>
+  <div class="row">
+    <div class="f f--court"><label>Date de visite</label><input></div>
+    <div class="f"><label>Relevé de mesures</label><input placeholder="L × P × H disponibles"></div>
+    <div class="f"><label>Photo prise</label><input placeholder="réf."></div>
+  </div>
+  <div class="row">
+    <div class="f"><label>Machine envisagée</label><input></div>
+    <div class="f"><label>Assortiment envisagé</label><input></div>
+  </div>
+  <div class="row">
+    <div class="f"><label>Observations</label><textarea></textarea></div>
+  </div>
+  <div class="row">
+    <div class="f f--court"><label>Suite donnée</label><input placeholder="favorable / à revoir"></div>
+    <div class="f"><label>Motif si défavorable</label><input></div>
+  </div>
+
+  <div class="sign">
+    <div>
+      <p class="lbl">L'établissement</p>
+      <p class="hint">Nom, qualité, date</p>
+      <div class="zone"></div>
+    </div>
+    <div>
+      <p class="lbl">CLTDistrib</p>
+      <p class="hint">Nom, date</p>
+      <div class="zone"></div>
+    </div>
+  </div>
+
+  <div class="doc-foot">
+    <span>CLTDistrib — Distribution automatique de boissons &amp; snacks</span>
+    <span>Étude d'emplacement</span>
+  </div>
+
+</div>
+
+<script>
+function viderChamps(){
+  if(!confirm("Vider tous les champs de ce document ?")) return;
+  document.querySelectorAll('.sheet input[type=checkbox]').forEach(function(c){ c.checked = false; });
+  document.querySelectorAll('.sheet input:not([type=checkbox]), .sheet textarea').forEach(function(f){
+    if(!f.defaultValue) f.value = "";
+  });
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Documents — CLTDistrib</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<link rel="icon" type="image/png" sizes="96x96" href="../../images/favicon-96.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#0060FC; --navy:#050B1A;
+  --page:#F4F6FA; --card:#FFFFFF;
+  --ink:#080D18; --ink-soft:#46536A; --ink-faint:#5E6A7F;
+  --line:#DDE4EF; --line-soft:#ECF0F8;
+  --warn:#8A5410; --warn-bg:#FDF2E3; --warn-line:#EEC98F;
+  --accent:#1364CC;
+  --fd:'Inter Tight','Inter',system-ui,sans-serif;
+  --fb:'Inter',system-ui,sans-serif;
+  --fm:'IBM Plex Mono',ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){
+  /* Page de site, pas artefact : aucun bouton ne pose data-theme ici.
+     On suit donc le seul réglage qui existe, celui du système. */
+  :root{
+    --page:#080F1D; --card:#0E1729;
+    --ink:#EAF0FA; --ink-soft:#9FAEC6; --ink-faint:#7B89A2;
+    --line:#1E2B43; --line-soft:#172236;
+    --warn:#F0B968; --warn-bg:#2A1E0C; --warn-line:#5A4318;
+    --accent:#6FB4FF;
+  }
+}
+*,*::before,*::after{ box-sizing:border-box; }
+body{ margin:0; background:var(--page); color:var(--ink);
+  font-family:var(--fb); font-size:15.5px; line-height:1.6; -webkit-font-smoothing:antialiased; }
+.wrap{ max-width:780px; margin:0 auto; padding:clamp(26px,5vw,52px) clamp(18px,4vw,30px) 80px; }
+.top{ display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  border-bottom:2px solid var(--ink); padding-bottom:16px; margin-bottom:18px; }
+h1{ font-family:var(--fd); font-weight:700; font-size:clamp(23px,4.4vw,31px);
+  letter-spacing:-0.028em; margin:0; }
+.top a{ font-family:var(--fm); font-size:12px; color:var(--accent); text-decoration:none; }
+.top a:hover{ text-decoration:underline; }
+.intro{ color:var(--ink-soft); max-width:60ch; margin:0 0 26px; }
+
+.docs{ display:grid; gap:1px; background:var(--line); border:1px solid var(--line);
+  border-radius:12px; overflow:hidden; }
+.doc{ background:var(--card); padding:20px 22px; display:flex; gap:18px; align-items:flex-start;
+  text-decoration:none; color:inherit; transition:background-color .2s ease; }
+.doc:hover{ background:var(--page); }
+.doc .num{ font-family:var(--fm); font-size:12px; color:var(--accent); flex:0 0 auto; padding-top:3px; }
+.doc .body{ flex:1; min-width:0; }
+.doc h2{ font-family:var(--fd); font-weight:600; font-size:17px; letter-spacing:-0.015em; margin:0 0 4px; }
+.doc p{ margin:0; font-size:14px; color:var(--ink-soft); }
+.doc .when{ display:block; margin-top:7px; font-family:var(--fm); font-size:11px;
+  letter-spacing:.05em; text-transform:uppercase; color:var(--ink-faint); }
+
+.how{ margin-top:34px; border:1px solid var(--line); border-radius:12px; background:var(--card); overflow:hidden; }
+.how h2{ font-family:var(--fd); font-size:12px; letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-faint); margin:0; padding:14px 20px; border-bottom:1px solid var(--line-soft); }
+.how ol{ margin:0; padding:14px 20px 18px 40px; }
+.how li{ margin-bottom:9px; color:var(--ink-soft); font-size:14.5px; }
+.how li b{ color:var(--ink); font-weight:600; }
+.how code{ font-family:var(--fm); font-size:13px; background:var(--page); padding:2px 6px;
+  border-radius:5px; color:var(--ink); }
+
+.warn{ margin-top:30px; background:var(--warn-bg); border:1px solid var(--warn-line);
+  border-radius:12px; padding:18px 20px; }
+.warn strong{ display:block; font-family:var(--fd); font-size:15.5px; color:var(--warn); margin-bottom:6px; }
+.warn p{ margin:0 0 9px; font-size:14.5px; color:var(--ink-soft); }
+.warn p:last-child{ margin-bottom:0; }
+.warn b{ color:var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <h1>Documents</h1>
+    <a href="../">&larr; Espace pro</a>
+  </div>
+  <p class="intro">Trois documents à en-tête, prêts à imprimer ou à envoyer. Vos coordonnées sont déjà dedans ; tout le reste se remplit, à l'écran ou à la main.</p>
+
+  <div class="docs">
+
+    <a class="doc" href="etude-emplacement.html">
+      <span class="num">01</span>
+      <span class="body">
+        <h2>Étude d'emplacement</h2>
+        <p>Ce que vous faites remplir au premier contact : fréquentation, place disponible, prise électrique, existant. Une page de vérifications évite un déplacement pour rien.</p>
+        <span class="when">Avant tout engagement</span>
+      </span>
+    </a>
+
+    <a class="doc" href="contrat.html">
+      <span class="num">02</span>
+      <span class="body">
+        <h2>Contrat d'exploitation</h2>
+        <p>Mise à disposition et exploitation du distributeur. Durée, conditions financières, obligations de chacun, assurance, résiliation. Trois modèles financiers au choix, à cocher.</p>
+        <span class="when">À la signature</span>
+      </span>
+    </a>
+
+    <a class="doc" href="installation.html">
+      <span class="num">03</span>
+      <span class="body">
+        <h2>Procès-verbal d'installation</h2>
+        <p>Signé le jour de la pose. Matériel installé, essais réalisés, chargement initial, consignes remises, réserves éventuelles. C'est lui qui fait foi en cas de contestation.</p>
+        <span class="when">Le jour de la pose</span>
+      </span>
+    </a>
+
+  </div>
+
+  <div class="how">
+    <h2>Comment s'en servir</h2>
+    <ol>
+      <li><b>À l'écran.</b> Ouvrez le document, remplissez les champs, puis <code>Ctrl + P</code> et choisissez « Enregistrer au format PDF ». Vous obtenez un fichier propre à envoyer.</li>
+      <li><b>Sur papier.</b> Imprimez-le vierge : les champs deviennent des lignes à remplir au stylo.</li>
+      <li><b>Par le client.</b> Envoyez-lui le fichier <code>.html</code> en pièce jointe, ou le PDF. Il ouvre, remplit, et vous renvoie son PDF signé.</li>
+      <li><b>Rien n'est enregistré.</b> Ce que vous tapez reste à l'écran. Fermez l'onglet et c'est perdu — pensez à générer le PDF avant.</li>
+    </ol>
+  </div>
+
+  <div class="warn">
+    <strong>Deux choses à régler avant de vous en servir pour de vrai</strong>
+    <p><b>Votre identité juridique manque.</b> Le contrat comporte des champs « Forme juridique », « SIRET » et « Siège » laissés vides : ils attendent la création de votre entreprise. Un contrat signé sans ces mentions vous expose — c'est ce qui identifie la partie qui s'engage.</p>
+    <p><b>Faites relire le contrat.</b> Je l'ai rédigé sur le modèle courant de la mise à disposition en distribution automatique, mais je ne suis pas juriste et ce texte va vous engager. Une relecture par un avocat ou un juriste de votre chambre de commerce coûte peu au regard de ce qu'un contrat mal ficelé peut coûter. Votre CCI propose souvent ce service gratuitement aux créateurs.</p>
+  </div>
+
+</div>
+</body>
+</html>
