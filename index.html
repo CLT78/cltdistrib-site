@@ -1353,9 +1353,6 @@ html{
 @keyframes fade-in{ to{ opacity:1; } }
 
 /* ============================================================
-   21. APERÇU MOBILE / ESPACE PRO / ADMIN (inchangé)
-   ============================================================ */
-/* ============================================================
    APERÇU MOBILE (depuis un écran PC)
    ============================================================ */
 .device-preview{
@@ -3117,32 +3114,6 @@ if(chatMessagesEl && chatInput && chatSendBtn){
 }
 
 
-/* ============================================================
-   ACCÈS À L'ESPACE PRO
-   ============================================================ */
-/* L'espace pro vit dans un fichier séparé (pro/index.html). Cette page
-   n'en charge plus une seule ligne : ni son interface, ni ses styles, ni
-   ses données. C'est aussi ce découpage par URL qui permet de poser un
-   vrai contrôle d'accès côté serveur devant /pro. */
-(function initProAccess(){
-  var PRO_URL = "pro/";
-  if(location.hash === "#pro-clt78"){ location.replace(PRO_URL); return; }
-  var brand = document.querySelector(".nav .brand");
-  if(!brand) return;
-  var clics = 0, minuteur = null;
-  brand.addEventListener("click", function(e){
-    clics++;
-    if(clics >= 3){
-      e.preventDefault();
-      clics = 0;
-      clearTimeout(minuteur);
-      location.href = PRO_URL;
-      return;
-    }
-    clearTimeout(minuteur);
-    minuteur = setTimeout(function(){ clics = 0; }, 1500);
-  });
-})();
 })();
 </script>
 </body>

@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
 
+# Espace de gestion : non destiné aux visiteurs, non indexé.
+Disallow: /pro/
+
 Sitemap: https://clt78.github.io/cltdistrib-site/sitemap.xml
