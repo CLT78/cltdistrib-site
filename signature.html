@@ -76,6 +76,16 @@
   ol strong{ color:var(--ink); }
   .note{ font-size:13px; color:var(--ink-faint); margin-top:12px; line-height:1.55; }
   a{ color:var(--brand); }
+
+  .avatar-row{ display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:6px; }
+  .avatar-row__big{ width:128px; height:128px; border-radius:50%; display:block; flex-shrink:0; }
+  .avatar-row__sizes{ display:flex; align-items:flex-end; gap:14px; }
+  .avatar-row__sizes span{ display:flex; flex-direction:column; align-items:center; gap:5px; }
+  .avatar-row__sizes img{ border-radius:50%; display:block; }
+  .avatar-row__sizes small{ font-size:11px; color:var(--ink-faint); font-family:ui-monospace,monospace; }
+  .avatar-row__txt{ flex:1 1 240px; }
+  .avatar-row__txt p{ margin:0 0 12px; font-size:13.5px; color:var(--ink-soft); }
+  .avatar-row__txt .btn{ flex:0 0 auto; text-decoration:none; }
 </style>
 </head>
 <body>
@@ -120,6 +130,27 @@
       <summary>Voir le code HTML</summary>
       <textarea id="code" readonly onclick="this.select()"></textarea>
     </details>
+  </div>
+
+  <div class="card">
+    <h2>Photo de profil Gmail</h2>
+    <p>Google affiche votre photo <strong>en rond</strong>, et à 32 pixels dans la liste des messages. Le logo complet y devient illisible : cette pastille reprend donc le lettrage seul.</p>
+    <div class="avatar-row">
+      <img class="avatar-row__big" src="images/avatar-gmail.png" alt="Photo de profil CLTDistrib">
+      <div class="avatar-row__sizes">
+        <span><img src="images/avatar-gmail.png" alt="" width="48" height="48"><small>48 px</small></span>
+        <span><img src="images/avatar-gmail.png" alt="" width="32" height="32"><small>32 px</small></span>
+      </div>
+      <div class="avatar-row__txt">
+        <p>1024 × 1024 px — bien au-delà du minimum de 250 px demandé par Google, pour rester net sur les écrans haute définition.</p>
+        <a class="btn btn--main" href="images/avatar-gmail.png" download="cltdistrib-avatar.png">Télécharger l'image</a>
+      </div>
+    </div>
+    <ol>
+      <li><strong>Sur téléphone</strong> — appuyez longuement sur la grande image ci-dessus, puis « Enregistrer l'image ». Ouvrez l'application Gmail → votre initiale en haut à droite → « Gérer votre compte Google » → Informations personnelles → Photo.</li>
+      <li><strong>Sur ordinateur</strong> — bouton « Télécharger l'image », puis <a href="https://myaccount.google.com/personal-info" target="_blank" rel="noopener">myaccount.google.com/personal-info</a> → Photo → choisir le fichier.</li>
+    </ol>
+    <p class="note">Le changement met parfois quelques heures à se propager chez vos destinataires : Google met la photo en cache de son côté.</p>
   </div>
 
   <div class="card">
