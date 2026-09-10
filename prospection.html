@@ -314,11 +314,21 @@
     </div>
 
     <div class="card">
+      <h2>Tout automatiser</h2>
+      <p>Envoi, relance au bout de sept jours et détection des réponses, sans vous. Le code tourne chez Google sous votre compte : gratuit, sans serveur.</p>
+      <div class="actions">
+        <a class="btn btn--main btn--wide" href="automatisation.html">Voir la marche à suivre</a>
+      </div>
+      <p class="note" style="margin-top:11px">Un quart d'heure d'installation, une seule fois, depuis un ordinateur.</p>
+    </div>
+
+    <div class="card">
       <h2>Sauvegarde</h2>
       <p>Vos prospects et vos coordonnées vivent dans ce navigateur. Exportez de temps en temps, et pour passer du téléphone à l'ordinateur.</p>
       <div class="actions">
         <button class="btn btn--dark" id="exporter" type="button">Exporter mes données</button>
         <button class="btn btn--ghost" id="importer" type="button">Importer un fichier</button>
+        <button class="btn btn--ghost" id="exporterTableur" type="button">Exporter pour Google Sheets</button>
         <input type="file" id="fichier" accept="application/json" hidden>
       </div>
       <p class="note" style="margin-top:12px">Le fichier exporté contient vos prospects : gardez-le sur votre appareil ou dans un espace privé. Ne le déposez jamais dans le dépôt du site, qui est public.</p>
@@ -951,6 +961,26 @@ function exporter(){
   flash("Fichier exporté.");
 }
 
+/* Colonnes attendues par le script Apps Script, dans cet ordre exact. */
+var LIBELLE_TABLEUR = {
+  a_envoyer:"À envoyer", envoye:"Envoyé", relance:"Relancé", reponse:"Réponse reçue",
+  rdv:"Rendez-vous", gagne:"Emplacement signé", refus:"Sans suite"
+};
+
+function exporterTableur(){
+  function c(v){ return String(v == null ? "" : v).replace(/[\t\r\n]+/g, " ").trim(); }
+  var lignes = D.prospects.map(function(p){
+    return [
+      c(p.entreprise), c(p.type), c(p.ville), c(p.contactNom), c(p.email),
+      LIBELLE_TABLEUR[p.statut] || "À envoyer",
+      c(p.dateEnvoi), c(p.dateRelance), c(p.dateReponse), c(p.note)
+    ].join("\t");
+  });
+  if(!lignes.length){ flash("Aucune entreprise à exporter."); return; }
+  copierTexte(lignes.join("\n"),
+    lignes.length + " ligne(s) copiée(s). Collez sous la ligne de titres du tableau.");
+}
+
 function importer(fichier){
   var lecteur = new FileReader();
   lecteur.onload = function(){
@@ -1028,6 +1058,7 @@ $("copierSig").addEventListener("click", function(){ copierRiche($("sig")); });
 $("copierCode").addEventListener("click", function(){ copierTexte($("code").value, "Code HTML copié."); });
 $("exporter").addEventListener("click", exporter);
 $("importer").addEventListener("click", function(){ $("fichier").click(); });
+$("exporterTableur").addEventListener("click", exporterTableur);
 $("fichier").addEventListener("change", function(){
   if(this.files && this.files[0]) importer(this.files[0]);
   this.value = "";

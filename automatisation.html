@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Automatiser la prospection — CLTDistrib</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#050B1A">
+<link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<style>
+  :root{
+    --brand:#0060FC; --brand-deep:#003A9E; --brand-tint:#E8F0FF;
+    --navy:#050B1A; --ink:#080D18; --ink-soft:#46536A; --ink-faint:#7A869B;
+    --line:#DDE4EF; --line-soft:#ECF0F8; --bg:#F3F6FB;
+    --ok:#12764A; --ok-tint:#E4F5EC; --warn:#8A6A18; --warn-tint:#FCF3DE;
+  }
+  *,*::before,*::after{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-size:16px; line-height:1.6; -webkit-font-smoothing:antialiased;
+  }
+  .top{ background:var(--navy); color:#fff; }
+  .top__in{ max-width:820px; margin:0 auto; padding:14px 16px; display:flex; align-items:center; gap:12px; }
+  .top__logo{ height:30px; background:#fff; border-radius:6px; padding:3px 6px; display:block; }
+  .top__in strong{ font-size:15px; letter-spacing:-0.02em; }
+  .wrap{ max-width:820px; margin:0 auto; padding:0 16px 80px; }
+
+  h1{ font-size:clamp(23px,5vw,31px); letter-spacing:-0.03em; line-height:1.15; margin:26px 0 8px; color:var(--navy); }
+  .chapo{ font-size:16.5px; color:var(--ink-soft); margin:0 0 6px; }
+  .card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:20px; margin-top:16px; }
+  .card h2{ font-size:17px; letter-spacing:-0.02em; margin:0 0 4px; color:var(--navy); }
+  .card h2 + p{ margin:0 0 14px; font-size:14px; color:var(--ink-soft); }
+  h3{ font-size:14.5px; margin:18px 0 6px; color:var(--navy); }
+
+  .pas{ counter-reset:pas; list-style:none; padding:0; margin:0; }
+  .pas > li{ position:relative; padding:0 0 20px 44px; counter-increment:pas; }
+  .pas > li::before{
+    content:counter(pas); position:absolute; left:0; top:0;
+    width:30px; height:30px; border-radius:50%; background:var(--brand); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700;
+  }
+  .pas > li::after{
+    content:''; position:absolute; left:14.5px; top:34px; bottom:4px; width:1px; background:var(--line);
+  }
+  .pas > li:last-child{ padding-bottom:0; }
+  .pas > li:last-child::after{ display:none; }
+  .pas strong{ display:block; font-size:15.5px; color:var(--navy); letter-spacing:-0.015em; margin-bottom:3px; }
+  .pas p{ margin:0; font-size:14.5px; color:var(--ink-soft); }
+  .pas p + p{ margin-top:6px; }
+  .pas code{ background:var(--line-soft); padding:1px 6px; border-radius:4px; font-size:13px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+
+  .btn{
+    font:inherit; font-size:15px; font-weight:600; padding:12px 18px; min-height:46px;
+    border-radius:10px; border:1px solid transparent; cursor:pointer; text-decoration:none;
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .btn--main{ background:var(--brand); color:#fff; }
+  .btn--ghost{ background:#fff; color:var(--navy); border-color:var(--line); }
+  .btn--wide{ width:100%; }
+  .actions{ display:flex; gap:9px; flex-wrap:wrap; margin-top:12px; }
+  .actions .btn{ flex:1 1 190px; }
+
+  .code{
+    width:100%; min-height:210px; margin-top:10px; padding:13px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11.5px; line-height:1.5;
+    border:1px solid var(--line); border-radius:10px; background:#fff; color:var(--ink-soft);
+    resize:vertical; white-space:pre; overflow:auto;
+  }
+  .code--grand{ min-height:340px; }
+
+  table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:13.5px; }
+  th,td{ border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th{ background:var(--line-soft); font-weight:600; color:var(--navy); white-space:nowrap; }
+  td code{ font-family:ui-monospace,monospace; font-size:12.5px; }
+  .tb{ overflow-x:auto; }
+
+  .bilan{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+  @media (max-width:560px){ .bilan{ grid-template-columns:1fr; } }
+  .bilan div{ border-radius:11px; padding:13px 15px; font-size:14px; line-height:1.5; }
+  .bilan .oui{ background:var(--ok-tint); border:1px solid rgba(18,118,74,.25); color:#0E5C3A; }
+  .bilan .non{ background:var(--warn-tint); border:1px solid rgba(138,106,24,.3); color:#6F5A31; }
+  .bilan strong{ display:block; margin-bottom:5px; }
+  .bilan ul{ margin:0; padding-left:17px; }
+  .bilan li{ margin-bottom:4px; }
+
+  .warn{
+    display:flex; gap:11px; align-items:flex-start; background:var(--warn-tint);
+    border:1px solid rgba(138,106,24,.3); border-left:3px solid var(--warn);
+    border-radius:10px; padding:13px 15px; font-size:13.5px; color:#6F5A31; line-height:1.55; margin-top:14px;
+  }
+  .warn svg{ width:18px; height:18px; flex-shrink:0; margin-top:2px; }
+  .warn strong{ color:#4A3B1F; }
+
+  .flash{
+    position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(12px);
+    background:var(--navy); color:#fff; padding:12px 18px; border-radius:11px; font-size:14px; font-weight:600;
+    box-shadow:0 12px 32px rgba(5,11,26,.3); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:90;
+  }
+  .flash.is-on{ opacity:1; transform:translateX(-50%) translateY(0); }
+  a{ color:var(--brand); }
+  .retour{ display:inline-block; margin-top:22px; font-size:14px; }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top__in">
+    <img class="top__logo" src="images/signature-logo.png" alt="CLTDistrib">
+    <strong>Automatiser la prospection</strong>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <h1>Envoyer, relancer et suivre les réponses, tout seul</h1>
+  <p class="chapo">Le site ne peut pas le faire : GitHub Pages sert des fichiers, il n'exécute aucun code. La solution est de faire tourner le code <strong>chez Google, sous votre compte</strong> — il a alors le droit d'envoyer depuis votre boîte et de lire vos réponses. C'est gratuit, sans serveur à louer et sans validation à demander à Google.</p>
+
+  <div class="card">
+    <h2>Ce que ça change concrètement</h2>
+    <div class="bilan">
+      <div class="oui">
+        <strong>Chaque matin, tout seul</strong>
+        <ul>
+          <li>Les nouveaux mails partent, personnalisés selon le type d'établissement</li>
+          <li>Les entreprises sans réponse depuis 7 jours sont relancées, une seule fois</li>
+          <li>Les réponses reçues sont détectées et le statut change</li>
+          <li>Votre signature et votre logo sont dans chaque message</li>
+        </ul>
+      </div>
+      <div class="non">
+        <strong>Ce qu'il faut savoir</strong>
+        <ul>
+          <li>Un compte Gmail gratuit plafonne autour de <strong>100 destinataires par jour</strong> via un script — largement suffisant, mais ce n'est pas illimité</li>
+          <li>Le déclencheur passe à l'heure choisie, pas à la seconde près</li>
+          <li>Une réponse est repérée par la recherche Gmail : un accusé de réception automatique peut être pris pour une vraie réponse</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>La marche à suivre</h2>
+    <p>Comptez un quart d'heure, une seule fois. À faire depuis un ordinateur : Apps Script ne s'ouvre pas sur téléphone.</p>
+    <ol class="pas">
+      <li>
+        <strong>Créez un tableau</strong>
+        <p>Allez sur <a href="https://sheets.new" target="_blank" rel="noopener">sheets.new</a>. Nommez-le « Prospection CLTDistrib ».</p>
+      </li>
+      <li>
+        <strong>Collez la ligne de titres</strong>
+        <p>Cliquez sur la case A1, puis collez la ligne ci-dessous : les dix colonnes se remplissent d'un coup.</p>
+        <div class="actions"><button class="btn btn--ghost" id="copierEntetes" type="button">Copier la ligne de titres</button></div>
+      </li>
+      <li>
+        <strong>Ouvrez l'éditeur de script</strong>
+        <p>Dans le menu du tableau : <code>Extensions</code> → <code>Apps Script</code>. Une nouvelle page s'ouvre avec un fichier presque vide.</p>
+      </li>
+      <li>
+        <strong>Remplacez tout par le script</strong>
+        <p>Sélectionnez le contenu existant, supprimez-le, puis collez le script fourni plus bas. Enregistrez avec l'icône disquette.</p>
+      </li>
+      <li>
+        <strong>Complétez vos informations</strong>
+        <p>Tout en haut du script, le bloc <code>MOI</code> : votre téléphone, votre zone d'intervention, votre SIRET quand vous l'aurez. Ces lignes sont vides tant que vous ne les remplissez pas.</p>
+      </li>
+      <li>
+        <strong>Autorisez le script</strong>
+        <p>Choisissez la fonction <code>tourneeQuotidienne</code> puis « Exécuter ». Google demande une autorisation : c'est normal, le script agit sur votre propre boîte.</p>
+        <p>L'écran « Google n'a pas validé cette application » apparaît car le script vous appartient et n'est pas publié : cliquez sur <strong>Paramètres avancés</strong>, puis sur <strong>Accéder au projet</strong>.</p>
+      </li>
+      <li>
+        <strong>Activez l'automatisation</strong>
+        <p>Revenez au tableau et rechargez la page : un menu <strong>CLTDistrib</strong> apparaît à côté d'« Aide ». Choisissez <code>Activer l'automatisation quotidienne</code>.</p>
+        <p>À partir de là, la tournée se fait chaque matin sans vous. Le menu permet aussi de tout déclencher à la main quand vous voulez.</p>
+      </li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>Les colonnes du tableau</h2>
+    <p>Le script lit et écrit dans cet ordre exact. La colonne <strong>Statut</strong> est le moteur : elle décide de ce qui part.</p>
+    <div class="tb">
+      <table>
+        <thead><tr><th>Colonne</th><th>Contenu</th><th>Qui la remplit</th></tr></thead>
+        <tbody>
+          <tr><td><code>A</code> Entreprise</td><td>Nom de l'établissement</td><td>Vous</td></tr>
+          <tr><td><code>B</code> Type</td><td>Reprend exactement un des types listés dans le script — c'est lui qui choisit l'angle du mail</td><td>Vous</td></tr>
+          <tr><td><code>C</code> Ville</td><td>Pour votre repérage</td><td>Vous</td></tr>
+          <tr><td><code>D</code> Contact</td><td>Nom de la personne, pour le « Bonjour … »</td><td>Vous</td></tr>
+          <tr><td><code>E</code> Email</td><td>Sans adresse, la ligne est ignorée</td><td>Vous</td></tr>
+          <tr><td><code>F</code> Statut</td><td><code>À envoyer</code> → <code>Envoyé</code> → <code>Relancé</code> → <code>Réponse reçue</code></td><td>Vous au départ, le script ensuite</td></tr>
+          <tr><td><code>G</code> Date envoi</td><td>Renseignée à l'envoi</td><td>Le script</td></tr>
+          <tr><td><code>H</code> Date relance</td><td>Renseignée à la relance</td><td>Le script</td></tr>
+          <tr><td><code>I</code> Date réponse</td><td>Renseignée à la détection</td><td>Le script</td></tr>
+          <tr><td><code>J</code> Notes</td><td>Vos remarques, et les échecs éventuels</td><td>Les deux</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:12px;font-size:14px;color:var(--ink-soft)">Pour lancer une entreprise, il suffit donc d'écrire <code>À envoyer</code> en colonne F. Le lendemain matin, le mail est parti.</p>
+  </div>
+
+  <div class="card">
+    <h2>Le script</h2>
+    <p>À coller entièrement dans l'éditeur Apps Script, à la place de ce qui s'y trouve.</p>
+    <div class="actions">
+      <button class="btn btn--main btn--wide" id="copierScript" type="button">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        Copier le script
+      </button>
+    </div>
+    <textarea class="code code--grand" id="script" readonly spellcheck="false" onclick="this.select()">/**
+ * CLTDistrib — prospection automatique
+ * ------------------------------------
+ * À coller dans Extensions &gt; Apps Script depuis votre Google Sheet.
+ * Le script tourne chez Google, sous VOTRE compte : il envoie depuis
+ * votre boîte Gmail et lit vos réponses. Aucun serveur à héberger.
+ *
+ * Colonnes attendues, dans cet ordre, avec une ligne de titres :
+ * A Entreprise | B Type | C Ville | D Contact | E Email
+ * F Statut | G Date envoi | H Date relance | I Date réponse | J Notes
+ */
+
+/* ============================================================
+   1. VOS INFORMATIONS — à compléter
+   ============================================================ */
+var MOI = {
+  nom:      "Clément Pires Valente",
+  fonction: "Fondateur",
+  tel:      "",                       // ex : "06 12 34 56 78"
+  email:    "clementpiresvalente@gmail.com",
+  zone:     "",                       // ex : "Yvelines et communes limitrophes"
+  site:     "https://clt78.github.io/cltdistrib-site/",
+  siret:    ""                        // à ajouter dès l'immatriculation
+};
+
+/* ============================================================
+   2. RÉGLAGES
+   ============================================================ */
+var REGLAGES = {
+  maxParJour:     15,    // sécurité : jamais plus de mails que ça par exécution
+  joursAvantRelance: 7,  // délai avant de proposer une relance
+  relanceUnique:  true,  // une seule relance, puis on laisse tranquille
+  heureEnvoi:     9,     // heure du déclencheur quotidien
+  fuseau:         "Europe/Paris"
+};
+
+/* ============================================================
+   3. ANGLES PAR TYPE D'ÉTABLISSEMENT
+   ============================================================ */
+var ANGLES = {
+  "Entreprise / bureaux":
+    "Vos équipes n'ont pas toujours de quoi boire ou grignoter sur place, et sortir pour une pause fait perdre du temps à tout le monde.",
+  "Usine / atelier":
+    "Sur un site en horaires décalés, les commerces sont souvent fermés quand vos équipes prennent leur pause.",
+  "Entrepôt / logistique":
+    "Entre les zones de quai et la salle de repos, un point boissons accessible à toute heure change le quotidien des équipes.",
+  "Salle de sport":
+    "Une boisson fraîche ou une barre à la sortie d'une séance, c'est un service que vos adhérents attendent souvent sur place.",
+  "Centre de formation":
+    "Entre deux sessions, stagiaires et formateurs cherchent rarement bien loin : encore faut-il trouver quelque chose sur place.",
+  "Hôtel / résidence":
+    "En dehors des horaires de service, vos clients n'ont pas toujours de solution pour boire ou manger un en-cas.",
+  "Établissement accueillant du public":
+    "Dans un espace d'accueil ou une salle d'attente, pouvoir patienter avec une boisson change nettement l'expérience.",
+  "Gare / lieu de passage":
+    "Sur un lieu de passage, l'offre disponible sur place est souvent limitée alors que la fréquentation est là.",
+  "Autre":
+    "Proposer des boissons et des snacks sur place rend service aux personnes présentes, sans créer de point de vente."
+};
+
+/* ============================================================
+   4. LE MENU DANS LE TABLEUR
+   ============================================================ */
+function onOpen() {
+  SpreadsheetApp.getUi()
+    .createMenu("CLTDistrib")
+    .addItem("Envoyer les nouveaux mails", "envoyerNouveaux")
+    .addItem("Envoyer les relances", "envoyerRelances")
+    .addItem("Vérifier les réponses reçues", "detecterReponses")
+    .addSeparator()
+    .addItem("Tout faire maintenant", "tourneeQuotidienne")
+    .addItem("Activer l'automatisation quotidienne", "installerDeclencheur")
+    .addItem("Désactiver l'automatisation", "retirerDeclencheur")
+    .addToUi();
+}
+
+/* ============================================================
+   5. OUTILS
+   ============================================================ */
+var COL = { entreprise:0, type:1, ville:2, contact:3, email:4,
+            statut:5, dateEnvoi:6, dateRelance:7, dateReponse:8, notes:9 };
+
+function feuille() { return SpreadsheetApp.getActiveSpreadsheet().getSheets()[0]; }
+
+function aujourdhui() {
+  return Utilities.formatDate(new Date(), REGLAGES.fuseau, "yyyy-MM-dd");
+}
+
+function joursDepuis(valeur) {
+  if (!valeur) return null;
+  var d = (valeur instanceof Date) ? valeur : new Date(String(valeur));
+  if (isNaN(d.getTime())) return null;
+  return Math.floor((new Date() - d) / 86400000);
+}
+
+function texteVersHtml(txt) {
+  return txt
+    .replace(/&amp;/g, "&amp;amp;").replace(/&lt;/g, "&amp;lt;").replace(/&gt;/g, "&amp;gt;")
+    .replace(/\n/g, "&lt;br&gt;");
+}
+
+/* ============================================================
+   6. LE MAIL
+   ============================================================ */
+function objetMail(p, estRelance) {
+  var nom = p.entreprise || "votre établissement";
+  return estRelance
+    ? "Relance — un distributeur de boissons et snacks pour " + nom
+    : "Un distributeur de boissons et snacks pour " + nom + " ?";
+}
+
+function corpsMail(p, estRelance) {
+  var nom = p.entreprise || "votre établissement";
+  var l = [];
+  l.push(p.contact ? "Bonjour " + p.contact + "," : "Bonjour,", "");
+
+  if (estRelance) {
+    l.push("Je me permets de revenir vers vous au sujet de mon message concernant l'installation d'un distributeur de boissons et snacks chez " + nom + ".");
+    l.push("");
+    l.push("La proposition tient toujours : CLTDistrib fournit la machine, l'installe, l'approvisionne et l'entretient. De votre côté, il s'agit simplement de mettre à disposition un emplacement adapté et une alimentation électrique.");
+    l.push("");
+    l.push("Si le sujet n'est pas d'actualité, dites-le moi simplement, je n'insisterai pas. Et s'il l'est, je peux passer voir l'emplacement quand cela vous arrange : cette visite est gratuite et sans engagement.");
+  } else {
+    l.push("Je suis " + MOI.nom + ", " + (MOI.fonction ? MOI.fonction.toLowerCase() + " de " : "") + "CLTDistrib. J'installe et j'exploite des distributeurs automatiques de boissons et de snacks pour les entreprises et les établissements.");
+    l.push("");
+    l.push(ANGLES[p.type] || ANGLES["Autre"]);
+    l.push("");
+    l.push("Le principe est simple : vous mettez à disposition un emplacement adapté, et je m'occupe du reste.");
+    l.push("");
+    l.push("— La machine est fournie et installée par mes soins");
+    l.push("— Les produits sont sélectionnés selon le public du lieu");
+    l.push("— Le réassort, le nettoyage et la maintenance sont assurés");
+    l.push("— Le paiement par carte et sans contact est géré de mon côté");
+    l.push("");
+    l.push("Aucun investissement ni gestion de stock de votre côté.");
+    l.push("");
+    l.push("Si l'idée vous paraît pertinente pour " + nom + ", je peux passer étudier l'emplacement : la visite est gratuite et sans engagement, et je vous dirai franchement si votre site s'y prête ou non." + (MOI.zone ? " Je me déplace sur le secteur suivant : " + MOI.zone + "." : ""));
+  }
+
+  l.push("");
+  l.push("Seriez-vous disponible pour en échanger quelques minutes ?");
+  l.push("");
+  l.push("Bien cordialement,");
+  return l.join("\n");
+}
+
+/* La signature n'est pas ajoutée par Gmail quand c'est un script qui envoie :
+   on la reconstruit ici, en tableau et styles en ligne. */
+function signatureHtml() {
+  var LOGO = "https://clt78.github.io/cltdistrib-site/images/signature-logo.png";
+  var A = "#0060FC", NAVY = "#0A1428", INK = "#1A2333", DOUX = "#5A6879", LIGNE = "#DDE4EF";
+  var F = "Arial, 'Helvetica Neue', Helvetica, sans-serif";
+  var contacts = [];
+  if (MOI.tel)   contacts.push('&lt;a href="tel:' + MOI.tel.replace(/[^\d+]/g, "") + '" style="color:' + INK + ';text-decoration:none;"&gt;' + MOI.tel + '&lt;/a&gt;');
+  if (MOI.email) contacts.push('&lt;a href="mailto:' + MOI.email + '" style="color:' + INK + ';text-decoration:none;"&gt;' + MOI.email + '&lt;/a&gt;');
+
+  var h = '&lt;table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:' + F + ';margin-top:18px;"&gt;' +
+    '&lt;tr&gt;&lt;td style="vertical-align:top;padding:0 18px 0 0;"&gt;' +
+    '&lt;img src="' + LOGO + '" width="190" height="64" alt="CLTDistrib" style="display:block;border:0;"&gt;' +
+    '&lt;/td&gt;&lt;td style="vertical-align:top;padding:0 0 0 18px;border-left:3px solid ' + A + ';"&gt;' +
+    '&lt;div style="font-size:16px;font-weight:bold;color:' + NAVY + ';line-height:1.3;"&gt;' + MOI.nom + '&lt;/div&gt;';
+  if (MOI.fonction) h += '&lt;div style="font-size:13px;color:' + DOUX + ';line-height:1.4;"&gt;' + MOI.fonction + ' — CLTDistrib&lt;/div&gt;';
+  h += '&lt;div style="font-size:11px;font-weight:bold;color:' + A + ';letter-spacing:0.08em;text-transform:uppercase;padding-top:7px;"&gt;Distribution automatique &amp;nbsp;&amp;middot;&amp;nbsp; Boissons &amp;amp; snacks&lt;/div&gt;';
+  if (contacts.length) h += '&lt;div style="font-size:13px;color:' + INK + ';line-height:1.6;padding-top:9px;"&gt;' + contacts.join('&lt;span style="color:' + LIGNE + ';"&gt; &amp;nbsp;|&amp;nbsp; &lt;/span&gt;') + '&lt;/div&gt;';
+  if (MOI.site) h += '&lt;div style="font-size:13px;line-height:1.6;"&gt;&lt;a href="' + MOI.site + '" style="color:' + A + ';text-decoration:none;font-weight:bold;"&gt;' + MOI.site.replace(/^https?:\/\//, "").replace(/\/$/, "") + '&lt;/a&gt;&lt;/div&gt;';
+  if (MOI.zone) h += '&lt;div style="font-size:12.5px;color:' + DOUX + ';line-height:1.6;"&gt;Zone d\'intervention : ' + MOI.zone + '&lt;/div&gt;';
+  h += '&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;';
+
+  var bas = [];
+  if (MOI.siret) bas.push("SIRET " + MOI.siret);
+  bas.push("Message professionnel. Pour ne plus être contacté, répondez « STOP » à cet email.");
+  h += '&lt;div style="font-family:' + F + ';font-size:10.5px;color:#8A93A3;line-height:1.5;padding-top:12px;"&gt;' + bas.join(" &amp;middot; ") + '&lt;/div&gt;';
+  return h;
+}
+
+function envoyerMail(p, estRelance) {
+  var sujet = objetMail(p, estRelance);
+  var texte = corpsMail(p, estRelance);
+  var html  = '&lt;div style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:1.6;color:#1A2333;"&gt;' +
+              texteVersHtml(texte) + '&lt;/div&gt;' + signatureHtml();
+  GmailApp.sendEmail(p.email, sujet, texte, { htmlBody: html, name: "CLTDistrib" });
+}
+
+/* ============================================================
+   7. LES TROIS ACTIONS
+   ============================================================ */
+function lignes() {
+  var f = feuille();
+  var v = f.getDataRange().getValues();
+  var out = [];
+  for (var i = 1; i &lt; v.length; i++) {          // on saute la ligne de titres
+    out.push({
+      ligne: i + 1,
+      entreprise: String(v[i][COL.entreprise] || "").trim(),
+      type: String(v[i][COL.type] || "").trim(),
+      contact: String(v[i][COL.contact] || "").trim(),
+      email: String(v[i][COL.email] || "").trim(),
+      statut: String(v[i][COL.statut] || "").trim(),
+      dateEnvoi: v[i][COL.dateEnvoi],
+      dateRelance: v[i][COL.dateRelance],
+      dateReponse: v[i][COL.dateReponse]
+    });
+  }
+  return out;
+}
+
+function ecrire(ligne, colonne, valeur) {
+  feuille().getRange(ligne, colonne + 1).setValue(valeur);
+}
+
+function envoyerNouveaux() {
+  var envoyes = 0;
+  lignes().forEach(function (p) {
+    if (envoyes &gt;= REGLAGES.maxParJour) return;
+    if (p.statut !== "À envoyer") return;
+    if (!p.email || p.email.indexOf("@") === -1) return;
+    try {
+      envoyerMail(p, false);
+      ecrire(p.ligne, COL.statut, "Envoyé");
+      ecrire(p.ligne, COL.dateEnvoi, aujourdhui());
+      envoyes++;
+      Utilities.sleep(1500);                    // on espace les envois
+    } catch (e) {
+      ecrire(p.ligne, COL.notes, "Échec d'envoi : " + e.message);
+    }
+  });
+  journal(envoyes + " nouveau(x) mail(s) envoyé(s).");
+  return envoyes;
+}
+
+function envoyerRelances() {
+  var envoyes = 0;
+  lignes().forEach(function (p) {
+    if (envoyes &gt;= REGLAGES.maxParJour) return;
+    if (p.statut !== "Envoyé") return;          // déjà relancé : on n'insiste pas
+    if (!p.email) return;
+    var j = joursDepuis(p.dateEnvoi);
+    if (j === null || j &lt; REGLAGES.joursAvantRelance) return;
+    try {
+      envoyerMail(p, true);
+      ecrire(p.ligne, COL.statut, "Relancé");
+      ecrire(p.ligne, COL.dateRelance, aujourdhui());
+      envoyes++;
+      Utilities.sleep(1500);
+    } catch (e) {
+      ecrire(p.ligne, COL.notes, "Échec de relance : " + e.message);
+    }
+  });
+  journal(envoyes + " relance(s) envoyée(s).");
+  return envoyes;
+}
+
+/* Une réponse = un message reçu DE cette adresse après notre envoi. */
+function detecterReponses() {
+  var trouvees = 0;
+  lignes().forEach(function (p) {
+    if (p.statut !== "Envoyé" &amp;&amp; p.statut !== "Relancé") return;
+    if (!p.email) return;
+    var domaine = p.email.split("@")[1];
+    try {
+      var fils = GmailApp.search('from:' + p.email + ' newer_than:120d', 0, 5);
+      if (!fils.length &amp;&amp; domaine) {
+        // le contact a pu répondre depuis une autre adresse de la même maison
+        fils = GmailApp.search('from:@' + domaine + ' newer_than:120d', 0, 5);
+      }
+      if (fils.length) {
+        ecrire(p.ligne, COL.statut, "Réponse reçue");
+        ecrire(p.ligne, COL.dateReponse, aujourdhui());
+        trouvees++;
+      }
+    } catch (e) {
+      ecrire(p.ligne, COL.notes, "Vérification impossible : " + e.message);
+    }
+  });
+  journal(trouvees + " réponse(s) détectée(s).");
+  return trouvees;
+}
+
+function tourneeQuotidienne() {
+  detecterReponses();   // d'abord les réponses : on ne relance pas quelqu'un qui a répondu
+  envoyerRelances();
+  envoyerNouveaux();
+}
+
+function journal(message) {
+  Logger.log(message);
+  try { SpreadsheetApp.getActiveSpreadsheet().toast(message, "CLTDistrib", 5); } catch (e) {}
+}
+
+/* ============================================================
+   8. AUTOMATISATION QUOTIDIENNE
+   ============================================================ */
+function installerDeclencheur() {
+  retirerDeclencheur();
+  ScriptApp.newTrigger("tourneeQuotidienne")
+    .timeBased()
+    .everyDays(1)
+    .atHour(REGLAGES.heureEnvoi)
+    .inTimezone(REGLAGES.fuseau)
+    .create();
+  journal("Automatisation activée : tournée chaque jour vers " + REGLAGES.heureEnvoi + " h.");
+}
+
+function retirerDeclencheur() {
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    if (t.getHandlerFunction() === "tourneeQuotidienne") ScriptApp.deleteTrigger(t);
+  });
+}
+</textarea>
+  </div>
+
+  <div class="card">
+    <h2>Reprendre vos entreprises déjà saisies</h2>
+    <p>Si vous avez commencé dans l'espace prospection, exportez-les au format tableau et collez le résultat sous la ligne de titres.</p>
+    <p style="font-size:14px">Ouvrez <a href="prospection.html">l'espace prospection</a>, onglet « Mes infos », puis « Exporter pour Google Sheets ».</p>
+  </div>
+
+  <div class="card">
+    <h2>Quelques précautions</h2>
+    <div class="warn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+      <div><strong>Allez-y doucement au début.</strong> Le script est réglé sur 15 mails maximum par tournée. Envoyer beaucoup d'un coup depuis une adresse récente est le meilleur moyen de finir en indésirables. Montez progressivement, et vérifiez vos premiers envois dans « Messages envoyés ».</div>
+    </div>
+    <div class="warn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      <div><strong>La prospection entre professionnels est encadrée.</strong> Écrivez à une adresse professionnelle, sur un sujet qui concerne la fonction de la personne, et laissez toujours une porte de sortie : la mention « répondez STOP » est déjà dans la signature. Si quelqu'un demande à ne plus être contacté, retirez-le du tableau.</div>
+    </div>
+    <div class="warn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+      <div><strong>Relisez avant d'automatiser.</strong> Lancez d'abord « Envoyer les nouveaux mails » à la main sur une ou deux lignes, envoyez-vous un test à votre propre adresse, et vérifiez que la signature et le logo s'affichent. Ensuite seulement, activez la tournée quotidienne.</div>
+    </div>
+  </div>
+
+  <a class="retour" href="prospection.html">← Retour à l'espace prospection</a>
+</div>
+
+<div class="flash" id="flash"></div>
+
+<script>
+(function(){
+  "use strict";
+  var ENTETES = "Entreprise\tType\tVille\tContact\tEmail\tStatut\tDate envoi\tDate relance\tDate réponse\tNotes";
+
+  function flash(t){
+    var f = document.getElementById("flash");
+    f.textContent = t;
+    f.classList.add("is-on");
+    clearTimeout(flash.t);
+    flash.t = setTimeout(function(){ f.classList.remove("is-on"); }, 3000);
+  }
+
+  function copier(txt, msg){
+    function repli(){
+      var z = document.createElement("textarea");
+      z.value = txt; z.style.position = "fixed"; z.style.opacity = "0";
+      document.body.appendChild(z); z.select(); z.setSelectionRange(0, 999999);
+      var ok = false;
+      try{ ok = document.execCommand("copy"); }catch(e){}
+      document.body.removeChild(z);
+      flash(ok ? msg : "Copie impossible : sélectionnez le texte à la main.");
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ flash(msg); }).catch(repli);
+    } else { repli(); }
+  }
+
+  document.getElementById("copierEntetes").addEventListener("click", function(){
+    copier(ENTETES, "Ligne de titres copiée. Collez-la dans la case A1.");
+  });
+  document.getElementById("copierScript").addEventListener("click", function(){
+    copier(document.getElementById("script").value, "Script copié. Collez-le dans l'éditeur Apps Script.");
+  });
+})();
+</script>
+</body>
+</html>
