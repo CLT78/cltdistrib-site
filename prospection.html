@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prospection — CLTDistrib</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#050B1A">
+<link rel="icon" type="image/png" sizes="96x96" href="images/favicon-96.png">
+<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+<style>
+  :root{
+    --brand:#0060FC; --brand-deep:#003A9E; --brand-tint:#E8F0FF;
+    --navy:#050B1A; --navy-2:#0F1A30;
+    --ink:#080D18; --ink-soft:#46536A; --ink-faint:#7A869B;
+    --line:#DDE4EF; --line-soft:#ECF0F8; --bg:#F3F6FB;
+    --ok:#12764A; --ok-tint:#E4F5EC;
+    --wait:#8A6A18; --wait-tint:#FCF3DE;
+    --late:#A33528; --late-tint:#FCEAE7;
+    --info:#0B4FBF; --info-tint:#E6EEFE;
+    --mute:#5A6879; --mute-tint:#EEF1F6;
+  }
+  *,*::before,*::after{ box-sizing:border-box; }
+  html{ -webkit-text-size-adjust:100%; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+    font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:900px; margin:0 auto; padding:0 16px 90px; }
+
+  /* ---------- en-tête ---------- */
+  .top{ background:var(--navy); color:#fff; position:sticky; top:0; z-index:30; }
+  .top__in{ max-width:900px; margin:0 auto; padding:12px 16px; display:flex; align-items:center; gap:12px; }
+  .top__logo{ height:30px; width:auto; display:block; background:#fff; border-radius:6px; padding:3px 6px; }
+  .top__t{ flex:1; min-width:0; }
+  .top__t strong{ display:block; font-size:15px; letter-spacing:-0.02em; line-height:1.2; }
+  .top__t span{ display:block; font-size:11.5px; color:#8B9AB5; }
+  .tabs{ display:flex; gap:0; max-width:900px; margin:0 auto; padding:0 10px; }
+  .tabs button{
+    flex:1; font:inherit; font-size:14px; font-weight:600; padding:11px 8px 13px; min-height:46px;
+    background:none; border:none; border-bottom:3px solid transparent; color:#8B9AB5; cursor:pointer;
+  }
+  .tabs button.is-on{ color:#fff; border-bottom-color:var(--brand); }
+
+  /* ---------- blocs ---------- */
+  .card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:18px; margin-top:16px; }
+  .card > h2{ font-size:16px; letter-spacing:-0.02em; margin:0 0 3px; color:var(--navy); }
+  .card > h2 + p{ margin:0 0 14px; font-size:13.5px; color:var(--ink-soft); }
+  h3{ font-size:14.5px; margin:0; letter-spacing:-0.01em; }
+
+  .note{ font-size:12.5px; color:var(--ink-faint); line-height:1.5; }
+  .warn{
+    display:flex; gap:11px; align-items:flex-start; background:#FCF3DE;
+    border:1px solid rgba(138,106,24,.3); border-left:3px solid #8A6A18;
+    border-radius:10px; padding:12px 14px; font-size:13px; color:#6F5A31; line-height:1.5;
+  }
+  .warn strong{ color:#4A3B1F; }
+  .warn svg{ width:18px; height:18px; flex-shrink:0; margin-top:1px; }
+
+  /* ---------- indicateurs ---------- */
+  .kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:16px; }
+  .kpi{
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:11px 10px;
+    text-align:center; cursor:pointer; transition:border-color .15s, background-color .15s;
+  }
+  .kpi:hover{ border-color:var(--brand); }
+  .kpi.is-on{ background:var(--navy); border-color:var(--navy); }
+  .kpi.is-on b, .kpi.is-on span{ color:#fff; }
+  .kpi b{ display:block; font-size:22px; line-height:1.1; letter-spacing:-0.03em; color:var(--navy); }
+  .kpi span{ display:block; font-size:10.5px; color:var(--ink-faint); margin-top:3px; line-height:1.25; }
+  @media (max-width:520px){ .kpi b{ font-size:19px; } }
+
+  /* ---------- recherche et actions ---------- */
+  .bar{ display:flex; gap:8px; margin-top:14px; }
+  .bar input{ flex:1; min-width:0; }
+  .btn{
+    font:inherit; font-size:15px; font-weight:600; padding:12px 18px; min-height:46px;
+    border-radius:10px; border:1px solid transparent; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center; gap:8px; text-decoration:none;
+  }
+  .btn svg{ width:17px; height:17px; }
+  .btn--main{ background:var(--brand); color:#fff; }
+  .btn--main:active{ background:var(--brand-deep); }
+  .btn--dark{ background:var(--navy); color:#fff; }
+  .btn--ghost{ background:#fff; color:var(--navy); border-color:var(--line); }
+  .btn--danger{ background:#fff; color:var(--late); border-color:#F0CFC9; }
+  .btn--sm{ font-size:13.5px; padding:9px 13px; min-height:40px; border-radius:8px; }
+  .btn--wide{ width:100%; }
+  .btn:disabled{ opacity:.5; cursor:not-allowed; }
+
+  input,select,textarea{
+    font:inherit; font-size:15px; padding:11px 12px; border:1px solid var(--line);
+    border-radius:9px; background:#fff; color:var(--ink); width:100%; min-height:44px;
+  }
+  input:focus,select:focus,textarea:focus{ outline:none; border-color:var(--brand); box-shadow:0 0 0 3px rgba(0,96,252,.13); }
+  textarea{ min-height:110px; resize:vertical; line-height:1.55; }
+  label{ font-size:12px; font-weight:600; color:var(--ink-soft); display:block; margin-bottom:4px; }
+  label .opt{ font-weight:400; color:var(--ink-faint); }
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+  .grid .full{ grid-column:1 / -1; }
+  @media (max-width:560px){ .grid{ grid-template-columns:1fr; } }
+
+  /* ---------- liste des prospects ---------- */
+  .liste{ margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .pros{
+    width:100%; text-align:left; background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:13px 14px; cursor:pointer; display:flex; gap:12px; align-items:flex-start;
+    transition:border-color .15s, transform .12s;
+  }
+  .pros:hover{ border-color:var(--brand); }
+  .pros:active{ transform:scale(.995); }
+  .pros__c{ flex:1; min-width:0; display:block; }
+  .pros__n{ display:block; font-weight:600; font-size:15px; color:var(--navy); letter-spacing:-0.01em; line-height:1.3; }
+  .pros__m{ display:block; font-size:12.5px; color:var(--ink-faint); margin-top:3px; line-height:1.35; }
+  .pros__a{ display:block; font-size:12.5px; margin-top:6px; font-weight:600; line-height:1.35; }
+  .pros__a--late{ color:var(--late); }
+  .pros__a--soon{ color:var(--wait); }
+  .pill{
+    display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    padding:4px 9px; border-radius:99px; white-space:nowrap; flex-shrink:0;
+  }
+  .p-a_envoyer{ background:var(--mute-tint); color:var(--mute); }
+  .p-envoye{ background:var(--wait-tint); color:var(--wait); }
+  .p-relance{ background:var(--info-tint); color:var(--info); }
+  .p-reponse{ background:var(--ok-tint); color:var(--ok); }
+  .p-rdv{ background:var(--brand-tint); color:var(--brand-deep); }
+  .p-gagne{ background:var(--ok-tint); color:var(--ok); }
+  .p-refus{ background:var(--late-tint); color:var(--late); }
+  .vide{ text-align:center; padding:34px 14px; color:var(--ink-faint); font-size:14px; }
+
+  /* ---------- fiche prospect ---------- */
+  .sheet{ position:fixed; inset:0; z-index:60; background:rgba(5,11,26,.45); display:none; }
+  .sheet.is-on{ display:block; }
+  .sheet__in{
+    position:absolute; inset:auto 0 0 0; max-height:94vh; overflow-y:auto; background:var(--bg);
+    border-radius:18px 18px 0 0; -webkit-overflow-scrolling:touch;
+  }
+  @media (min-width:760px){
+    .sheet__in{ position:relative; margin:36px auto; max-width:720px; border-radius:16px; inset:auto; }
+  }
+  .sheet__bar{
+    position:sticky; top:0; z-index:2; background:#fff; border-bottom:1px solid var(--line);
+    padding:13px 16px; display:flex; align-items:center; gap:12px; border-radius:18px 18px 0 0;
+  }
+  .sheet__bar h3{ flex:1; min-width:0; font-size:16px; color:var(--navy); }
+  .sheet__body{ padding:0 16px 30px; }
+
+  .etapes{ display:flex; gap:6px; margin-top:12px; overflow-x:auto; padding-bottom:4px; }
+  .etape{
+    font:inherit; font-size:12.5px; font-weight:600; padding:9px 12px; min-height:40px; white-space:nowrap;
+    border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--ink-soft); cursor:pointer;
+  }
+  .etape.is-on{ background:var(--navy); border-color:var(--navy); color:#fff; }
+
+  .hist{ margin-top:10px; display:flex; flex-direction:column; gap:7px; }
+  .hist__l{ display:flex; gap:9px; font-size:12.5px; color:var(--ink-soft); align-items:baseline; }
+  .hist__d{ font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; color:var(--ink-faint); flex-shrink:0; }
+
+  .apercu{
+    background:#fff; border:1px solid var(--line); border-radius:11px; padding:14px; margin-top:10px;
+    font-size:14px; line-height:1.6; white-space:pre-wrap; color:var(--ink); word-break:break-word;
+  }
+  .objet{ font-weight:600; color:var(--navy); padding-bottom:9px; margin-bottom:9px; border-bottom:1px solid var(--line-soft); }
+  .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .actions .btn{ flex:1 1 150px; }
+
+  .flash{
+    position:fixed; left:50%; bottom:22px; transform:translateX(-50%) translateY(12px);
+    background:var(--navy); color:#fff; padding:12px 18px; border-radius:11px; font-size:14px; font-weight:600;
+    box-shadow:0 12px 32px rgba(5,11,26,.3); opacity:0; pointer-events:none; transition:opacity .2s, transform .2s;
+    z-index:90; max-width:calc(100% - 32px); text-align:center;
+  }
+  .flash.is-on{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  .vue{ display:none; }
+  .vue.is-on{ display:block; }
+
+  details{ margin-top:12px; }
+  summary{ cursor:pointer; font-size:13.5px; font-weight:600; color:var(--brand); min-height:34px; }
+  ol{ margin:9px 0 0; padding-left:20px; font-size:14px; color:var(--ink-soft); }
+  ol li{ margin-bottom:6px; }
+  ol strong{ color:var(--ink); }
+  a{ color:var(--brand); }
+
+  /* ---------- onglet Mes infos ---------- */
+  .sig-prev{ background:#fff; border:1px solid var(--line); border-radius:11px; padding:16px; overflow-x:auto; margin-top:10px; }
+  .av-row{ display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+  .av-big{ width:104px; height:104px; border-radius:50%; display:block; flex-shrink:0; }
+  .av-min{ display:flex; align-items:center; gap:10px; }
+  .av-min img{ border-radius:50%; display:block; }
+  .av-min small{ font-size:10.5px; color:var(--ink-faint); font-family:ui-monospace,monospace; }
+  .av-txt{ flex:1 1 220px; }
+  .miss{ background:#FCF3DE; border:1px dashed #8A6A18; border-radius:10px; padding:11px 13px; font-size:13px; color:#6F5A31; margin-top:12px; }
+  .miss:empty{ display:none; }
+  .code{
+    width:100%; margin-top:9px; min-height:130px; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:11px; line-height:1.5; background:var(--bg); color:var(--ink-soft);
+  }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top__in">
+    <img class="top__logo" src="images/signature-logo.png" alt="CLTDistrib">
+    <div class="top__t">
+      <strong>Espace prospection</strong>
+      <span>Vos données restent sur cet appareil</span>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="is-on" data-vue="prospects" type="button">Prospects</button>
+    <button data-vue="infos" type="button">Mes infos</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- ============================ PROSPECTS ============================ -->
+  <div class="vue is-on" id="v-prospects">
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="bar">
+      <input id="q" type="search" placeholder="Rechercher une entreprise, une ville…" aria-label="Rechercher">
+      <button class="btn btn--main" id="ajouter" type="button" aria-label="Ajouter une entreprise">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+    </div>
+
+    <div class="liste" id="liste"></div>
+
+    <div class="card" id="demarrage">
+      <h2>Par où commencer</h2>
+      <p>Trois minutes pour être opérationnel.</p>
+      <ol>
+        <li><strong>Onglet « Mes infos »</strong> — renseignez votre téléphone et votre zone, puis installez la signature dans Gmail. Elle s'ajoutera toute seule à chaque mail.</li>
+        <li><strong>Ajoutez une entreprise</strong> — nom, type d'établissement, email du contact. Le reste est facultatif.</li>
+        <li><strong>Ouvrez sa fiche</strong> — le mail est déjà écrit et adapté à son secteur. Relisez, envoyez, le statut se met à jour.</li>
+      </ol>
+      <div class="warn" style="margin-top:14px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+        <div><strong>Sauvegardez régulièrement.</strong> Vos prospects sont enregistrés dans ce navigateur, sur cet appareil. Vider les données du navigateur les efface. Utilisez « Exporter » en bas de l'onglet « Mes infos » pour en garder une copie.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================ MES INFOS ============================ -->
+  <div class="vue" id="v-infos">
+
+    <div class="card">
+      <h2>Vos coordonnées</h2>
+      <p>Reprises dans la signature et dans les mails générés. Les champs vides n'apparaissent nulle part.</p>
+      <div class="grid">
+        <div><label for="nom">Nom et prénom</label><input id="nom" value="Clément Pires Valente"></div>
+        <div><label for="fonction">Fonction</label><input id="fonction" value="Fondateur"></div>
+        <div><label for="tel">Téléphone</label><input id="tel" type="tel" placeholder="06 00 00 00 00"></div>
+        <div><label for="email">Email</label><input id="email" type="email" value="clementpiresvalente@gmail.com"></div>
+        <div class="full"><label for="zone">Zone d'intervention</label><input id="zone" placeholder="Ex : Yvelines et communes limitrophes"></div>
+        <div class="full"><label for="site">Site internet</label><input id="site" value="https://clt78.github.io/cltdistrib-site/"></div>
+        <div class="full"><label for="siret">SIRET <span class="opt">— facultatif, à ajouter dès l'immatriculation</span></label><input id="siret" placeholder="000 000 000 00000"></div>
+      </div>
+      <div class="miss" id="miss"></div>
+    </div>
+
+    <div class="card">
+      <h2>Signature email</h2>
+      <p>À installer une fois dans Gmail : elle s'ajoutera ensuite à chaque message, y compris ceux générés ici.</p>
+      <div class="etapes">
+        <button class="etape is-on" data-sig="complete" type="button">Complète</button>
+        <button class="etape" data-sig="courte" type="button">Courte (réponses)</button>
+      </div>
+      <div class="sig-prev"><div id="sig"></div></div>
+      <div class="actions">
+        <button class="btn btn--main" id="copierSig" type="button">Copier la signature</button>
+        <button class="btn btn--ghost" id="copierCode" type="button">Copier le code HTML</button>
+      </div>
+      <details>
+        <summary>Voir le code HTML</summary>
+        <textarea class="code" id="code" readonly onclick="this.select()"></textarea>
+      </details>
+      <details>
+        <summary>Où la coller</summary>
+        <ol>
+          <li><strong>Gmail sur ordinateur</strong> — roue dentée → « Voir tous les paramètres » → Général → Signature → « Créer » → coller → « Enregistrer les modifications » en bas.</li>
+          <li><strong>Gmail sur téléphone</strong> — l'application ne gère que le texte brut. Ouvrez <a href="https://mail.google.com" target="_blank" rel="noopener">mail.google.com</a> en mode ordinateur pour coller ; la signature se synchronise ensuite.</li>
+          <li><strong>Outlook</strong> — Fichier → Options → Courrier → Signatures → Nouveau → coller.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>Photo de profil Gmail</h2>
+      <p>Google l'affiche en rond, et à 32 pixels dans la liste des messages : d'où le lettrage seul plutôt que le logo complet.</p>
+      <div class="av-row">
+        <img class="av-big" src="images/avatar-gmail.png" alt="Photo de profil CLTDistrib">
+        <div class="av-min">
+          <span style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/avatar-gmail.png" alt="" width="48" height="48"><small>48 px</small></span>
+          <span style="display:flex;flex-direction:column;align-items:center;gap:4px"><img src="images/avatar-gmail.png" alt="" width="32" height="32"><small>32 px</small></span>
+        </div>
+        <div class="av-txt">
+          <p class="note" style="margin:0 0 10px">1024 × 1024 px, bien au-delà du minimum de 250 px demandé par Google.</p>
+          <a class="btn btn--main btn--sm" href="images/avatar-gmail.png" download="cltdistrib-avatar.png">Télécharger</a>
+        </div>
+      </div>
+      <details>
+        <summary>Comment la mettre en place</summary>
+        <ol>
+          <li><strong>Téléphone</strong> — appui long sur l'image, « Enregistrer ». Puis Gmail → votre initiale en haut à droite → « Gérer votre compte Google » → Informations personnelles → Photo.</li>
+          <li><strong>Ordinateur</strong> — bouton « Télécharger », puis <a href="https://myaccount.google.com/personal-info" target="_blank" rel="noopener">myaccount.google.com/personal-info</a> → Photo.</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="card">
+      <h2>Sauvegarde</h2>
+      <p>Vos prospects et vos coordonnées vivent dans ce navigateur. Exportez de temps en temps, et pour passer du téléphone à l'ordinateur.</p>
+      <div class="actions">
+        <button class="btn btn--dark" id="exporter" type="button">Exporter mes données</button>
+        <button class="btn btn--ghost" id="importer" type="button">Importer un fichier</button>
+        <input type="file" id="fichier" accept="application/json" hidden>
+      </div>
+      <p class="note" style="margin-top:12px">Le fichier exporté contient vos prospects : gardez-le sur votre appareil ou dans un espace privé. Ne le déposez jamais dans le dépôt du site, qui est public.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- ============================ FICHE PROSPECT ============================ -->
+<div class="sheet" id="fiche">
+  <div class="sheet__in">
+    <div class="sheet__bar">
+      <h3 id="ficheTitre">Entreprise</h3>
+      <button class="btn btn--ghost btn--sm" id="fermer" type="button">Fermer</button>
+    </div>
+    <div class="sheet__body" id="ficheCorps"></div>
+  </div>
+</div>
+
+<div class="flash" id="flash"></div>
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   DONNÉES — tout reste dans ce navigateur, rien n'est envoyé
+   ============================================================ */
+var CLE = "cltdistrib-prospection";
+var D = { infos:{}, prospects:[] };
+
+var INFOS_DEFAUT = {
+  nom:"Clément Pires Valente", fonction:"Fondateur", tel:"",
+  email:"clementpiresvalente@gmail.com", zone:"",
+  site:"https://clt78.github.io/cltdistrib-site/", siret:""
+};
+
+function charger(){
+  try{
+    var brut = localStorage.getItem(CLE);
+    if(brut){
+      var p = JSON.parse(brut);
+      D.infos = p.infos || {};
+      D.prospects = Array.isArray(p.prospects) ? p.prospects : [];
+    }
+  }catch(e){ /* navigation privée ou données abîmées : on repart à vide */ }
+  Object.keys(INFOS_DEFAUT).forEach(function(k){
+    if(typeof D.infos[k] !== "string") D.infos[k] = INFOS_DEFAUT[k];
+  });
+}
+function sauver(){
+  try{ localStorage.setItem(CLE, JSON.stringify(D)); }
+  catch(e){ flash("Enregistrement impossible : pensez à exporter."); }
+}
+function uid(){ return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+/* ============================================================
+   OUTILS
+   ============================================================ */
+function $(id){ return document.getElementById(id); }
+function esc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+function aujourdhui(){ return new Date().toISOString().slice(0,10); }
+function joursDepuis(iso){
+  if(!iso) return null;
+  var d = new Date(iso + "T00:00:00");
+  if(isNaN(d)) return null;
+  return Math.floor((new Date(aujourdhui() + "T00:00:00") - d) / 86400000);
+}
+function dateFr(iso){
+  if(!iso) return "";
+  var p = iso.split("-");
+  return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : iso;
+}
+var flashT = null;
+function flash(txt){
+  var f = $("flash");
+  f.textContent = txt;
+  f.classList.add("is-on");
+  clearTimeout(flashT);
+  flashT = setTimeout(function(){ f.classList.remove("is-on"); }, 3200);
+}
+
+/* ============================================================
+   STATUTS ET RELANCES
+   ============================================================ */
+var STATUTS = [
+  { k:"a_envoyer", l:"À envoyer" },
+  { k:"envoye",    l:"Mail envoyé" },
+  { k:"relance",   l:"Relancé" },
+  { k:"reponse",   l:"Réponse reçue" },
+  { k:"rdv",       l:"Rendez-vous" },
+  { k:"gagne",     l:"Emplacement signé" },
+  { k:"refus",     l:"Sans suite" }
+];
+function libelleStatut(k){
+  var s = STATUTS.find(function(x){ return x.k === k; });
+  return s ? s.l : k;
+}
+var DELAI_RELANCE = 7;   /* jours avant de proposer une relance */
+
+/* Le prospect attend-il une relance, et depuis combien de temps ? */
+function relance(p){
+  if(p.statut !== "envoye" && p.statut !== "relance") return null;
+  var base = p.statut === "relance" ? p.dateRelance : p.dateEnvoi;
+  var j = joursDepuis(base);
+  if(j === null) return null;
+  return { jours:j, du: j >= DELAI_RELANCE };
+}
+
+/* ============================================================
+   MODÈLES DE MAIL — un angle par type d'établissement
+   ============================================================ */
+var TYPES = [
+  "Entreprise / bureaux", "Usine / atelier", "Entrepôt / logistique",
+  "Salle de sport", "Centre de formation", "Hôtel / résidence",
+  "Établissement accueillant du public", "Gare / lieu de passage", "Autre"
+];
+
+var ANGLES = {
+  "Entreprise / bureaux":
+    "Vos équipes n'ont pas toujours de quoi boire ou grignoter sur place, et sortir pour une pause fait perdre du temps à tout le monde.",
+  "Usine / atelier":
+    "Sur un site en horaires décalés, les commerces sont souvent fermés quand vos équipes prennent leur pause.",
+  "Entrepôt / logistique":
+    "Entre les zones de quai et la salle de repos, un point boissons accessible à toute heure change le quotidien des équipes.",
+  "Salle de sport":
+    "Une boisson fraîche ou une barre à la sortie d'une séance, c'est un service que vos adhérents attendent souvent sur place.",
+  "Centre de formation":
+    "Entre deux sessions, stagiaires et formateurs cherchent rarement bien loin : encore faut-il trouver quelque chose sur place.",
+  "Hôtel / résidence":
+    "En dehors des horaires de service, vos clients n'ont pas toujours de solution pour boire ou manger un en-cas.",
+  "Établissement accueillant du public":
+    "Dans un espace d'accueil ou une salle d'attente, pouvoir patienter avec une boisson change nettement l'expérience.",
+  "Gare / lieu de passage":
+    "Sur un lieu de passage, l'offre disponible sur place est souvent limitée alors que la fréquentation est là.",
+  "Autre":
+    "Proposer des boissons et des snacks sur place rend service aux personnes présentes, sans créer de point de vente."
+};
+
+function infos(){ return D.infos; }
+
+function ligneContact(){
+  var i = infos(), l = [];
+  if(i.tel) l.push(i.tel);
+  if(i.email) l.push(i.email);
+  return l.join(" — ");
+}
+
+function objetMail(p, type){
+  if(type === "relance")
+    return "Relance — un distributeur de boissons et snacks pour " + (p.entreprise || "votre établissement");
+  return "Un distributeur de boissons et snacks pour " + (p.entreprise || "votre établissement") + " ?";
+}
+
+function corpsMail(p, type){
+  var i = infos();
+  var salut = p.contactNom ? "Bonjour " + p.contactNom + "," : "Bonjour,";
+  var nomSite = p.entreprise || "votre établissement";
+  var l = [];
+
+  if(type === "relance"){
+    l.push(salut, "");
+    l.push("Je me permets de revenir vers vous au sujet de mon message concernant l'installation d'un distributeur de boissons et snacks chez " + nomSite + ".");
+    l.push("");
+    l.push("La proposition tient toujours : CLTDistrib fournit la machine, l'installe, l'approvisionne et l'entretient. De votre côté, il s'agit simplement de mettre à disposition un emplacement adapté et une alimentation électrique.");
+    l.push("");
+    l.push("Si le sujet n'est pas d'actualité, dites-le moi simplement, je n'insisterai pas. Et s'il l'est, je peux passer voir l'emplacement quand cela vous arrange : cette visite est gratuite et sans engagement.");
+  } else {
+    l.push(salut, "");
+    /* La zone est annoncée à part : « du secteur de Yvelines » passe mal,
+       et l'élision dépend de ce qui sera saisi. */
+    l.push("Je suis " + (i.nom || "") + ", " + (i.fonction ? i.fonction.toLowerCase() + " de " : "") + "CLTDistrib. J'installe et j'exploite des distributeurs automatiques de boissons et de snacks pour les entreprises et les établissements.");
+    l.push("");
+    l.push(ANGLES[p.type] || ANGLES["Autre"]);
+    l.push("");
+    l.push("Le principe est simple : vous mettez à disposition un emplacement adapté, et je m'occupe du reste.");
+    l.push("");
+    l.push("— La machine est fournie et installée par mes soins");
+    l.push("— Les produits sont sélectionnés selon le public du lieu");
+    l.push("— Le réassort, le nettoyage et la maintenance sont assurés");
+    l.push("— Le paiement par carte et sans contact est géré de mon côté");
+    l.push("");
+    l.push("Aucun investissement ni gestion de stock de votre côté.");
+    l.push("");
+    l.push("Si l'idée vous paraît pertinente pour " + nomSite + ", je peux passer étudier l'emplacement : la visite est gratuite et sans engagement, et je vous dirai franchement si votre site s'y prête ou non." + (i.zone ? " Je me déplace sur le secteur suivant : " + i.zone + "." : ""));
+  }
+
+  l.push("");
+  l.push("Seriez-vous disponible pour en échanger quelques minutes ?");
+  l.push("");
+  l.push("Bien cordialement,");
+  l.push(i.nom || "");
+  if(ligneContact()) l.push(ligneContact());
+  if(i.site) l.push(i.site);
+
+  return l.join("\n");
+}
+
+/* ============================================================
+   SIGNATURE (reprise de la page précédente)
+   ============================================================ */
+var LOGO = "https://clt78.github.io/cltdistrib-site/images/signature-logo.png";
+var A = "#0060FC", NAVY = "#0A1428", INK = "#1A2333", DOUX = "#5A6879", LIGNE = "#DDE4EF";
+var POLICE = "Arial, 'Helvetica Neue', Helvetica, sans-serif";
+var formatSig = "complete";
+
+function siteCourt(u){ return String(u).replace(/^https?:\/\//,"").replace(/\/$/,""); }
+function telLien(t){ return "tel:" + String(t).replace(/[^\d+]/g,""); }
+
+function contactsHtml(){
+  var i = infos(), d = [];
+  if(i.tel)   d.push('<a href="' + telLien(i.tel) + '" style="color:' + INK + ';text-decoration:none;">' + esc(i.tel) + '</a>');
+  if(i.email) d.push('<a href="mailto:' + esc(i.email) + '" style="color:' + INK + ';text-decoration:none;">' + esc(i.email) + '</a>');
+  return d.join('<span style="color:' + LIGNE + ';"> &nbsp;|&nbsp; </span>');
+}
+
+function signatureComplete(){
+  var i = infos(), l = [];
+  l.push('<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:' + POLICE + ';">');
+  l.push('<tr><td style="vertical-align:top;padding:0 18px 0 0;">');
+  l.push('<img src="' + LOGO + '" width="190" height="64" alt="CLTDistrib" style="display:block;border:0;outline:none;text-decoration:none;">');
+  l.push('</td><td style="vertical-align:top;padding:0 0 0 18px;border-left:3px solid ' + A + ';">');
+  l.push('<div style="font-family:' + POLICE + ';font-size:16px;font-weight:bold;color:' + NAVY + ';line-height:1.3;">' + esc(i.nom) + '</div>');
+  if(i.fonction)
+    l.push('<div style="font-family:' + POLICE + ';font-size:13px;color:' + DOUX + ';line-height:1.4;padding-top:1px;">' + esc(i.fonction) + ' — CLTDistrib</div>');
+  l.push('<div style="font-family:' + POLICE + ';font-size:11px;font-weight:bold;color:' + A + ';letter-spacing:0.08em;text-transform:uppercase;padding-top:7px;">Distribution automatique &nbsp;&middot;&nbsp; Boissons &amp; snacks</div>');
+  if(contactsHtml())
+    l.push('<div style="font-family:' + POLICE + ';font-size:13px;color:' + INK + ';line-height:1.6;padding-top:9px;">' + contactsHtml() + '</div>');
+  if(i.site)
+    l.push('<div style="font-family:' + POLICE + ';font-size:13px;line-height:1.6;"><a href="' + esc(i.site) + '" style="color:' + A + ';text-decoration:none;font-weight:bold;">' + esc(siteCourt(i.site)) + '</a></div>');
+  if(i.zone)
+    l.push('<div style="font-family:' + POLICE + ';font-size:12.5px;color:' + DOUX + ';line-height:1.6;padding-top:2px;">Zone d\'intervention : ' + esc(i.zone) + '</div>');
+  l.push('</td></tr></table>');
+
+  l.push('<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:' + POLICE + ';margin-top:14px;"><tr><td style="border-top:1px solid ' + LIGNE + ';padding-top:11px;">');
+  l.push('<div style="font-family:' + POLICE + ';font-size:12.5px;color:' + NAVY + ';font-weight:bold;line-height:1.5;">Vous avez l\'emplacement, nous nous occupons du reste.</div>');
+  l.push('<div style="font-family:' + POLICE + ';font-size:12px;color:' + DOUX + ';line-height:1.5;padding-top:2px;">Machine fournie, installée, approvisionnée et entretenue &mdash; étude de votre emplacement gratuite et sans engagement.</div>');
+  var bas = [];
+  if(i.siret) bas.push("SIRET " + esc(i.siret));
+  bas.push("Message professionnel. Pour ne plus être contacté, répondez « STOP » à cet email.");
+  l.push('<div style="font-family:' + POLICE + ';font-size:10.5px;color:#8A93A3;line-height:1.5;padding-top:9px;">' + bas.join(" &middot; ") + '</div>');
+  l.push('</td></tr></table>');
+  return l.join("");
+}
+
+function signatureCourte(){
+  var i = infos(), l = [];
+  l.push('<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;font-family:' + POLICE + ';">');
+  l.push('<tr><td style="vertical-align:middle;padding:0 14px 0 0;">');
+  l.push('<img src="' + LOGO + '" width="118" height="40" alt="CLTDistrib" style="display:block;border:0;outline:none;">');
+  l.push('</td><td style="vertical-align:middle;padding:0 0 0 14px;border-left:3px solid ' + A + ';">');
+  l.push('<div style="font-family:' + POLICE + ';font-size:14px;font-weight:bold;color:' + NAVY + ';line-height:1.35;">' + esc(i.nom) + '</div>');
+  l.push('<div style="font-family:' + POLICE + ';font-size:11.5px;color:' + DOUX + ';line-height:1.45;">CLTDistrib — Distribution automatique</div>');
+  if(contactsHtml())
+    l.push('<div style="font-family:' + POLICE + ';font-size:12.5px;color:' + INK + ';line-height:1.55;padding-top:3px;">' + contactsHtml() + '</div>');
+  l.push('</td></tr></table>');
+  return l.join("");
+}
+
+function rendreSignature(){
+  var html = formatSig === "courte" ? signatureCourte() : signatureComplete();
+  $("sig").innerHTML = html;
+  $("code").value = html;
+  var i = infos(), m = [];
+  if(!i.tel)   m.push("votre <strong>téléphone</strong>");
+  if(!i.zone)  m.push("votre <strong>zone d'intervention</strong>");
+  if(!i.siret) m.push("votre <strong>SIRET</strong> (dès l'immatriculation)");
+  $("miss").innerHTML = m.length
+    ? "Il manque " + m.join(", ") + ". Ces lignes n'apparaissent ni dans la signature ni dans les mails tant qu'elles sont vides."
+    : "";
+}
+
+/* ============================================================
+   PRESSE-PAPIERS
+   ============================================================ */
+function copierTexte(txt, message){
+  function repli(){
+    var z = document.createElement("textarea");
+    z.value = txt;
+    z.style.position = "fixed"; z.style.opacity = "0";
+    document.body.appendChild(z);
+    z.select(); z.setSelectionRange(0, 999999);
+    var ok = false;
+    try{ ok = document.execCommand("copy"); }catch(e){}
+    document.body.removeChild(z);
+    flash(ok ? message : "Copie impossible : sélectionnez le texte à la main.");
+  }
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(function(){ flash(message); }).catch(repli);
+  } else { repli(); }
+}
+
+function copierRiche(noeud){
+  var html = noeud.innerHTML, brut = noeud.innerText;
+  function repli(){
+    var sel = window.getSelection(), plage = document.createRange();
+    plage.selectNodeContents(noeud);
+    sel.removeAllRanges(); sel.addRange(plage);
+    var ok = false;
+    try{ ok = document.execCommand("copy"); }catch(e){}
+    sel.removeAllRanges();
+    flash(ok ? "Signature copiée." : "Copie impossible : utilisez « Copier le code HTML ».");
+  }
+  if(window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+    navigator.clipboard.write([ new ClipboardItem({
+      "text/html": new Blob([html], {type:"text/html"}),
+      "text/plain": new Blob([brut], {type:"text/plain"})
+    })]).then(function(){ flash("Signature copiée."); }).catch(repli);
+  } else { repli(); }
+}
+
+/* ============================================================
+   LISTE DES PROSPECTS
+   ============================================================ */
+var filtre = "tous";
+var recherche = "";
+var ficheId = null;
+
+function compteurs(){
+  var c = { tous:D.prospects.length, a_envoyer:0, attente:0, relancer:0, reponse:0 };
+  D.prospects.forEach(function(p){
+    if(p.statut === "a_envoyer") c.a_envoyer++;
+    if(p.statut === "envoye" || p.statut === "relance") c.attente++;
+    var r = relance(p);
+    if(r && r.du) c.relancer++;
+    if(p.statut === "reponse" || p.statut === "rdv" || p.statut === "gagne") c.reponse++;
+  });
+  return c;
+}
+
+function rendreKpis(){
+  var c = compteurs();
+  var cases = [
+    { k:"a_envoyer", n:c.a_envoyer, l:"À envoyer" },
+    { k:"attente",   n:c.attente,   l:"En attente" },
+    { k:"relancer",  n:c.relancer,  l:"À relancer" },
+    { k:"reponse",   n:c.reponse,   l:"Réponses" }
+  ];
+  $("kpis").innerHTML = cases.map(function(x){
+    return '<button class="kpi' + (filtre === x.k ? " is-on" : "") + '" data-f="' + x.k + '" type="button">' +
+      '<b>' + x.n + '</b><span>' + x.l + '</span></button>';
+  }).join("");
+  $("kpis").querySelectorAll("[data-f]").forEach(function(b){
+    b.addEventListener("click", function(){
+      var f = b.getAttribute("data-f");
+      filtre = (filtre === f) ? "tous" : f;
+      rendreListe();
+    });
+  });
+}
+
+function passeFiltre(p){
+  if(filtre === "a_envoyer") return p.statut === "a_envoyer";
+  if(filtre === "attente")   return p.statut === "envoye" || p.statut === "relance";
+  if(filtre === "relancer"){ var r = relance(p); return !!(r && r.du); }
+  if(filtre === "reponse")   return p.statut === "reponse" || p.statut === "rdv" || p.statut === "gagne";
+  return true;
+}
+function passeRecherche(p){
+  if(!recherche) return true;
+  var t = (p.entreprise + " " + p.ville + " " + p.type + " " + (p.contactNom||"") + " " + (p.email||"")).toLowerCase();
+  return t.indexOf(recherche) !== -1;
+}
+
+/* Les prospects à relancer remontent en tête, puis les non envoyés. */
+function priorite(p){
+  var r = relance(p);
+  if(r && r.du) return 0;
+  if(p.statut === "reponse") return 1;
+  if(p.statut === "a_envoyer") return 2;
+  if(p.statut === "rdv") return 3;
+  if(p.statut === "envoye" || p.statut === "relance") return 4;
+  return 5;
+}
+
+function rendreListe(){
+  rendreKpis();
+  var l = D.prospects.filter(function(p){ return passeFiltre(p) && passeRecherche(p); });
+  l.sort(function(a,b){
+    var d = priorite(a) - priorite(b);
+    return d !== 0 ? d : (a.entreprise || "").localeCompare(b.entreprise || "", "fr");
+  });
+
+  $("demarrage").style.display = D.prospects.length ? "none" : "";
+
+  if(!l.length){
+    $("liste").innerHTML = '<div class="vide">' +
+      (D.prospects.length ? "Aucune entreprise ne correspond." : "Aucune entreprise pour l'instant.<br>Appuyez sur + pour en ajouter une.") +
+      '</div>';
+    return;
+  }
+
+  $("liste").innerHTML = l.map(function(p){
+    var r = relance(p), action = "", cls = "";
+    if(r && r.du){ action = "À relancer — envoyé il y a " + r.jours + " jours"; cls = " pros__a--late"; }
+    else if(r){ action = "Envoyé il y a " + r.jours + (r.jours > 1 ? " jours" : " jour"); cls = " pros__a--soon"; }
+    else if(p.statut === "a_envoyer"){ action = p.email ? "Prêt à envoyer" : "Email du contact manquant"; }
+    else if(p.statut === "reponse"){ action = "Réponse reçue le " + dateFr(p.dateReponse); }
+
+    var meta = [p.type, p.ville].filter(Boolean).join(" · ");
+    return '<button class="pros" data-id="' + p.id + '" type="button">' +
+      '<span class="pros__c">' +
+        '<span class="pros__n">' + esc(p.entreprise || "Sans nom") + '</span>' +
+        (meta ? '<span class="pros__m">' + esc(meta) + '</span>' : '') +
+        (action ? '<span class="pros__a' + cls + '">' + esc(action) + '</span>' : '') +
+      '</span>' +
+      '<span class="pill p-' + p.statut + '">' + esc(libelleStatut(p.statut)) + '</span>' +
+    '</button>';
+  }).join("");
+
+  $("liste").querySelectorAll("[data-id]").forEach(function(b){
+    b.addEventListener("click", function(){ ouvrirFiche(b.getAttribute("data-id")); });
+  });
+}
+
+/* ============================================================
+   FICHE PROSPECT
+   ============================================================ */
+function trouver(id){ return D.prospects.find(function(p){ return p.id === id; }); }
+
+var CHAMPS = [
+  { k:"entreprise", l:"Nom de l'entreprise", w:2 },
+  { k:"type", l:"Type d'établissement", t:"select" },
+  { k:"ville", l:"Ville" },
+  { k:"contactNom", l:"Contact — nom" },
+  { k:"contactFonction", l:"Contact — fonction" },
+  { k:"email", l:"Email du contact", t:"email", w:2 },
+  { k:"tel", l:"Téléphone" },
+  { k:"effectif", l:"Personnes sur le site" },
+  { k:"note", l:"Notes", t:"area", w:2 }
+];
+
+function champHtml(p, c){
+  var id = "f-" + c.k, val = esc(p[c.k] || "");
+  var champ;
+  if(c.t === "area"){
+    champ = '<textarea id="' + id + '" data-k="' + c.k + '" rows="2" style="min-height:70px"></textarea>';
+  } else if(c.t === "select"){
+    champ = '<select id="' + id + '" data-k="' + c.k + '">' +
+      TYPES.map(function(t){ return '<option' + (p.type === t ? " selected" : "") + '>' + esc(t) + '</option>'; }).join("") +
+      '</select>';
+  } else {
+    champ = '<input id="' + id + '" data-k="' + c.k + '" type="' + (c.t || "text") + '" value="' + val + '">';
+  }
+  return '<div' + (c.w === 2 ? ' class="full"' : '') + '><label for="' + id + '">' + esc(c.l) + '</label>' + champ + '</div>';
+}
+
+function ouvrirFiche(id){
+  var p = trouver(id);
+  if(!p) return;
+  ficheId = id;
+  $("ficheTitre").textContent = p.entreprise || "Nouvelle entreprise";
+
+  var estRelance = p.statut === "envoye" || p.statut === "relance";
+  var typeMail = estRelance ? "relance" : "premier";
+  /* Recalculé à chaque frappe : les boutons doivent envoyer le texte à jour,
+     jamais celui figé à l'ouverture de la fiche. */
+  var courant = { objet: objetMail(p, typeMail), corps: corpsMail(p, typeMail) };
+
+  var histo = (p.historique || []).slice().reverse().map(function(h){
+    return '<div class="hist__l"><span class="hist__d">' + esc(dateFr(h.date)) + '</span><span>' + esc(h.texte) + '</span></div>';
+  }).join("") || '<p class="note">Aucun événement pour l\'instant.</p>';
+
+  $("ficheCorps").innerHTML =
+    '<div class="card" style="margin-top:14px">' +
+      '<h2>Où en est ce prospect</h2>' +
+      '<div class="etapes" id="etapes">' +
+        STATUTS.map(function(s){
+          return '<button class="etape' + (p.statut === s.k ? " is-on" : "") + '" data-s="' + s.k + '" type="button">' + esc(s.l) + '</button>';
+        }).join("") +
+      '</div>' +
+      '<div class="hist">' + histo + '</div>' +
+    '</div>' +
+
+    '<div class="card">' +
+      '<h2>' + (estRelance ? "Mail de relance" : "Mail de prospection") + '</h2>' +
+      '<p>' + (estRelance
+        ? "Adapté au fait que vous avez déjà écrit. Relisez avant d'envoyer."
+        : "Adapté au type d'établissement. Relisez et ajustez avant d'envoyer.") + '</p>' +
+      '<div class="apercu" id="apercu"><div class="objet" id="apercuObjet">Objet : ' + esc(courant.objet) + '</div>' +
+        '<span id="apercuCorps">' + esc(courant.corps) + '</span></div>' +
+      '<div class="miss" id="besoinEmail" style="margin-top:10px' + (p.email ? ';display:none' : '') + '">Renseignez l\'email du contact plus bas pour pouvoir envoyer.</div>' +
+      '<div class="actions">' +
+        '<button class="btn btn--main" id="ouvrirGmail" type="button"' + (p.email ? '' : ' disabled') + '>' +
+          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>' +
+          'Ouvrir dans Gmail</button>' +
+        '<button class="btn btn--ghost" id="ouvrirMailto" type="button"' + (p.email ? '' : ' disabled') + '>Ma messagerie</button>' +
+        '<button class="btn btn--ghost" id="copierMail" type="button">Copier le mail</button>' +
+      '</div>' +
+      '<p class="note" style="margin-top:11px">Votre signature n\'est pas dans ce texte : Gmail l\'ajoute tout seul si vous l\'avez installée depuis l\'onglet « Mes infos ».</p>' +
+      (p.statut === "a_envoyer"
+        ? '<button class="btn btn--dark btn--wide" id="marquerEnvoye" type="button" style="margin-top:11px">J\'ai envoyé ce mail</button>'
+        : '') +
+      (estRelance
+        ? '<div class="actions" style="margin-top:4px">' +
+            '<button class="btn btn--dark" id="marquerRelance" type="button">J\'ai relancé</button>' +
+            '<button class="btn btn--ghost" id="marquerReponse" type="button">Réponse reçue</button>' +
+          '</div>'
+        : '') +
+    '</div>' +
+
+    '<div class="card">' +
+      '<h2>Informations</h2>' +
+      '<div class="grid">' + CHAMPS.map(function(c){ return champHtml(p, c); }).join("") + '</div>' +
+      '<div class="actions" style="margin-top:14px">' +
+        '<button class="btn btn--danger" id="supprimer" type="button">Supprimer cette entreprise</button>' +
+      '</div>' +
+    '</div>';
+
+  /* la zone de notes est remplie en propriété pour éviter tout souci d'échappement */
+  var zn = $("f-note");
+  if(zn) zn.value = p.note || "";
+
+  /* enregistrement au fil de la frappe */
+  function majApercu(){
+    courant.objet = objetMail(p, typeMail);
+    courant.corps = corpsMail(p, typeMail);
+    $("apercuObjet").textContent = "Objet : " + courant.objet;
+    $("apercuCorps").textContent = courant.corps;
+    var pret = !!p.email;
+    ["ouvrirGmail","ouvrirMailto"].forEach(function(id){
+      var b = $(id);
+      if(b) b.disabled = !pret;
+    });
+    $("besoinEmail").style.display = pret ? "none" : "";
+  }
+  ouvrirFiche.majApercu = majApercu;
+
+  $("ficheCorps").querySelectorAll("[data-k]").forEach(function(el){
+    var evt = el.tagName === "SELECT" ? "change" : "input";
+    el.addEventListener(evt, function(){
+      var k = el.getAttribute("data-k");
+      p[k] = el.value;
+      sauver();
+      if(k === "entreprise") $("ficheTitre").textContent = el.value || "Nouvelle entreprise";
+      if(k === "entreprise" || k === "contactNom" || k === "type" || k === "email") majApercu();
+      rendreListe();
+    });
+  });
+
+  $("etapes").querySelectorAll("[data-s]").forEach(function(b){
+    b.addEventListener("click", function(){ changerStatut(p, b.getAttribute("data-s")); });
+  });
+
+  var g = $("ouvrirGmail");
+  if(g) g.addEventListener("click", function(){
+    window.open("https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=" + encodeURIComponent(p.email) +
+      "&su=" + encodeURIComponent(courant.objet) + "&body=" + encodeURIComponent(courant.corps), "_blank", "noopener");
+    flash("Gmail ouvert. Pensez à repasser ici pour marquer l'envoi.");
+  });
+  var m = $("ouvrirMailto");
+  if(m) m.addEventListener("click", function(){
+    window.location.href = "mailto:" + encodeURIComponent(p.email) +
+      "?subject=" + encodeURIComponent(courant.objet) + "&body=" + encodeURIComponent(courant.corps);
+  });
+  $("copierMail").addEventListener("click", function(){
+    copierTexte("Objet : " + courant.objet + "\n\n" + courant.corps, "Mail copié.");
+  });
+
+  var me = $("marquerEnvoye");
+  if(me) me.addEventListener("click", function(){ changerStatut(p, "envoye"); });
+  var mr = $("marquerRelance");
+  if(mr) mr.addEventListener("click", function(){ changerStatut(p, "relance"); });
+  var mp = $("marquerReponse");
+  if(mp) mp.addEventListener("click", function(){ changerStatut(p, "reponse"); });
+
+  $("supprimer").addEventListener("click", function(){
+    if(!confirm("Supprimer « " + (p.entreprise || "cette entreprise") + " » et tout son historique ?")) return;
+    D.prospects = D.prospects.filter(function(x){ return x.id !== p.id; });
+    sauver(); fermerFiche(); rendreListe();
+    flash("Entreprise supprimée.");
+  });
+
+  $("fiche").classList.add("is-on");
+  document.documentElement.style.overflow = "hidden";
+}
+
+function fermerFiche(){
+  $("fiche").classList.remove("is-on");
+  document.documentElement.style.overflow = "";
+  ficheId = null;
+}
+
+function ajouterHisto(p, texte){
+  if(!Array.isArray(p.historique)) p.historique = [];
+  p.historique.push({ date: aujourdhui(), texte: texte });
+}
+
+function changerStatut(p, s){
+  if(p.statut === s && s !== "relance") return;
+  p.statut = s;
+  if(s === "envoye"){ p.dateEnvoi = aujourdhui(); ajouterHisto(p, "Mail de prospection envoyé"); }
+  else if(s === "relance"){ p.dateRelance = aujourdhui(); ajouterHisto(p, "Relance envoyée"); }
+  else if(s === "reponse"){ p.dateReponse = aujourdhui(); ajouterHisto(p, "Réponse reçue"); }
+  else { ajouterHisto(p, "Statut : " + libelleStatut(s)); }
+  sauver();
+  rendreListe();
+  ouvrirFiche(p.id);
+  flash("Statut : " + libelleStatut(s));
+}
+
+/* ============================================================
+   AJOUT, EXPORT, IMPORT
+   ============================================================ */
+function ajouterProspect(){
+  var p = {
+    id: uid(), entreprise:"", type:"Entreprise / bureaux", ville:"",
+    contactNom:"", contactFonction:"", email:"", tel:"", effectif:"", note:"",
+    statut:"a_envoyer", dateEnvoi:"", dateRelance:"", dateReponse:"",
+    historique:[{ date: aujourdhui(), texte:"Entreprise ajoutée" }]
+  };
+  D.prospects.push(p);
+  sauver();
+  rendreListe();
+  ouvrirFiche(p.id);
+  setTimeout(function(){ var e = $("f-entreprise"); if(e) e.focus(); }, 120);
+}
+
+function exporter(){
+  var contenu = JSON.stringify(D, null, 2);
+  var blob = new Blob([contenu], { type:"application/json" });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement("a");
+  a.href = url;
+  a.download = "cltdistrib-prospection-" + aujourdhui() + ".json";
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  flash("Fichier exporté.");
+}
+
+function importer(fichier){
+  var lecteur = new FileReader();
+  lecteur.onload = function(){
+    try{
+      var p = JSON.parse(lecteur.result);
+      if(!p || !Array.isArray(p.prospects)) throw new Error("format");
+      if(D.prospects.length && !confirm("Remplacer les " + D.prospects.length + " entreprise(s) déjà présentes par le contenu du fichier ?")) return;
+      D.prospects = p.prospects;
+      if(p.infos) D.infos = Object.assign({}, INFOS_DEFAUT, p.infos);
+      sauver();
+      remplirInfos();
+      rendreSignature();
+      rendreListe();
+      flash(D.prospects.length + " entreprise(s) importée(s).");
+    }catch(e){
+      flash("Fichier illisible : ce n'est pas un export de cette page.");
+    }
+  };
+  lecteur.readAsText(fichier);
+}
+
+/* ============================================================
+   MISE EN PLACE
+   ============================================================ */
+var CHAMPS_INFOS = ["nom","fonction","tel","email","zone","site","siret"];
+
+function remplirInfos(){
+  CHAMPS_INFOS.forEach(function(k){
+    var e = $(k);
+    if(e) e.value = D.infos[k] || "";
+  });
+}
+
+charger();
+remplirInfos();
+rendreSignature();
+rendreListe();
+
+CHAMPS_INFOS.forEach(function(k){
+  var e = $(k);
+  if(e) e.addEventListener("input", function(){
+    D.infos[k] = e.value;
+    sauver();
+    rendreSignature();
+    if(ficheId && ouvrirFiche.majApercu) ouvrirFiche.majApercu();
+  });
+});
+
+document.querySelectorAll(".tabs button").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll(".tabs button").forEach(function(x){ x.classList.remove("is-on"); });
+    b.classList.add("is-on");
+    document.querySelectorAll(".vue").forEach(function(v){ v.classList.remove("is-on"); });
+    $("v-" + b.getAttribute("data-vue")).classList.add("is-on");
+    window.scrollTo(0, 0);
+  });
+});
+
+document.querySelectorAll("[data-sig]").forEach(function(b){
+  b.addEventListener("click", function(){
+    document.querySelectorAll("[data-sig]").forEach(function(x){ x.classList.remove("is-on"); });
+    b.classList.add("is-on");
+    formatSig = b.getAttribute("data-sig");
+    rendreSignature();
+  });
+});
+
+$("q").addEventListener("input", function(){ recherche = $("q").value.trim().toLowerCase(); rendreListe(); });
+$("ajouter").addEventListener("click", ajouterProspect);
+$("fermer").addEventListener("click", fermerFiche);
+$("fiche").addEventListener("click", function(e){ if(e.target === $("fiche")) fermerFiche(); });
+document.addEventListener("keydown", function(e){ if(e.key === "Escape" && ficheId) fermerFiche(); });
+
+$("copierSig").addEventListener("click", function(){ copierRiche($("sig")); });
+$("copierCode").addEventListener("click", function(){ copierTexte($("code").value, "Code HTML copié."); });
+$("exporter").addEventListener("click", exporter);
+$("importer").addEventListener("click", function(){ $("fichier").click(); });
+$("fichier").addEventListener("change", function(){
+  if(this.files && this.files[0]) importer(this.files[0]);
+  this.value = "";
+});
+
+/* L'onglet peut être ouvert directement : prospection.html#infos */
+if(location.hash === "#infos"){
+  var bi = document.querySelector('.tabs button[data-vue="infos"]');
+  if(bi) bi.click();
+}
+
+})();
+</script>
+</body>
+</html>
