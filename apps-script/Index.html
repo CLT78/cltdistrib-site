@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<style>
+  :root{
+    --navy:#050B1A; --navy-soft:#0C1526; --brand:#0060FC; --brand-deep:#003A9E; --brand-tint:#E8F0FF;
+    --ink:#1B2437; --ink-soft:#46536A; --ink-faint:#7A8698;
+    --line:#DDE4EF; --line-soft:#ECF0F8; --bg:#F3F6FB;
+    --ok:#13693F; --ok-tint:#E3F3E9; --wait:#8A6A18; --wait-tint:#FCF3DE;
+    --late:#9B2C1E; --late-tint:#FBE9E6; --info:#1C4C8B; --info-tint:#E6EEF9;
+    --mute:#5A6478; --mute-tint:#EDF0F5;
+  }
+  *{ box-sizing:border-box; }
+  body{
+    margin:0; background:var(--bg); color:var(--ink); line-height:1.55;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif; font-size:15px;
+    -webkit-text-size-adjust:100%;
+  }
+  h1,h2,h3{ margin:0; font-weight:700; letter-spacing:-0.02em; }
+  p{ margin:0 0 10px; }
+  a{ color:var(--brand); }
+
+  .top{ position:sticky; top:0; z-index:30; background:var(--navy); color:#fff; }
+  .top__in{ display:flex; align-items:center; gap:12px; padding:11px 16px; max-width:820px; margin:0 auto; }
+  .top__logo{ height:34px; width:auto; display:block; background:#fff; border-radius:7px; padding:3px 6px; }
+  .top__t strong{ display:block; font-size:15px; }
+  .top__t span{ display:block; font-size:11.5px; color:#93A2BC; }
+  .tabs{ display:flex; max-width:820px; margin:0 auto; }
+  .tabs button{
+    flex:1; font:inherit; font-size:14px; font-weight:600; padding:12px 6px; min-height:48px;
+    background:none; border:0; border-bottom:3px solid transparent; color:#93A2BC; cursor:pointer;
+  }
+  .tabs button.is-on{ color:#fff; border-bottom-color:var(--brand); }
+
+  .wrap{ max-width:820px; margin:0 auto; padding:0 16px 130px; }
+  .vue{ display:none; }
+  .vue.is-on{ display:block; }
+
+  .card{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:17px; margin-top:15px; }
+  .card > h2{ font-size:16px; color:var(--navy); margin:0 0 3px; }
+  .card > h2 + p{ margin:0 0 13px; font-size:13.5px; color:var(--ink-soft); }
+  .note{ font-size:12.5px; color:var(--ink-faint); line-height:1.5; }
+
+  .btn{
+    font:inherit; font-size:15px; font-weight:600; padding:12px 17px; min-height:46px; border-radius:10px;
+    border:1px solid transparent; cursor:pointer; display:inline-flex; align-items:center;
+    justify-content:center; gap:8px; text-decoration:none;
+  }
+  .btn--main{ background:var(--brand); color:#fff; }
+  .btn--dark{ background:var(--navy); color:#fff; }
+  .btn--ghost{ background:#fff; color:var(--navy); border-color:var(--line); }
+  .btn--danger{ background:#fff; color:var(--late); border-color:#F0CFC9; }
+  .btn--sm{ font-size:13.5px; padding:9px 13px; min-height:40px; border-radius:8px; }
+  .btn--wide{ width:100%; }
+  .btn:disabled{ opacity:.5; cursor:not-allowed; }
+  .actions{ display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .actions .btn{ flex:1 1 150px; }
+
+  input,select,textarea{
+    font:inherit; font-size:15px; padding:11px 12px; border:1px solid var(--line); border-radius:9px;
+    background:#fff; color:var(--ink); width:100%; min-height:44px;
+  }
+  input:focus,select:focus,textarea:focus{ outline:none; border-color:var(--brand); box-shadow:0 0 0 3px rgba(0,96,252,.13); }
+  textarea{ resize:vertical; line-height:1.55; }
+  label{ font-size:12px; font-weight:600; color:var(--ink-soft); display:block; margin-bottom:4px; }
+  .grid{ display:grid; grid-template-columns:1fr 1fr; gap:11px; }
+  .grid .full{ grid-column:1 / -1; }
+  @media (max-width:560px){ .grid{ grid-template-columns:1fr; } }
+
+  /* ---------- assistant ---------- */
+  .chat{ display:flex; flex-direction:column; gap:11px; padding-top:15px; }
+  .bulle{ max-width:88%; padding:12px 14px; border-radius:13px; font-size:14.5px; white-space:pre-wrap; }
+  .bulle--moi{ align-self:flex-end; background:var(--brand); color:#fff; border-bottom-right-radius:4px; }
+  .bulle--ia{ align-self:flex-start; background:#fff; border:1px solid var(--line); border-bottom-left-radius:4px; }
+  .bulle--err{ align-self:flex-start; background:var(--late-tint); border:1px solid #F0CFC9; color:#7A2318; }
+  .pense{ align-self:flex-start; color:var(--ink-faint); font-size:13.5px; padding:4px 2px; }
+  .pense span{ animation:clign 1.1s infinite; }
+  @keyframes clign{ 0%,100%{opacity:.25} 50%{opacity:1} }
+
+  .cand{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:13px 14px; display:flex; gap:12px; }
+  .cand + .cand{ margin-top:8px; }
+  .cand.is-on{ border-color:var(--brand); box-shadow:0 0 0 2px rgba(0,96,252,.12); }
+  .cand input[type=checkbox]{ width:22px; height:22px; min-height:0; padding:0; margin:1px 0 0; flex-shrink:0; accent-color:var(--brand); }
+  .cand__c{ flex:1; min-width:0; }
+  .cand__n{ display:block; font-weight:600; font-size:15px; color:var(--navy); line-height:1.3; }
+  .cand__m{ display:block; font-size:12.5px; color:var(--ink-faint); margin-top:3px; }
+  .cand__p{ display:block; font-size:13px; color:var(--ink-soft); margin-top:6px; }
+  .tag{
+    display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase;
+    padding:3px 8px; border-radius:99px; margin-top:7px; margin-right:5px;
+  }
+  .tag--ok{ background:var(--ok-tint); color:var(--ok); }
+  .tag--no{ background:var(--wait-tint); color:var(--wait); }
+  .tag--h{ background:var(--brand-tint); color:var(--brand-deep); }
+  .tag--m{ background:var(--mute-tint); color:var(--mute); }
+
+  .barre{
+    position:fixed; left:0; right:0; bottom:0; z-index:25; background:#fff; border-top:1px solid var(--line);
+    padding:10px 16px calc(10px + env(safe-area-inset-bottom));
+  }
+  .barre__in{ max-width:820px; margin:0 auto; display:flex; gap:9px; align-items:flex-end; }
+  .barre textarea{ min-height:48px; max-height:130px; }
+  .barre .btn{ flex-shrink:0; }
+  .exemples{ display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
+  .exemple{
+    font:inherit; font-size:12.5px; font-weight:600; padding:8px 12px; min-height:38px; border-radius:99px;
+    border:1px solid var(--line); background:#fff; color:var(--ink-soft); cursor:pointer; text-align:left;
+  }
+
+  /* ---------- liste ---------- */
+  .kpis{ display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding-top:15px; }
+  .kpi{ background:#fff; border:1px solid var(--line); border-radius:11px; padding:11px 6px; text-align:center; }
+  .kpi b{ display:block; font-size:19px; color:var(--navy); }
+  .kpi span{ display:block; font-size:10.5px; color:var(--ink-faint); margin-top:1px; }
+  .groupe{ margin-top:20px; }
+  .groupe__t{ display:flex; align-items:center; gap:9px; margin-bottom:9px; }
+  .groupe__t h2{ font-size:15px; color:var(--navy); flex:1; }
+  .pros{
+    width:100%; text-align:left; background:#fff; border:1px solid var(--line); border-radius:12px;
+    padding:12px 13px; display:flex; gap:11px; align-items:flex-start;
+  }
+  .pros + .pros{ margin-top:8px; }
+  .pros input[type=checkbox]{ width:22px; height:22px; min-height:0; padding:0; margin:1px 0 0; flex-shrink:0; accent-color:var(--brand); }
+  .pros__c{ flex:1; min-width:0; cursor:pointer; }
+  .pros__n{ display:block; font-weight:600; font-size:15px; color:var(--navy); line-height:1.3; }
+  .pros__m{ display:block; font-size:12.5px; color:var(--ink-faint); margin-top:3px; }
+  .pros__a{ display:block; font-size:12.5px; font-weight:600; margin-top:5px; }
+  .pros__a--late{ color:var(--late); }
+  .pros__a--soon{ color:var(--wait); }
+  .pros__a--ok{ color:var(--ok); }
+  .vide{ text-align:center; padding:26px 14px; color:var(--ink-faint); font-size:14px; }
+
+  /* ---------- fiche ---------- */
+  .sheet{ position:fixed; inset:0; z-index:60; background:rgba(5,11,26,.45); display:none; }
+  .sheet.is-on{ display:block; }
+  .sheet__in{
+    position:absolute; inset:auto 0 0 0; max-height:94vh; overflow-y:auto; background:var(--bg);
+    border-radius:18px 18px 0 0; -webkit-overflow-scrolling:touch;
+  }
+  @media (min-width:760px){ .sheet__in{ position:relative; margin:34px auto; max-width:720px; border-radius:16px; inset:auto; } }
+  .sheet__bar{
+    position:sticky; top:0; z-index:2; background:#fff; border-bottom:1px solid var(--line);
+    padding:13px 16px; display:flex; align-items:center; gap:12px; border-radius:18px 18px 0 0;
+  }
+  .sheet__bar h3{ flex:1; min-width:0; font-size:16px; color:var(--navy); }
+  .sheet__body{ padding:0 16px 34px; }
+  .etapes{ display:flex; gap:6px; margin-top:11px; overflow-x:auto; padding-bottom:4px; }
+  .etape{
+    font:inherit; font-size:12.5px; font-weight:600; padding:9px 12px; min-height:40px; white-space:nowrap;
+    border-radius:9px; border:1px solid var(--line); background:#fff; color:var(--ink-soft); cursor:pointer;
+  }
+  .etape.is-on{ background:var(--navy); border-color:var(--navy); color:#fff; }
+  .hist{ margin-top:11px; display:flex; flex-direction:column; gap:6px; }
+  .hist__l{ display:flex; gap:9px; font-size:12.5px; color:var(--ink-soft); }
+  .hist__d{ font-family:ui-monospace,Menlo,monospace; font-size:11px; color:var(--ink-faint); flex-shrink:0; }
+
+  .pill{
+    display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+    padding:4px 9px; border-radius:99px; white-space:nowrap; flex-shrink:0;
+  }
+  .p-a_envoyer{ background:var(--mute-tint); color:var(--mute); }
+  .p-envoye{ background:var(--wait-tint); color:var(--wait); }
+  .p-a_relancer{ background:var(--late-tint); color:var(--late); }
+  .p-relance{ background:var(--info-tint); color:var(--info); }
+  .p-reponse,.p-gagne{ background:var(--ok-tint); color:var(--ok); }
+  .p-rdv{ background:var(--brand-tint); color:var(--brand-deep); }
+  .p-refus{ background:var(--mute-tint); color:var(--mute); }
+
+  .warn{
+    display:flex; gap:10px; background:var(--wait-tint); border:1px solid #E7D5A8; border-radius:11px;
+    padding:12px 13px; font-size:13px; color:#6F5A31; margin-top:13px;
+  }
+  .warn svg{ width:19px; height:19px; flex-shrink:0; }
+  .flash{
+    position:fixed; left:50%; bottom:86px; transform:translateX(-50%) translateY(12px); z-index:80;
+    background:var(--navy); color:#fff; padding:12px 18px; border-radius:11px; font-size:14px; font-weight:600;
+    opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; max-width:90vw; text-align:center;
+  }
+  .flash.is-on{ opacity:1; transform:translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top__in">
+    <img class="top__logo" src="https://clt78.github.io/cltdistrib-site/images/signature-logo.png" alt="CLTDistrib">
+    <div class="top__t">
+      <strong>Prospection</strong>
+      <span id="sousTitre">Assistant, mails et suivi</span>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="is-on" data-vue="chat" type="button">Assistant</button>
+    <button data-vue="liste" type="button">Ma liste</button>
+    <button data-vue="reglages" type="button">Réglages</button>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="vue is-on" id="v-chat">
+    <div class="chat" id="chat"></div>
+    <div class="exemples" id="exemples"></div>
+  </div>
+
+  <div class="vue" id="v-liste">
+    <div class="kpis" id="kpis"></div>
+    <div id="groupes"></div>
+  </div>
+
+  <div class="vue" id="v-reglages">
+    <div class="card">
+      <h2>Clé de l'assistant</h2>
+      <p>Elle permet à l'application de chercher des entreprises et d'écrire les mails. Gratuite, à créer une seule fois sur Google AI Studio.</p>
+      <label for="cle">Clé Google AI Studio</label>
+      <input id="cle" type="password" autocomplete="off" placeholder="AIza…">
+      <div class="actions">
+        <button class="btn btn--main" id="cleGo" type="button">Enregistrer</button>
+        <a class="btn btn--ghost" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Obtenir une clé</a>
+      </div>
+      <p class="note" id="cleEtat" style="margin-top:11px"></p>
+    </div>
+
+    <div class="card">
+      <h2>Contrôle quotidien</h2>
+      <p>Chaque matin : repère les réponses reçues dans votre Gmail, et bascule en « à relancer » ce qui dépasse sept jours sans réponse.</p>
+      <div class="actions">
+        <button class="btn btn--dark" id="trigGo" type="button">Activer</button>
+        <button class="btn btn--ghost" id="trigStop" type="button">Désactiver</button>
+        <button class="btn btn--ghost" id="trigNow" type="button">Contrôler maintenant</button>
+      </div>
+      <p class="note" id="trigEtat" style="margin-top:11px"></p>
+    </div>
+
+    <div class="card">
+      <h2>Vos données</h2>
+      <p>Tout est enregistré dans une feuille de calcul de votre Drive : vous la retrouvez sur tous vos appareils.</p>
+      <div class="actions">
+        <a class="btn btn--ghost btn--wide" id="lienFeuille" href="#" target="_blank" rel="noopener">Ouvrir la feuille</a>
+      </div>
+      <p class="note" id="techEtat" style="margin-top:11px"></p>
+    </div>
+  </div>
+
+</div>
+
+<div class="barre" id="barre">
+  <div class="barre__in">
+    <textarea id="msg" rows="1" placeholder="Ce que vous cherchez…"></textarea>
+    <button class="btn btn--main" id="go" type="button">Chercher</button>
+  </div>
+</div>
+
+<div class="sheet" id="fiche">
+  <div class="sheet__in">
+    <div class="sheet__bar">
+      <h3 id="ficheTitre">Entreprise</h3>
+      <button class="btn btn--ghost btn--sm" id="fermer" type="button">Fermer</button>
+    </div>
+    <div class="sheet__body" id="ficheCorps"></div>
+  </div>
+</div>
+
+<div class="flash" id="flash"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   Passerelle vers le code qui tourne dans votre compte Google
+   ============================================================ */
+function srv(nom){
+  var args = Array.prototype.slice.call(arguments, 1);
+  return new Promise(function(ok, ko){
+    var r = google.script.run
+      .withSuccessHandler(ok)
+      .withFailureHandler(function(e){ ko(new Error(e && e.message ? e.message : String(e))); });
+    r[nom].apply(r, args);
+  });
+}
+
+function $(id){ return document.getElementById(id); }
+function esc(s){
+  return String(s == null ? "" : s)
+    .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+var minuteur = null;
+function flash(txt){
+  var f = $("flash");
+  f.textContent = txt;
+  f.classList.add("is-on");
+  clearTimeout(minuteur);
+  minuteur = setTimeout(function(){ f.classList.remove("is-on"); }, 3200);
+}
+function dateFr(iso){
+  if(!iso) return "";
+  var p = String(iso).split("-");
+  return p.length === 3 ? p[2] + "/" + p[1] + "/" + p[0] : iso;
+}
+
+/* ============================================================
+   ÉTAT
+   ============================================================ */
+var E = { prospects:[], statuts:{}, moi:{}, reglages:{}, cleIA:false, manquants:[], urlFeuille:"" };
+var messages = [];
+var candidats = {};      /* clé de message -> liste de candidats */
+var choix = {};          /* entreprise cochée dans l'assistant */
+var selection = {};      /* prospect coché dans la liste */
+var ficheId = null;
+var occupe = false;
+
+var EXEMPLES = [
+  "des laveries automatiques et des contrôles techniques autour de Mantes-la-Jolie",
+  "des PME industrielles de 20 à 80 salariés dans une zone d'activité des Yvelines",
+  "des salles de sport et des centres de formation à moins de 20 km de Bonnières-sur-Seine",
+  "des garages et des concessions automobiles vers Vernon"
+];
+
+/* ============================================================
+   ASSISTANT
+   ============================================================ */
+function rendreChat(){
+  var h = messages.map(function(m, i){
+    if(m.type === "moi") return '<div class="bulle bulle--moi">' + esc(m.texte) + "</div>";
+    if(m.type === "err") return '<div class="bulle bulle--err">' + esc(m.texte) + "</div>";
+    if(m.type === "attente") return '<div class="pense">Je cherche<span>…</span></div>';
+    if(m.type === "ia") return '<div class="bulle bulle--ia">' + esc(m.texte) + "</div>";
+    if(m.type === "candidats") return blocCandidats(m, i);
+    return "";
+  }).join("");
+  $("chat").innerHTML = h;
+  window.scrollTo(0, document.body.scrollHeight);
+}
+
+function blocCandidats(m, i){
+  var liste = candidats[m.cle] || [];
+  var n = liste.filter(function(c){ return choix[cleCand(c)]; }).length;
+  return '<div class="bulle bulle--ia" style="max-width:100%;width:100%;white-space:normal">' +
+    "<strong>" + liste.length + " établissement(s) proposé(s).</strong>" +
+    '<p class="note" style="margin:6px 0 12px">' +
+      "Le repère « vérifiée » signifie que l'établissement existe bien au registre des entreprises. " +
+      "L'estimation « sans distributeur » reste une supposition : aucune base ne le dit." +
+    "</p>" +
+    liste.map(function(c, k){
+      var cle = cleCand(c);
+      var meta = [c.ville, c.effectif || c.taille, c.activite].filter(Boolean).join(" · ");
+      return '<label class="cand' + (choix[cle] ? " is-on" : "") + '">' +
+        '<input type="checkbox" data-cand="' + esc(m.cle + "|" + k) + '"' + (choix[cle] ? " checked" : "") + ">" +
+        '<span class="cand__c">' +
+          '<span class="cand__n">' + esc(c.entreprise) + "</span>" +
+          (meta ? '<span class="cand__m">' + esc(meta) + "</span>" : "") +
+          (c.pourquoi ? '<span class="cand__p">' + esc(c.pourquoi) + "</span>" : "") +
+          (c.verifie === true ? '<span class="tag tag--ok">vérifiée</span>' : "") +
+          (c.verifie === false ? '<span class="tag tag--no">non retrouvée au registre</span>' : "") +
+          (c.certitude === "haute" ? '<span class="tag tag--h">sans distributeur : probable</span>' : "") +
+          (c.certitude === "faible" ? '<span class="tag tag--m">sans distributeur : incertain</span>' : "") +
+        "</span></label>";
+    }).join("") +
+    '<div class="actions">' +
+      '<button class="btn btn--ghost btn--sm" data-tout="' + esc(m.cle) + '" type="button">Tout cocher</button>' +
+      '<button class="btn btn--main btn--sm" data-ajouter="' + esc(m.cle) + '" type="button"' +
+        (n ? "" : " disabled") + ">Ajouter " + (n ? n + " " : "") + "à ma liste</button>" +
+    "</div>" +
+    (m.sources && m.sources.length
+      ? '<p class="note" style="margin-top:11px">Sources consultées : ' +
+        m.sources.slice(0, 5).map(function(s){
+          return '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.titre || "lien") + "</a>";
+        }).join(", ") + "</p>"
+      : "") +
+    "</div>";
+}
+
+function cleCand(c){
+  return (c.entreprise + "|" + (c.ville || "")).toLowerCase();
+}
+
+function chercher(){
+  if(occupe) return;
+  var txt = $("msg").value.trim();
+  if(!txt) return;
+  if(!E.cleIA){
+    flash("Enregistrez d'abord votre clé dans « Réglages ».");
+    allerVue("reglages");
+    return;
+  }
+  occupe = true;
+  $("go").disabled = true;
+  $("msg").value = "";
+  messages.push({ type:"moi", texte:txt });
+  messages.push({ type:"attente" });
+  rendreChat();
+
+  var connus = E.prospects.map(function(p){ return p.entreprise; });
+  srv("chercherProspects", txt, connus).then(function(r){
+    messages.pop();
+    var cle = "c" + Date.now().toString(36);
+    candidats[cle] = r.candidats || [];
+    if(r.avertissement) messages.push({ type:"ia", texte:r.avertissement });
+    messages.push({ type:"candidats", cle:cle, sources:r.sources });
+    fin();
+  }).catch(function(e){
+    messages.pop();
+    messages.push({ type:"err", texte:e.message });
+    fin();
+  });
+
+  function fin(){
+    occupe = false;
+    $("go").disabled = false;
+    rendreChat();
+  }
+}
+
+function ajouterCoches(cle){
+  var liste = (candidats[cle] || []).filter(function(c){ return choix[cleCand(c)]; });
+  if(!liste.length) return;
+  flash("Ajout de " + liste.length + " entreprise(s)…");
+  srv("ajouterCandidats", liste).then(function(ajoutes){
+    E.prospects = E.prospects.concat(ajoutes);
+    liste.forEach(function(c){ delete choix[cleCand(c)]; });
+    candidats[cle] = (candidats[cle] || []).filter(function(c){
+      return !ajoutes.some(function(a){ return a.entreprise === c.entreprise; });
+    });
+    messages.push({ type:"ia", texte: ajoutes.length + " entreprise(s) placée(s) dans « À envoyer ». " +
+      "Ouvrez l'onglet « Ma liste » pour préparer les mails." });
+    rendreChat();
+    rendreListe();
+    flash(ajoutes.length + " ajoutée(s) à « À envoyer ».");
+  }).catch(function(e){ flash(e.message); });
+}
+
+/* ============================================================
+   LISTE
+   ============================================================ */
+var ORDRE = [
+  { k:"a_relancer", t:"À relancer", aide:"Sept jours sans réponse." },
+  { k:"reponse",    t:"Réponses reçues", aide:"À traiter en priorité." },
+  { k:"a_envoyer",  t:"À envoyer", aide:"Préparez les mails, puis envoyez." },
+  { k:"envoye",     t:"En attente de réponse", aide:"" },
+  { k:"relance",    t:"Relancés", aide:"" },
+  { k:"rdv",        t:"Rendez-vous", aide:"" },
+  { k:"gagne",      t:"Emplacements signés", aide:"" },
+  { k:"refus",      t:"Sans suite", aide:"" }
+];
+
+function compte(k){
+  return E.prospects.filter(function(p){ return p.statut === k; }).length;
+}
+
+function rendreListe(){
+  $("kpis").innerHTML = [
+    ["À envoyer", compte("a_envoyer")],
+    ["En attente", compte("envoye")],
+    ["À relancer", compte("a_relancer")],
+    ["Réponses", compte("reponse")]
+  ].map(function(x){
+    return '<div class="kpi"><b>' + x[1] + "</b><span>" + esc(x[0]) + "</span></div>";
+  }).join("");
+
+  var h = "";
+  ORDRE.forEach(function(g){
+    var liste = E.prospects.filter(function(p){ return p.statut === g.k; });
+    if(!liste.length) return;
+    liste.sort(function(a, b){ return (b.jours || 0) - (a.jours || 0); });
+    var lot = (g.k === "a_envoyer" || g.k === "a_relancer");
+    var sel = liste.filter(function(p){ return selection[p.id]; }).length;
+    h += '<div class="groupe">' +
+      '<div class="groupe__t"><h2>' + esc(g.t) + " · " + liste.length + "</h2>" +
+        (lot ? '<button class="btn btn--ghost btn--sm" data-toutlot="' + g.k + '" type="button">' +
+          (sel >= liste.length ? "Décocher" : "Tout cocher") + "</button>" : "") +
+      "</div>" +
+      (g.aide ? '<p class="note" style="margin:-4px 0 9px">' + esc(g.aide) + "</p>" : "") +
+      liste.map(ligneProspect).join("") +
+      (lot
+        ? '<div class="actions">' +
+            '<button class="btn btn--dark" data-preparer="' + g.k + '" type="button"' + (sel ? "" : " disabled") +
+              ">Préparer " + (sel ? sel + " " : "") + "mail(s)</button>" +
+            '<button class="btn btn--main" data-envoyer="' + g.k + '" type="button"' + (sel ? "" : " disabled") +
+              ">Envoyer " + (sel ? sel + " " : "") + "mail(s)</button>" +
+          "</div>"
+        : "") +
+      "</div>";
+  });
+  $("groupes").innerHTML = h || '<div class="vide">Aucune entreprise pour l\'instant.<br>Passez par l\'assistant pour en trouver.</div>';
+}
+
+function ligneProspect(p){
+  var lot = (p.statut === "a_envoyer" || p.statut === "a_relancer");
+  var action = "", cls = "";
+  if(p.statut === "a_envoyer"){
+    if(p.corps && p.email){ action = "Mail prêt — " + p.email; cls = " pros__a--ok"; }
+    else if(p.email){ action = "Mail à préparer"; }
+    else if(p.tel){ action = "À appeler — " + p.tel; cls = " pros__a--soon"; }
+    else { action = "Adresse à trouver"; cls = " pros__a--soon"; }
+  }else if(p.statut === "envoye"){
+    action = "Envoyé il y a " + p.jours + (p.jours > 1 ? " jours" : " jour");
+    cls = " pros__a--soon";
+  }else if(p.statut === "a_relancer"){
+    action = "Sans réponse depuis " + p.jours + " jours";
+    cls = " pros__a--late";
+  }else if(p.statut === "relance"){
+    action = "Relancé il y a " + p.jours + (p.jours > 1 ? " jours" : " jour");
+  }else if(p.statut === "reponse"){
+    action = "Réponse le " + dateFr(p.dateReponse);
+    cls = " pros__a--ok";
+  }
+  var meta = [p.ville, p.activite || p.type].filter(Boolean).join(" · ");
+  return '<div class="pros">' +
+    (lot ? '<input type="checkbox" data-sel="' + esc(p.id) + '"' + (selection[p.id] ? " checked" : "") + ">" : "") +
+    '<span class="pros__c" data-ouvrir="' + esc(p.id) + '">' +
+      '<span class="pros__n">' + esc(p.entreprise) + "</span>" +
+      (meta ? '<span class="pros__m">' + esc(meta) + "</span>" : "") +
+      (action ? '<span class="pros__a' + cls + '">' + esc(action) + "</span>" : "") +
+    "</span>" +
+    '<span class="pill p-' + esc(p.statut) + '">' + esc(p.statutLibelle || "") + "</span>" +
+  "</div>";
+}
+
+function idsSelectionnes(statut){
+  return E.prospects.filter(function(p){ return p.statut === statut && selection[p.id]; })
+    .map(function(p){ return p.id; });
+}
+
+/* Les lots sont découpés : le code de Google s'arrête au bout de six minutes. */
+function parPaquets(ids, taille, fonction, fini){
+  var faits = 0, resultats = [];
+  function suite(){
+    var lot = ids.slice(faits, faits + taille);
+    if(!lot.length){ fini(resultats); return; }
+    srv(fonction, lot).then(function(r){
+      resultats = resultats.concat(r || []);
+      faits += lot.length;
+      flash(faits + " / " + ids.length + " traité(s)…");
+      suite();
+    }).catch(function(e){
+      flash(e.message);
+      fini(resultats);
+    });
+  }
+  suite();
+}
+
+function preparerMails(statut){
+  var ids = idsSelectionnes(statut);
+  if(!ids.length) return;
+  flash("Préparation de " + ids.length + " mail(s), laissez l'écran ouvert…");
+  parPaquets(ids, 6, "preparerLot", function(res){
+    var prets = res.filter(function(r){ return r.pret; }).length;
+    var soucis = res.filter(function(r){ return !r.pret; });
+    recharger().then(function(){
+      flash(prets + " mail(s) prêt(s)" + (soucis.length ? ", " + soucis.length + " en attente d'adresse" : "") + ".");
+      if(soucis.length){
+        messages.push({ type:"ia", texte:"Sans adresse email pour le moment :\n" +
+          soucis.map(function(r){ return "· " + r.entreprise + " — " + r.message; }).join("\n") });
+        rendreChat();
+      }
+    });
+  });
+}
+
+function envoyerMails(statut){
+  var ids = idsSelectionnes(statut);
+  if(!ids.length) return;
+  var prets = E.prospects.filter(function(p){
+    return ids.indexOf(p.id) >= 0 && p.email;
+  });
+  if(!prets.length){ flash("Aucune adresse email dans la sélection."); return; }
+  if(!confirm("Envoyer " + prets.length + " mail(s) depuis votre Gmail maintenant ?")) return;
+  flash("Envoi en cours, laissez l'écran ouvert…");
+  parPaquets(prets.map(function(p){ return p.id; }), 6, "envoyerLot", function(res){
+    var ok = res.filter(function(r){ return r.envoye; }).length;
+    var ko = res.filter(function(r){ return !r.envoye; });
+    selection = {};
+    recharger().then(function(){
+      flash(ok + " mail(s) envoyé(s).");
+      if(ko.length){
+        messages.push({ type:"err", texte:"Non envoyés :\n" +
+          ko.map(function(r){ return "· " + r.entreprise + " — " + r.message; }).join("\n") });
+        rendreChat();
+      }
+    });
+  });
+}
+
+/* ============================================================
+   FICHE
+   ============================================================ */
+var CHAMPS = [
+  { k:"entreprise", l:"Nom de l'établissement", w:2 },
+  { k:"ville", l:"Commune" },
+  { k:"activite", l:"Activité" },
+  { k:"email", l:"Email du contact", w:2 },
+  { k:"site", l:"Site internet", w:2 },
+  { k:"tel", l:"Téléphone" },
+  { k:"effectif", l:"Taille" },
+  { k:"contactNom", l:"Contact — nom" },
+  { k:"contactFonction", l:"Contact — fonction" },
+  { k:"note", l:"Notes", t:"area", w:2 }
+];
+
+function trouver(id){
+  for(var i = 0; i < E.prospects.length; i++) if(E.prospects[i].id === id) return E.prospects[i];
+  return null;
+}
+
+function ouvrirFiche(id){
+  var p = trouver(id);
+  if(!p) return;
+  ficheId = id;
+  $("ficheTitre").textContent = p.entreprise || "Entreprise";
+  $("fiche").classList.add("is-on");
+  document.body.style.overflow = "hidden";
+
+  var histo = (p.historique || []).slice().reverse().map(function(h){
+    return '<div class="hist__l"><span class="hist__d">' + esc(dateFr(h.date)) + "</span><span>" + esc(h.texte) + "</span></div>";
+  }).join("") || '<p class="note">Aucun événement.</p>';
+
+  var relance = (p.statut === "a_relancer" || p.statut === "relance");
+
+  $("ficheCorps").innerHTML =
+    '<div class="card" style="margin-top:14px">' +
+      "<h2>Où en est ce prospect</h2>" +
+      '<div class="etapes">' + Object.keys(E.statuts).map(function(k){
+        return '<button class="etape' + (p.statut === k ? " is-on" : "") + '" data-st="' + k + '" type="button">' +
+          esc(E.statuts[k]) + "</button>";
+      }).join("") + "</div>" +
+      '<div class="hist">' + histo + "</div>" +
+    "</div>" +
+
+    '<div class="card">' +
+      "<h2>" + (relance ? "Mail de relance" : "Mail de prospection") + "</h2>" +
+      "<p>Écrit pour cette activité. Relisez et modifiez librement avant l'envoi.</p>" +
+      (p.email ? "" : '<div class="warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg><div>Aucune adresse email. Le bouton ci-dessous la cherche sur le site de l\'entreprise.</div></div>') +
+      '<div class="actions">' +
+        '<button class="btn btn--ghost" id="fEmail" type="button">Trouver l\'adresse</button>' +
+        '<button class="btn btn--dark" id="fGen" type="button">' + (p.corps ? "Réécrire le mail" : "Écrire le mail") + "</button>" +
+      "</div>" +
+      '<div style="margin-top:13px">' +
+        '<label for="fObjet">Objet</label>' +
+        '<input id="fObjet" type="text" value="' + esc(p.objet) + '">' +
+      "</div>" +
+      '<div style="margin-top:11px">' +
+        '<label for="fCorps">Message</label>' +
+        '<textarea id="fCorps" rows="12" style="min-height:250px"></textarea>' +
+      "</div>" +
+      '<p class="note" style="margin-top:9px">Votre logo et vos coordonnées sont ajoutés automatiquement en bas du mail.</p>' +
+      '<div class="actions">' +
+        '<button class="btn btn--main btn--wide" id="fEnvoi" type="button"' +
+          (p.email ? "" : " disabled") + ">Envoyer depuis mon Gmail</button>" +
+      "</div>" +
+    "</div>" +
+
+    '<div class="card">' +
+      "<h2>Informations</h2>" +
+      '<div class="grid">' + CHAMPS.map(function(c){
+        var id = "c-" + c.k;
+        var champ = c.t === "area"
+          ? '<textarea id="' + id + '" data-k="' + c.k + '" rows="2" style="min-height:70px"></textarea>'
+          : '<input id="' + id + '" data-k="' + c.k + '" type="text" value="' + esc(p[c.k]) + '">';
+        return '<div' + (c.w === 2 ? ' class="full"' : "") + '><label for="' + id + '">' + esc(c.l) + "</label>" + champ + "</div>";
+      }).join("") + "</div>" +
+      (p.pourquoi ? '<p class="note" style="margin-top:12px"><strong>Pourquoi ce lieu :</strong> ' + esc(p.pourquoi) + "</p>" : "") +
+      '<div class="actions">' +
+        '<button class="btn btn--danger btn--wide" id="fSupp" type="button">Retirer de ma liste</button>' +
+      "</div>" +
+    "</div>";
+
+  $("fCorps").value = p.corps || "";
+  var zn = $("c-note");
+  if(zn) zn.value = p.note || "";
+
+  $("ficheCorps").querySelectorAll("[data-k]").forEach(function(el){
+    el.addEventListener("change", function(){
+      var champs = {};
+      champs[el.getAttribute("data-k")] = el.value;
+      srv("majProspect", p.id, champs).then(function(maj){
+        remplacer(maj);
+        if(el.getAttribute("data-k") === "entreprise") $("ficheTitre").textContent = maj.entreprise;
+        rendreListe();
+      }).catch(function(e){ flash(e.message); });
+    });
+  });
+
+  $("ficheCorps").querySelectorAll("[data-st]").forEach(function(b){
+    b.addEventListener("click", function(){
+      srv("changerStatut", p.id, b.getAttribute("data-st")).then(function(maj){
+        remplacer(maj);
+        rendreListe();
+        ouvrirFiche(p.id);
+        flash("Statut : " + maj.statutLibelle);
+      }).catch(function(e){ flash(e.message); });
+    });
+  });
+
+  $("fEmail").addEventListener("click", function(){
+    var b = this;
+    b.disabled = true;
+    b.textContent = "Recherche…";
+    var site = $("c-site").value.trim();
+    var suite = site
+      ? Promise.resolve(site)
+      : srv("trouverSite", p.id).then(function(u){ if(u) $("c-site").value = u; return u; });
+    suite.then(function(u){
+      if(!u){ throw new Error("Site introuvable. Renseignez-le à la main, ou appelez."); }
+      return srv("trouverEmail", p.id, u);
+    }).then(function(r){
+      b.disabled = false;
+      b.textContent = "Trouver l'adresse";
+      if(r.email){
+        flash("Adresse trouvée : " + r.email);
+        recharger().then(function(){ ouvrirFiche(p.id); });
+      }else{
+        flash(r.message || "Aucune adresse sur ce site.");
+      }
+    }).catch(function(e){
+      b.disabled = false;
+      b.textContent = "Trouver l'adresse";
+      flash(e.message);
+    });
+  });
+
+  $("fGen").addEventListener("click", function(){
+    var b = this;
+    b.disabled = true;
+    b.textContent = "L'assistant écrit…";
+    srv("genererMail", p.id, relance ? "relance" : "premier").then(function(m){
+      $("fObjet").value = m.objet;
+      $("fCorps").value = m.corps;
+      b.disabled = false;
+      b.textContent = "Réécrire le mail";
+      recharger();
+      flash("Mail prêt. Relisez-le avant d'envoyer.");
+    }).catch(function(e){
+      b.disabled = false;
+      b.textContent = "Écrire le mail";
+      flash(e.message);
+    });
+  });
+
+  $("fEnvoi").addEventListener("click", function(){
+    var objet = $("fObjet").value.trim(), corps = $("fCorps").value.trim();
+    if(!objet || !corps){ flash("Écrivez d'abord le mail."); return; }
+    if(!confirm("Envoyer ce mail à " + p.email + " ?")) return;
+    var b = this;
+    b.disabled = true;
+    b.textContent = "Envoi…";
+    srv("envoyerMail", p.id, objet, corps).then(function(maj){
+      remplacer(maj);
+      delete selection[maj.id];
+      rendreListe();
+      fermerFiche();
+      flash("Mail envoyé à " + maj.entreprise + ".");
+    }).catch(function(e){
+      b.disabled = false;
+      b.textContent = "Envoyer depuis mon Gmail";
+      flash(e.message);
+    });
+  });
+
+  $("fSupp").addEventListener("click", function(){
+    if(!confirm("Retirer " + p.entreprise + " de votre liste ?")) return;
+    srv("supprimerProspect", p.id).then(function(){
+      E.prospects = E.prospects.filter(function(x){ return x.id !== p.id; });
+      fermerFiche();
+      rendreListe();
+      flash("Retirée.");
+    }).catch(function(e){ flash(e.message); });
+  });
+}
+
+function remplacer(maj){
+  for(var i = 0; i < E.prospects.length; i++){
+    if(E.prospects[i].id === maj.id){ E.prospects[i] = maj; return; }
+  }
+  E.prospects.push(maj);
+}
+
+function fermerFiche(){
+  ficheId = null;
+  $("fiche").classList.remove("is-on");
+  document.body.style.overflow = "";
+}
+
+/* ============================================================
+   RÉGLAGES
+   ============================================================ */
+function rendreReglages(){
+  $("cleEtat").textContent = E.cleIA
+    ? "Une clé est enregistrée. L'assistant est opérationnel."
+    : "Aucune clé : l'assistant ne peut ni chercher ni écrire.";
+  $("lienFeuille").href = E.urlFeuille || "#";
+  srv("infosTechniques").then(function(t){
+    $("trigEtat").textContent = t.declencheur
+      ? "Actif." + (t.derniereTournee ? " Dernier contrôle : " + new Date(t.derniereTournee).toLocaleString("fr-FR") + "." : "")
+      : "Inactif : les bascules en « à relancer » ne se feront pas toutes seules.";
+    $("techEtat").textContent = "Envois aujourd'hui : " + t.envoisAujourdhui +
+      " · quota Gmail restant : " + t.quotaGmail +
+      (t.modele ? " · modèle : " + t.modele : "");
+  }).catch(function(){ /* sans importance */ });
+}
+
+/* ============================================================
+   MISE EN PLACE
+   ============================================================ */
+function recharger(){
+  return srv("etat").then(function(e){
+    E = e;
+    rendreListe();
+    rendreReglages();
+    if(e.manquants && e.manquants.length){
+      $("sousTitre").textContent = "À compléter dans le code : " + e.manquants.join(", ");
+    }
+    return e;
+  });
+}
+
+function allerVue(nom){
+  document.querySelectorAll(".tabs button").forEach(function(b){
+    b.classList.toggle("is-on", b.getAttribute("data-vue") === nom);
+  });
+  document.querySelectorAll(".vue").forEach(function(v){
+    v.classList.toggle("is-on", v.id === "v-" + nom);
+  });
+  $("barre").style.display = nom === "chat" ? "" : "none";
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll(".tabs button").forEach(function(b){
+  b.addEventListener("click", function(){ allerVue(b.getAttribute("data-vue")); });
+});
+
+$("go").addEventListener("click", chercher);
+$("msg").addEventListener("keydown", function(e){
+  if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); chercher(); }
+});
+$("msg").addEventListener("input", function(){
+  this.style.height = "auto";
+  this.style.height = Math.min(130, this.scrollHeight) + "px";
+});
+
+$("exemples").innerHTML = EXEMPLES.map(function(x){
+  return '<button class="exemple" type="button">' + esc(x) + "</button>";
+}).join("");
+$("exemples").addEventListener("click", function(e){
+  var b = e.target.closest("button");
+  if(!b) return;
+  $("msg").value = b.textContent;
+  chercher();
+});
+
+$("chat").addEventListener("change", function(e){
+  var cb = e.target;
+  if(cb.type !== "checkbox" || !cb.getAttribute("data-cand")) return;
+  var parts = cb.getAttribute("data-cand").split("|");
+  var c = (candidats[parts[0]] || [])[parseInt(parts[1], 10)];
+  if(!c) return;
+  choix[cleCand(c)] = cb.checked;
+  rendreChat();
+});
+
+$("chat").addEventListener("click", function(e){
+  var b = e.target.closest("[data-ajouter],[data-tout]");
+  if(!b) return;
+  if(b.hasAttribute("data-ajouter")){ ajouterCoches(b.getAttribute("data-ajouter")); return; }
+  var cle = b.getAttribute("data-tout");
+  var liste = candidats[cle] || [];
+  var tout = liste.every(function(c){ return choix[cleCand(c)]; });
+  liste.forEach(function(c){ choix[cleCand(c)] = !tout; });
+  rendreChat();
+});
+
+$("groupes").addEventListener("change", function(e){
+  var cb = e.target;
+  if(cb.type !== "checkbox" || !cb.getAttribute("data-sel")) return;
+  selection[cb.getAttribute("data-sel")] = cb.checked;
+  rendreListe();
+});
+
+$("groupes").addEventListener("click", function(e){
+  var o = e.target.closest("[data-ouvrir]");
+  if(o){ ouvrirFiche(o.getAttribute("data-ouvrir")); return; }
+  var b = e.target.closest("[data-preparer],[data-envoyer],[data-toutlot]");
+  if(!b) return;
+  if(b.hasAttribute("data-preparer")) return preparerMails(b.getAttribute("data-preparer"));
+  if(b.hasAttribute("data-envoyer")) return envoyerMails(b.getAttribute("data-envoyer"));
+  var st = b.getAttribute("data-toutlot");
+  var liste = E.prospects.filter(function(p){ return p.statut === st; });
+  var tout = liste.every(function(p){ return selection[p.id]; });
+  liste.forEach(function(p){ selection[p.id] = !tout; });
+  rendreListe();
+});
+
+$("fermer").addEventListener("click", fermerFiche);
+$("fiche").addEventListener("click", function(e){ if(e.target === $("fiche")) fermerFiche(); });
+document.addEventListener("keydown", function(e){ if(e.key === "Escape" && ficheId) fermerFiche(); });
+
+$("cleGo").addEventListener("click", function(){
+  var v = $("cle").value.trim();
+  if(!v){ flash("Collez votre clé."); return; }
+  var b = this;
+  b.disabled = true;
+  srv("enregistrerCleIA", v).then(function(){
+    $("cle").value = "";
+    b.disabled = false;
+    flash("Clé enregistrée et vérifiée.");
+    recharger();
+  }).catch(function(e){
+    b.disabled = false;
+    flash(e.message);
+  });
+});
+
+$("trigGo").addEventListener("click", function(){
+  srv("installerDeclencheur").then(function(m){ flash(m); rendreReglages(); }).catch(function(e){ flash(e.message); });
+});
+$("trigStop").addEventListener("click", function(){
+  srv("retirerDeclencheur").then(function(m){ flash(m); rendreReglages(); }).catch(function(e){ flash(e.message); });
+});
+$("trigNow").addEventListener("click", function(){
+  var b = this;
+  b.disabled = true;
+  b.textContent = "Contrôle…";
+  srv("tourneeQuotidienne").then(function(r){
+    b.disabled = false;
+    b.textContent = "Contrôler maintenant";
+    var l = [];
+    if(r.reponses.length) l.push(r.reponses.length + " réponse(s) repérée(s)");
+    if(r.bascules.length) l.push(r.bascules.length + " passée(s) en « à relancer »");
+    if(r.relances.length) l.push(r.relances.length + " relance(s) envoyée(s)");
+    flash(l.length ? l.join(", ") + "." : "Rien de nouveau.");
+    recharger();
+  }).catch(function(e){
+    b.disabled = false;
+    b.textContent = "Contrôler maintenant";
+    flash(e.message);
+  });
+});
+
+messages.push({ type:"ia", texte:"Dites-moi le type de lieu et le secteur géographique que vous visez. " +
+  "Je cherche sur le web, je vérifie chaque établissement au registre des entreprises, " +
+  "et vous n'avez plus qu'à cocher ceux à prospecter." });
+rendreChat();
+recharger().catch(function(e){ flash(e.message); });
+
+})();
+</script>
+</body>
+</html>
