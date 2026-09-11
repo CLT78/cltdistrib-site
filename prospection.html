@@ -102,7 +102,15 @@
   @media (max-width:560px){ .grid{ grid-template-columns:1fr; } }
 
   /* ---------- liste des prospects ---------- */
-  .liste{ margin-top:12px; display:flex; flex-direction:column; gap:8px; }
+  .liste{ margin-top:12px; }
+  .groupe + .groupe{ margin-top:22px; }
+  .groupe__t{ display:flex; align-items:center; gap:9px; margin-bottom:5px; }
+  .groupe__t h2{ font-size:15px; color:var(--navy); letter-spacing:-0.02em; }
+  .groupe__t span{
+    font-size:11.5px; font-weight:700; color:var(--ink-soft); background:var(--line-soft);
+    border-radius:99px; padding:2px 9px;
+  }
+  .pros + .pros{ margin-top:8px; }
   .pros{
     width:100%; text-align:left; background:#fff; border:1px solid var(--line); border-radius:12px;
     padding:13px 14px; cursor:pointer; display:flex; gap:12px; align-items:flex-start;
@@ -122,6 +130,7 @@
   }
   .p-a_envoyer{ background:var(--mute-tint); color:var(--mute); }
   .p-envoye{ background:var(--wait-tint); color:var(--wait); }
+  .p-a_relancer{ background:var(--late-tint); color:var(--late); }
   .p-relance{ background:var(--info-tint); color:var(--info); }
   .p-reponse{ background:var(--ok-tint); color:var(--ok); }
   .p-rdv{ background:var(--brand-tint); color:var(--brand-deep); }
@@ -443,12 +452,17 @@
     </div>
 
     <div class="card">
-      <h2>Tout automatiser</h2>
-      <p>Une application qui cherche les entreprises, trouve leur adresse, écrit le mail, l'envoie depuis votre Gmail et bascule en « à relancer » au bout de sept jours. Le code tourne chez Google sous votre compte : gratuit, sans serveur.</p>
-      <div class="actions">
-        <a class="btn btn--main btn--wide" href="application.html">Installer l'application</a>
-      </div>
-      <p class="note" style="margin-top:11px">Un quart d'heure d'installation, une seule fois, depuis un ordinateur. Cette page-ci reste utilisable sans rien installer.</p>
+      <h2>Comment cette page fonctionne</h2>
+      <p>Rien à installer, rien à connecter, aucun compte à créer.</p>
+      <ol>
+        <li><strong>Vos entreprises</strong> — ajoutées une par une, collées depuis une liste, ou trouvées par l'onglet « Recherche ».</li>
+        <li><strong>Le mail</strong> — écrit pour le type d'établissement et la fonction du contact. Vous copiez l'objet et le message, vous envoyez depuis votre boîte, puis « J'ai envoyé ce mail ».</li>
+        <li><strong>Le suivi</strong> — au bout de sept jours sans réponse, l'entreprise passe d'elle-même dans « À relancer », avec un mail de relance déjà rédigé.</li>
+      </ol>
+      <details>
+        <summary>Faire partir les mails tout seuls</summary>
+        <p class="note" style="margin-top:9px">Un site ne peut pas envoyer de mail à votre place : il faudrait faire tourner du code dans votre compte Google. <a href="application.html">La marche à suivre existe</a> si un jour vous en avez envie, mais ce n'est pas nécessaire pour prospecter.</p>
+      </details>
     </div>
 
     <div class="card">
@@ -546,9 +560,10 @@ function flash(txt){
    STATUTS ET RELANCES
    ============================================================ */
 var STATUTS = [
-  { k:"a_envoyer", l:"À envoyer" },
-  { k:"envoye",    l:"Mail envoyé" },
-  { k:"relance",   l:"Relancé" },
+  { k:"a_envoyer",  l:"À envoyer" },
+  { k:"envoye",     l:"Mail envoyé" },
+  { k:"a_relancer", l:"À relancer" },
+  { k:"relance",    l:"Relancé" },
   { k:"reponse",   l:"Réponse reçue" },
   { k:"rdv",       l:"Rendez-vous" },
   { k:"gagne",     l:"Emplacement signé" },
@@ -560,13 +575,30 @@ function libelleStatut(k){
 }
 var DELAI_RELANCE = 7;   /* jours avant de proposer une relance */
 
-/* Le prospect attend-il une relance, et depuis combien de temps ? */
+/* Depuis combien de jours ce prospect attend-il ? */
 function relance(p){
-  if(p.statut !== "envoye" && p.statut !== "relance") return null;
+  if(["envoye", "a_relancer", "relance"].indexOf(p.statut) < 0) return null;
   var base = p.statut === "relance" ? p.dateRelance : p.dateEnvoi;
   var j = joursDepuis(base);
   if(j === null) return null;
-  return { jours:j, du: j >= DELAI_RELANCE };
+  return { jours:j, du: p.statut === "a_relancer" };
+}
+
+/* Sept jours sans réponse : le prospect change vraiment de statut, il ne
+   reste pas dans « mail envoyé » avec une mention. Appelé à l'ouverture de
+   la page, donc la bascule se fait même sans y avoir touché depuis. */
+function basculerRelances(){
+  var n = 0;
+  D.prospects.forEach(function(p){
+    if(p.statut !== "envoye") return;
+    var j = joursDepuis(p.dateEnvoi);
+    if(j === null || j < DELAI_RELANCE) return;
+    p.statut = "a_relancer";
+    ajouterHisto(p, "Sans réponse depuis " + j + " jours : passé en « à relancer »");
+    n++;
+  });
+  if(n) sauver();
+  return n;
 }
 
 /* ============================================================
@@ -815,8 +847,7 @@ function compteurs(){
   D.prospects.forEach(function(p){
     if(p.statut === "a_envoyer") c.a_envoyer++;
     if(p.statut === "envoye" || p.statut === "relance") c.attente++;
-    var r = relance(p);
-    if(r && r.du) c.relancer++;
+    if(p.statut === "a_relancer") c.relancer++;
     if(p.statut === "reponse" || p.statut === "rdv" || p.statut === "gagne") c.reponse++;
   });
   return c;
@@ -846,7 +877,7 @@ function rendreKpis(){
 function passeFiltre(p){
   if(filtre === "a_envoyer") return p.statut === "a_envoyer";
   if(filtre === "attente")   return p.statut === "envoye" || p.statut === "relance";
-  if(filtre === "relancer"){ var r = relance(p); return !!(r && r.du); }
+  if(filtre === "relancer")  return p.statut === "a_relancer";
   if(filtre === "reponse")   return p.statut === "reponse" || p.statut === "rdv" || p.statut === "gagne";
   return true;
 }
@@ -856,54 +887,79 @@ function passeRecherche(p){
   return t.indexOf(recherche) !== -1;
 }
 
-/* Les prospects à relancer remontent en tête, puis les non envoyés. */
-function priorite(p){
-  var r = relance(p);
-  if(r && r.du) return 0;
-  if(p.statut === "reponse") return 1;
-  if(p.statut === "a_envoyer") return 2;
-  if(p.statut === "rdv") return 3;
-  if(p.statut === "envoye" || p.statut === "relance") return 4;
-  return 5;
+
+/* Les entreprises sont rangées par statut : chaque groupe est un bloc, dans
+   l'ordre de ce qui demande une action. */
+var GROUPES = [
+  { k:"a_relancer", t:"À relancer",            aide:"Sept jours sans réponse. Le mail de relance est déjà écrit." },
+  { k:"reponse",    t:"Réponses reçues",       aide:"À traiter en premier." },
+  { k:"a_envoyer",  t:"À envoyer",             aide:"Ouvrez la fiche, copiez le mail, envoyez depuis votre boîte." },
+  { k:"envoye",     t:"En attente de réponse", aide:"" },
+  { k:"relance",    t:"Relancés",              aide:"" },
+  { k:"rdv",        t:"Rendez-vous",           aide:"" },
+  { k:"gagne",      t:"Emplacements signés",   aide:"" },
+  { k:"refus",      t:"Sans suite",            aide:"" }
+];
+
+function ligneProspect(p){
+  var r = relance(p), action = "", cls = "";
+  if(p.statut === "a_relancer"){
+    action = "Sans réponse depuis " + r.jours + " jours";
+    cls = " pros__a--late";
+  }else if(p.statut === "envoye"){
+    action = "Envoyé il y a " + r.jours + (r.jours > 1 ? " jours" : " jour") +
+      " — relance dans " + Math.max(0, DELAI_RELANCE - r.jours) + " j";
+    cls = " pros__a--soon";
+  }else if(p.statut === "relance"){
+    action = "Relancé il y a " + r.jours + (r.jours > 1 ? " jours" : " jour");
+  }else if(p.statut === "a_envoyer"){
+    if(p.email) action = "Prêt à envoyer";
+    else if(p.tel){ action = "À appeler — " + p.tel; cls = " pros__a--soon"; }
+    else { action = "Email du contact manquant"; cls = " pros__a--soon"; }
+  }else if(p.statut === "reponse"){
+    action = "Réponse reçue le " + dateFr(p.dateReponse);
+  }
+
+  var meta = [p.type, p.ville].filter(Boolean).join(" · ");
+  return '<button class="pros" data-id="' + p.id + '" type="button">' +
+    '<span class="pros__c">' +
+      '<span class="pros__n">' + esc(p.entreprise || "Sans nom") + "</span>" +
+      (meta ? '<span class="pros__m">' + esc(meta) + "</span>" : "") +
+      (action ? '<span class="pros__a' + cls + '">' + esc(action) + "</span>" : "") +
+    "</span>" +
+    '<span class="pill p-' + p.statut + '">' + esc(libelleStatut(p.statut)) + "</span>" +
+  "</button>";
 }
 
 function rendreListe(){
+  basculerRelances();
   rendreKpis();
-  var l = D.prospects.filter(function(p){ return passeFiltre(p) && passeRecherche(p); });
-  l.sort(function(a,b){
-    var d = priorite(a) - priorite(b);
-    return d !== 0 ? d : (a.entreprise || "").localeCompare(b.entreprise || "", "fr");
-  });
-
   $("demarrage").style.display = D.prospects.length ? "none" : "";
 
-  if(!l.length){
+  var visibles = D.prospects.filter(function(p){ return passeFiltre(p) && passeRecherche(p); });
+
+  if(!visibles.length){
     $("liste").innerHTML = '<div class="vide">' +
-      (D.prospects.length ? "Aucune entreprise ne correspond." : "Aucune entreprise pour l'instant.<br>Appuyez sur + pour en ajouter une.") +
-      '</div>';
+      (D.prospects.length
+        ? "Aucune entreprise ne correspond."
+        : "Aucune entreprise pour l'instant.<br>Appuyez sur + pour en ajouter une, ou collez une liste plus bas.") +
+      "</div>";
     return;
   }
 
-  $("liste").innerHTML = l.map(function(p){
-    var r = relance(p), action = "", cls = "";
-    if(r && r.du){ action = "À relancer — envoyé il y a " + r.jours + " jours"; cls = " pros__a--late"; }
-    else if(r){ action = "Envoyé il y a " + r.jours + (r.jours > 1 ? " jours" : " jour"); cls = " pros__a--soon"; }
-    else if(p.statut === "a_envoyer"){
-      if(p.email) action = "Prêt à envoyer";
-      else if(p.tel){ action = "À appeler — " + p.tel; cls = " pros__a--soon"; }
-      else action = "Email du contact manquant";
-    }
-    else if(p.statut === "reponse"){ action = "Réponse reçue le " + dateFr(p.dateReponse); }
-
-    var meta = [p.type, p.ville].filter(Boolean).join(" · ");
-    return '<button class="pros" data-id="' + p.id + '" type="button">' +
-      '<span class="pros__c">' +
-        '<span class="pros__n">' + esc(p.entreprise || "Sans nom") + '</span>' +
-        (meta ? '<span class="pros__m">' + esc(meta) + '</span>' : '') +
-        (action ? '<span class="pros__a' + cls + '">' + esc(action) + '</span>' : '') +
-      '</span>' +
-      '<span class="pill p-' + p.statut + '">' + esc(libelleStatut(p.statut)) + '</span>' +
-    '</button>';
+  $("liste").innerHTML = GROUPES.map(function(g){
+    var liste = visibles.filter(function(p){ return p.statut === g.k; });
+    if(!liste.length) return "";
+    liste.sort(function(a, b){
+      var ra = relance(a), rb = relance(b);
+      var d = (rb ? rb.jours : 0) - (ra ? ra.jours : 0);
+      return d !== 0 ? d : (a.entreprise || "").localeCompare(b.entreprise || "", "fr");
+    });
+    return '<div class="groupe">' +
+      '<div class="groupe__t"><h2>' + esc(g.t) + "</h2><span>" + liste.length + "</span></div>" +
+      (g.aide ? '<p class="note" style="margin:0 0 9px">' + esc(g.aide) + "</p>" : "") +
+      liste.map(ligneProspect).join("") +
+    "</div>";
   }).join("");
 
   $("liste").querySelectorAll("[data-id]").forEach(function(b){
@@ -992,7 +1048,7 @@ function ouvrirFiche(id){
   ficheId = id;
   $("ficheTitre").textContent = p.entreprise || "Nouvelle entreprise";
 
-  var estRelance = p.statut === "envoye" || p.statut === "relance";
+  var estRelance = p.statut === "a_relancer" || p.statut === "relance";
   var typeMail = estRelance ? "relance" : "premier";
   /* Recalculé à chaque frappe : les boutons doivent envoyer le texte à jour,
      jamais celui figé à l'ouverture de la fiche. */
@@ -1017,7 +1073,9 @@ function ouvrirFiche(id){
       '<h2>' + (estRelance ? "Mail de relance" : "Mail de prospection") + '</h2>' +
       '<p>' + (estRelance
         ? "Adapté au fait que vous avez déjà écrit. Relisez avant d'envoyer."
-        : "Adapté au type d'établissement. Relisez et ajustez avant d'envoyer.") + '</p>' +
+        : p.statut === "envoye"
+          ? "Le mail déjà envoyé le " + esc(dateFr(p.dateEnvoi)) + ". La relance s'écrira toute seule au bout de sept jours."
+          : "Adapté au type d'établissement. Relisez et ajustez avant d'envoyer.") + '</p>' +
       '<div class="apercu" id="apercu"><div class="objet" id="apercuObjet">Objet : ' + esc(courant.objet) + '</div>' +
         '<span id="apercuCorps">' + esc(courant.corps) + '</span></div>' +
       '<div class="miss" id="besoinEmail" style="margin-top:10px' + (p.email ? ';display:none' : '') + '">Renseignez l\'email du contact plus bas pour pouvoir envoyer.</div>' +
@@ -1026,7 +1084,12 @@ function ouvrirFiche(id){
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>' +
           'Ouvrir dans Gmail</button>' +
         '<button class="btn btn--ghost" id="ouvrirMailto" type="button"' + (p.email ? '' : ' disabled') + '>Ma messagerie</button>' +
-        '<button class="btn btn--ghost" id="copierMail" type="button">Copier le mail</button>' +
+      '</div>' +
+      '<p class="note" style="margin:13px 0 7px">Pour écrire depuis votre boîte habituelle, copiez les deux morceaux :</p>' +
+      '<div class="actions" style="margin-top:0">' +
+        '<button class="btn btn--dark" id="copierObjet" type="button">Copier l\'objet</button>' +
+        '<button class="btn btn--dark" id="copierCorps" type="button">Copier le message</button>' +
+        (p.email ? '<button class="btn btn--ghost" id="copierAdresse" type="button">Copier l\'adresse</button>' : '') +
       '</div>' +
       '<p class="note" style="margin-top:11px">Votre signature n\'est pas dans ce texte : Gmail l\'ajoute tout seul si vous l\'avez installée depuis l\'onglet « Mes infos ».</p>' +
       (p.statut === "a_envoyer"
@@ -1125,8 +1188,15 @@ function ouvrirFiche(id){
     window.location.href = "mailto:" + encodeURIComponent(p.email) +
       "?subject=" + encodeURIComponent(courant.objet) + "&body=" + encodeURIComponent(courant.corps);
   });
-  $("copierMail").addEventListener("click", function(){
-    copierTexte("Objet : " + courant.objet + "\n\n" + courant.corps, "Mail copié.");
+  $("copierObjet").addEventListener("click", function(){
+    copierTexte(courant.objet, "Objet copié. Collez-le dans la ligne « Objet ».");
+  });
+  $("copierCorps").addEventListener("click", function(){
+    copierTexte(courant.corps, "Message copié. Collez-le dans le corps du mail.");
+  });
+  var ca = $("copierAdresse");
+  if(ca) ca.addEventListener("click", function(){
+    copierTexte(p.email, "Adresse copiée.");
   });
 
   var me = $("marquerEnvoye");
