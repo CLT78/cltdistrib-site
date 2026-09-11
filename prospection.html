@@ -74,6 +74,7 @@
   /* ---------- recherche et actions ---------- */
   .bar{ display:flex; gap:8px; margin-top:14px; }
   .bar input{ flex:1; min-width:0; }
+  .bar .btn{ padding-left:14px; padding-right:14px; }
   .btn{
     font:inherit; font-size:15px; font-weight:600; padding:12px 18px; min-height:46px;
     border-radius:10px; border:1px solid transparent; cursor:pointer;
@@ -180,6 +181,23 @@
   .colle__m--tel{ color:var(--wait); font-weight:600; }
   .colle__n{ display:block; font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
 
+  /* ---------- mode sélection ---------- */
+  .pros--sel{ cursor:pointer; }
+  .pros input[type="checkbox"]{
+    width:23px; height:23px; min-height:0; padding:0; margin:1px 0 0; flex-shrink:0; accent-color:var(--brand);
+  }
+  .selbar{
+    position:fixed; left:0; right:0; bottom:0; z-index:50; display:none;
+    background:#fff; border-top:1px solid var(--line);
+    padding:11px 16px calc(11px + env(safe-area-inset-bottom));
+    box-shadow:0 -6px 22px rgba(5,11,26,.09);
+  }
+  .selbar.is-on{ display:block; }
+  .selbar__in{ max-width:720px; margin:0 auto; display:flex; align-items:center; gap:9px; }
+  .selbar__in span{ flex:1; min-width:0; font-size:13.5px; font-weight:600; color:var(--ink-soft); }
+  body.en-selection{ padding-bottom:74px; }
+  body.en-selection .flash{ bottom:92px; }
+
   .vide{ text-align:center; padding:34px 14px; color:var(--ink-faint); font-size:14px; }
 
   /* ---------- fiche prospect ---------- */
@@ -278,6 +296,9 @@
 
     <div class="bar">
       <input id="q" type="search" placeholder="Rechercher une entreprise, une ville…" aria-label="Rechercher">
+      <button class="btn btn--ghost" id="modeSel" type="button" aria-label="Sélectionner plusieurs entreprises">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 8.5 3 3 5-5"/><path d="m3 17.5 3 3 5-5"/><path d="M14 7h7M14 16h7"/></svg>
+      </button>
       <button class="btn btn--main" id="ajouter" type="button" aria-label="Ajouter une entreprise">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
       </button>
@@ -488,6 +509,14 @@
       <button class="btn btn--ghost btn--sm" id="fermer" type="button">Fermer</button>
     </div>
     <div class="sheet__body" id="ficheCorps"></div>
+  </div>
+</div>
+
+<div class="selbar" id="selbar">
+  <div class="selbar__in">
+    <span id="selCompte">Aucune sélection</span>
+    <button class="btn btn--ghost btn--sm" id="selTout" type="button">Tout</button>
+    <button class="btn btn--danger btn--sm" id="selSuppr" type="button" disabled>Supprimer</button>
   </div>
 </div>
 
@@ -840,6 +869,8 @@ function copierRiche(noeud){
    ============================================================ */
 var filtre = "tous";
 var recherche = "";
+var modeSelection = false;
+var selection = {};
 var ficheId = null;
 
 function compteurs(){
@@ -921,14 +952,22 @@ function ligneProspect(p){
   }
 
   var meta = [p.type, p.ville].filter(Boolean).join(" · ");
-  return '<button class="pros" data-id="' + p.id + '" type="button">' +
+  var dedans =
     '<span class="pros__c">' +
       '<span class="pros__n">' + esc(p.entreprise || "Sans nom") + "</span>" +
       (meta ? '<span class="pros__m">' + esc(meta) + "</span>" : "") +
       (action ? '<span class="pros__a' + cls + '">' + esc(action) + "</span>" : "") +
     "</span>" +
-    '<span class="pill p-' + p.statut + '">' + esc(libelleStatut(p.statut)) + "</span>" +
-  "</button>";
+    '<span class="pill p-' + p.statut + '">' + esc(libelleStatut(p.statut)) + "</span>";
+
+  /* En mode sélection la ligne devient une case à cocher : un appui n'importe
+     où sur la carte la coche, au lieu d'ouvrir la fiche. */
+  if(modeSelection){
+    return '<label class="pros pros--sel">' +
+      '<input type="checkbox" data-sel="' + esc(p.id) + '"' + (selection[p.id] ? " checked" : "") + ">" +
+      dedans + "</label>";
+  }
+  return '<button class="pros" data-id="' + p.id + '" type="button">' + dedans + "</button>";
 }
 
 function rendreListe(){
@@ -944,6 +983,7 @@ function rendreListe(){
         ? "Aucune entreprise ne correspond."
         : "Aucune entreprise pour l'instant.<br>Appuyez sur + pour en ajouter une, ou collez une liste plus bas.") +
       "</div>";
+    majBarreSelection();
     return;
   }
 
@@ -955,8 +995,14 @@ function rendreListe(){
       var d = (rb ? rb.jours : 0) - (ra ? ra.jours : 0);
       return d !== 0 ? d : (a.entreprise || "").localeCompare(b.entreprise || "", "fr");
     });
+    var tousCoches = liste.every(function(p){ return selection[p.id]; });
     return '<div class="groupe">' +
-      '<div class="groupe__t"><h2>' + esc(g.t) + "</h2><span>" + liste.length + "</span></div>" +
+      '<div class="groupe__t"><h2>' + esc(g.t) + "</h2><span>" + liste.length + "</span>" +
+        (modeSelection
+          ? '<button class="btn btn--ghost btn--sm" data-groupe="' + g.k + '" type="button">' +
+            (tousCoches ? "Décocher" : "Cocher tout") + "</button>"
+          : "") +
+      "</div>" +
       (g.aide ? '<p class="note" style="margin:0 0 9px">' + esc(g.aide) + "</p>" : "") +
       liste.map(ligneProspect).join("") +
     "</div>";
@@ -965,6 +1011,56 @@ function rendreListe(){
   $("liste").querySelectorAll("[data-id]").forEach(function(b){
     b.addEventListener("click", function(){ ouvrirFiche(b.getAttribute("data-id")); });
   });
+  majBarreSelection();
+}
+
+/* ============================================================
+   SÉLECTION MULTIPLE — pour supprimer d'un coup
+   ============================================================ */
+function prospectsVisibles(){
+  return D.prospects.filter(function(p){ return passeFiltre(p) && passeRecherche(p); });
+}
+
+function nbSelectionListe(){
+  return Object.keys(selection).filter(function(k){ return selection[k]; }).length;
+}
+
+function majBarreSelection(){
+  var n = nbSelectionListe();
+  $("selbar").classList.toggle("is-on", modeSelection);
+  document.body.classList.toggle("en-selection", modeSelection);
+  $("modeSel").classList.toggle("btn--dark", modeSelection);
+  $("modeSel").classList.toggle("btn--ghost", !modeSelection);
+  if(!modeSelection) return;
+  $("selCompte").textContent = n
+    ? n + (n > 1 ? " sélectionnées" : " sélectionnée")
+    : "Appuyez sur celles à supprimer";
+  $("selSuppr").disabled = !n;
+  $("selSuppr").textContent = n ? "Supprimer " + n : "Supprimer";
+  var visibles = prospectsVisibles();
+  var tout = visibles.length > 0 && visibles.every(function(p){ return selection[p.id]; });
+  $("selTout").textContent = tout ? "Rien" : "Tout";
+}
+
+function basculerModeSelection(force){
+  modeSelection = (typeof force === "boolean") ? force : !modeSelection;
+  if(!modeSelection) selection = {};
+  rendreListe();
+}
+
+function supprimerSelection(){
+  var ids = Object.keys(selection).filter(function(k){ return selection[k]; });
+  if(!ids.length) return;
+  var noms = D.prospects.filter(function(p){ return ids.indexOf(p.id) >= 0; })
+    .map(function(p){ return p.entreprise || "sans nom"; });
+  var apercu = noms.slice(0, 4).join(", ") + (noms.length > 4 ? " et " + (noms.length - 4) + " autre(s)" : "");
+  if(!confirm("Supprimer " + ids.length + " entreprise(s) et tout leur historique ?\n\n" + apercu)) return;
+  D.prospects = D.prospects.filter(function(p){ return ids.indexOf(p.id) < 0; });
+  selection = {};
+  modeSelection = false;
+  sauver();
+  rendreListe();
+  flash(ids.length + " entreprise(s) supprimée(s).");
 }
 
 /* ============================================================
@@ -2229,10 +2325,43 @@ document.querySelectorAll("[data-sig]").forEach(function(b){
 });
 
 $("q").addEventListener("input", function(){ recherche = $("q").value.trim().toLowerCase(); rendreListe(); });
-$("ajouter").addEventListener("click", ajouterProspect);
+$("ajouter").addEventListener("click", function(){
+  if(modeSelection) basculerModeSelection(false);
+  ajouterProspect();
+});
+$("modeSel").addEventListener("click", function(){ basculerModeSelection(); });
+$("selTout").addEventListener("click", function(){
+  var visibles = prospectsVisibles();
+  var tout = visibles.length > 0 && visibles.every(function(p){ return selection[p.id]; });
+  visibles.forEach(function(p){ selection[p.id] = !tout; });
+  rendreListe();
+});
+$("selSuppr").addEventListener("click", supprimerSelection);
+
+$("liste").addEventListener("change", function(e){
+  var cb = e.target;
+  if(!cb || cb.type !== "checkbox" || !cb.getAttribute("data-sel")) return;
+  selection[cb.getAttribute("data-sel")] = cb.checked;
+  majBarreSelection();
+});
+
+$("liste").addEventListener("click", function(e){
+  var b = e.target.closest ? e.target.closest("[data-groupe]") : null;
+  if(!b) return;
+  e.preventDefault();
+  var k = b.getAttribute("data-groupe");
+  var liste = prospectsVisibles().filter(function(p){ return p.statut === k; });
+  var tout = liste.every(function(p){ return selection[p.id]; });
+  liste.forEach(function(p){ selection[p.id] = !tout; });
+  rendreListe();
+});
 $("fermer").addEventListener("click", fermerFiche);
 $("fiche").addEventListener("click", function(e){ if(e.target === $("fiche")) fermerFiche(); });
-document.addEventListener("keydown", function(e){ if(e.key === "Escape" && ficheId) fermerFiche(); });
+document.addEventListener("keydown", function(e){
+  if(e.key !== "Escape") return;
+  if(ficheId) fermerFiche();
+  else if(modeSelection) basculerModeSelection(false);
+});
 
 $("copierSig").addEventListener("click", function(){ copierRiche($("sig")); });
 $("copierCode").addEventListener("click", function(){ copierTexte($("code").value, "Code HTML copié."); });
