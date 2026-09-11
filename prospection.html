@@ -127,6 +127,15 @@
   .p-rdv{ background:var(--brand-tint); color:var(--brand-deep); }
   .p-gagne{ background:var(--ok-tint); color:var(--ok); }
   .p-refus{ background:var(--late-tint); color:var(--late); }
+  /* ---------- import par copier-coller ---------- */
+  .colle__ap{ border:1px solid var(--line); border-radius:11px; background:#fff; padding:4px 13px; }
+  .colle__l{ padding:9px 0; border-bottom:1px solid var(--line-soft); font-size:14px; line-height:1.4; }
+  .colle__l:last-child{ border-bottom:0; }
+  .colle__l strong{ color:var(--navy); font-weight:600; }
+  .colle__m{ display:block; font-size:12.5px; color:var(--ink-faint); margin-top:2px; word-break:break-all; }
+  .colle__m--no{ color:var(--late); font-weight:600; }
+  .colle__n{ display:block; font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+
   .vide{ text-align:center; padding:34px 14px; color:var(--ink-faint); font-size:14px; }
 
   /* ---------- fiche prospect ---------- */
@@ -230,6 +239,36 @@
     </div>
 
     <div class="liste" id="liste"></div>
+
+    <details class="card" id="coller">
+      <summary>Importer une liste collée</summary>
+      <p class="note" style="margin:12px 0 14px">
+        Une ligne par entreprise. Chaque ligne peut contenir un numéro, le nom, l'adresse email
+        et une note, séparés par une tabulation, un point-virgule ou deux espaces. L'ordre n'a pas
+        d'importance : l'adresse email est reconnue toute seule.
+      </p>
+      <label for="colle">Votre liste</label>
+      <textarea id="colle" spellcheck="false" placeholder="1&#9;contact@exemple.fr&#9;Nom de l'entreprise&#9;note libre
+2&#9;contact@autre-exemple.fr&#9;Autre entreprise"></textarea>
+      <div class="grid" style="margin-top:12px">
+        <div>
+          <label for="colleStatut">Statut à leur donner</label>
+          <select id="colleStatut"></select>
+        </div>
+        <div>
+          <label for="colleDate">Date correspondante</label>
+          <input id="colleDate" type="date">
+        </div>
+        <div class="full">
+          <label for="colleType">Type d'établissement <span class="opt">— modifiable ensuite, fiche par fiche</span></label>
+          <select id="colleType"></select>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn btn--dark btn--wide" id="colleLire" type="button">Analyser la liste</button>
+      </div>
+      <div id="colleApercu"></div>
+    </details>
 
     <div class="card" id="demarrage">
       <h2>Par où commencer</h2>
@@ -988,6 +1027,130 @@ function ajouterProspect(){
   setTimeout(function(){ var e = $("f-entreprise"); if(e) e.focus(); }, 120);
 }
 
+/* ------------------------------------------------------------
+   IMPORT PAR COPIER-COLLER — pour reprendre une liste deja faite
+   ailleurs sans tout ressaisir. Rien ne sort de l'appareil.
+   ------------------------------------------------------------ */
+var RE_MAIL_SEUL = /^[^\s@,;<>()]+@[^\s@,;<>()]+\.[A-Za-z]{2,}$/;
+var RE_MAIL_DANS = /[^\s@,;<>():]+@[^\s@,;<>():]+\.[A-Za-z]{2,}/;
+
+function analyserLigne(l){
+  var cells;
+  if(l.indexOf("\t") >= 0) cells = l.split("\t");
+  else if(l.indexOf(";") >= 0) cells = l.split(";");
+  else if(/\s{2,}/.test(l)) cells = l.split(/\s{2,}/);
+  else {
+    /* Une seule colonne : on isole l'email, le reste forme le nom. */
+    var m = l.match(RE_MAIL_DANS);
+    if(m){
+      cells = [
+        l.replace(m[0], " ").replace(/^\s*\d{1,4}[.)\]]?\s+/, "").replace(/[<>(),;]/g, " "),
+        m[0]
+      ];
+    }else{
+      cells = [l];
+    }
+  }
+  cells = cells.map(function(c){
+    return c.replace(/\s+/g, " ").replace(/^[-–—•*·]\s+/, "").trim();
+  }).filter(Boolean);
+  /* Numero de ligne dans sa propre colonne : on le retire. */
+  if(cells.length > 1 && /^\d{1,4}[.)\]]?$/.test(cells[0])) cells.shift();
+
+  var email = "", nom = "", notes = [];
+  cells.forEach(function(c){
+    if(!email && RE_MAIL_SEUL.test(c)){ email = c.toLowerCase(); return; }
+    if(!nom && !RE_MAIL_SEUL.test(c)){ nom = c.replace(/[.,;:]+$/, "").trim(); return; }
+    notes.push(c);
+  });
+  if(!nom && email) nom = email.split("@")[1].split(".")[0];
+  if(!nom) return null;
+  return { entreprise:nom, email:email, note:notes.join(" · ") };
+}
+
+function analyserColle(){
+  var vus = {};
+  D.prospects.forEach(function(p){
+    if(p.email) vus[p.email.toLowerCase()] = true;
+    if(p.entreprise) vus["nom:" + p.entreprise.toLowerCase()] = true;
+  });
+  var res = { nouveaux:[], doublons:0, illisibles:0 };
+  String($("colle").value || "").split(/\r?\n/).forEach(function(l){
+    l = l.trim();
+    if(!l) return;
+    var r = analyserLigne(l);
+    if(!r){ res.illisibles++; return; }
+    var cle = r.email || ("nom:" + r.entreprise.toLowerCase());
+    if(vus[cle]){ res.doublons++; return; }
+    vus[cle] = true;
+    vus["nom:" + r.entreprise.toLowerCase()] = true;
+    res.nouveaux.push(r);
+  });
+  return res;
+}
+
+var colleLot = null;
+
+function apercuColle(){
+  var r = analyserColle();
+  colleLot = r.nouveaux;
+  var reste = [];
+  if(r.doublons) reste.push(r.doublons + " déjà dans votre liste");
+  if(r.illisibles) reste.push(r.illisibles + " ligne(s) non comprise(s)");
+  var suffixe = reste.length ? '<p class="note" style="margin-top:10px">' + esc(reste.join(", ")) + ".</p>" : "";
+
+  if(!r.nouveaux.length){
+    $("colleApercu").innerHTML = '<p class="note" style="margin-top:14px">Rien de nouveau à importer.</p>' + suffixe;
+    return;
+  }
+  var lignes = r.nouveaux.map(function(x){
+    return '<div class="colle__l"><strong>' + esc(x.entreprise) + "</strong>"
+      + (x.email
+          ? '<span class="colle__m">' + esc(x.email) + "</span>"
+          : '<span class="colle__m colle__m--no">adresse email à compléter</span>')
+      + (x.note ? '<span class="colle__n">' + esc(x.note) + "</span>" : "")
+      + "</div>";
+  }).join("");
+  $("colleApercu").innerHTML =
+    '<p class="note" style="margin:14px 0 8px"><strong>' + r.nouveaux.length
+      + " entreprise(s) prête(s) à être ajoutée(s).</strong> Vérifiez que les noms et les adresses sont au bon endroit.</p>"
+    + '<div class="colle__ap">' + lignes + "</div>"
+    + suffixe
+    + '<div class="actions"><button class="btn btn--main btn--wide" id="colleGo" type="button">Ajouter ces '
+      + r.nouveaux.length + " entreprise(s)</button></div>";
+  $("colleGo").addEventListener("click", importerColle);
+}
+
+function importerColle(){
+  if(!colleLot || !colleLot.length) return;
+  var st = $("colleStatut").value;
+  var dt = $("colleDate").value || aujourdhui();
+  var ty = $("colleType").value;
+  colleLot.forEach(function(x){
+    var p = {
+      id: uid(), entreprise:x.entreprise, type:ty, ville:"",
+      contactNom:"", contactFonction:"", email:x.email, tel:"", effectif:"", note:x.note,
+      statut:st, dateEnvoi:"", dateRelance:"", dateReponse:"",
+      historique:[{ date: aujourdhui(), texte:"Importée depuis une liste collée" }]
+    };
+    if(st === "envoye"){ p.dateEnvoi = dt; }
+    else if(st === "relance"){ p.dateEnvoi = dt; p.dateRelance = dt; }
+    else if(st === "reponse"){ p.dateEnvoi = dt; p.dateReponse = dt; }
+    else if(st === "rdv" || st === "gagne" || st === "refus"){ p.dateEnvoi = dt; }
+    if(st !== "a_envoyer") p.historique.push({ date: dt, texte: libelleStatut(st) });
+    D.prospects.push(p);
+  });
+  var n = colleLot.length;
+  colleLot = null;
+  $("colle").value = "";
+  $("colleApercu").innerHTML = "";
+  $("coller").open = false;
+  sauver();
+  rendreListe();
+  flash(n + " entreprise(s) ajoutée(s).");
+  window.scrollTo(0, 0);
+}
+
 function exporter(){
   var contenu = JSON.stringify(D, null, 2);
   var blob = new Blob([contenu], { type:"application/json" });
@@ -1099,6 +1262,13 @@ $("copierCode").addEventListener("click", function(){ copierTexte($("code").valu
 $("exporter").addEventListener("click", exporter);
 $("importer").addEventListener("click", function(){ $("fichier").click(); });
 $("exporterTableur").addEventListener("click", exporterTableur);
+
+$("colleStatut").innerHTML = STATUTS.map(function(s){
+  return '<option value="' + s.k + '"' + (s.k === "envoye" ? " selected" : "") + ">" + esc(s.l) + "</option>";
+}).join("");
+$("colleType").innerHTML = TYPES.map(function(t){ return "<option>" + esc(t) + "</option>"; }).join("");
+$("colleDate").value = aujourdhui();
+$("colleLire").addEventListener("click", apercuColle);
 $("fichier").addEventListener("change", function(){
   if(this.files && this.files[0]) importer(this.files[0]);
   this.value = "";
