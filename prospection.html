@@ -470,6 +470,30 @@ var ANGLES = {
     "Proposer des boissons et des snacks sur place rend service aux personnes présentes, sans créer de point de vente."
 };
 
+/* On n'argumente pas pareil selon la personne en face : le dirigeant
+   regarde la charge, le RH le confort des équipes, les services
+   généraux ce qu'ils auront à piloter. */
+var ROLES = [
+  "", "Gérant / dirigeant", "Responsable RH", "Services généraux",
+  "Responsable de site / production", "Accueil / office manager",
+  "Propriétaire / gestionnaire", "Autre"
+];
+
+var ARGUMENTS_ROLE = {
+  "Gérant / dirigeant":
+    "Concrètement, cela ne vous demande ni investissement, ni budget à débloquer, ni temps de gestion : c'est un service en plus sur votre site, sans rien à piloter.",
+  "Responsable RH":
+    "C'est souvent perçu comme un petit plus par les équipes : de quoi boire ou grignoter sans quitter le site, y compris en dehors des heures de restauration.",
+  "Services généraux":
+    "Côté exploitation, vous n'avez rien à reprendre : un seul interlocuteur, aucun stock à suivre, aucune maintenance à intégrer dans vos contrats en cours.",
+  "Responsable de site / production":
+    "L'installation se fait en une intervention courte, sans arrêter l'activité, et les passages de réassort s'organisent sur les créneaux qui vous conviennent.",
+  "Accueil / office manager":
+    "C'est le genre de détail qui se remarque à l'accueil : un visiteur qui patiente trouve de quoi boire, sans que vous ayez à vous en occuper.",
+  "Propriétaire / gestionnaire":
+    "Pour vous, c'est un service disponible en permanence sur le site, sans gestion de votre côté et sans immobiliser de trésorerie."
+};
+
 function infos(){ return D.infos; }
 
 function ligneContact(){
@@ -496,6 +520,10 @@ function corpsMail(p, type){
     l.push("Je me permets de revenir vers vous au sujet de mon message concernant l'installation d'un distributeur de boissons et snacks chez " + nomSite + ".");
     l.push("");
     l.push("La proposition tient toujours : CLTDistrib fournit la machine, l'installe, l'approvisionne et l'entretient. De votre côté, il s'agit simplement de mettre à disposition un emplacement adapté et une alimentation électrique.");
+    if(ARGUMENTS_ROLE[p.contactFonction]){
+      l.push("");
+      l.push(ARGUMENTS_ROLE[p.contactFonction]);
+    }
     l.push("");
     l.push("Si le sujet n'est pas d'actualité, dites-le moi simplement, je n'insisterai pas. Et s'il l'est, je peux passer voir l'emplacement quand cela vous arrange : cette visite est gratuite et sans engagement.");
   } else {
@@ -514,6 +542,10 @@ function corpsMail(p, type){
     l.push("— Le paiement par carte et sans contact est géré de mon côté");
     l.push("");
     l.push("Aucun investissement ni gestion de stock de votre côté.");
+    if(ARGUMENTS_ROLE[p.contactFonction]){
+      l.push("");
+      l.push(ARGUMENTS_ROLE[p.contactFonction]);
+    }
     l.push("");
     l.push("Si l'idée vous paraît pertinente pour " + nomSite + ", je peux passer étudier l'emplacement : la visite est gratuite et sans engagement, et je vous dirai franchement si votre site s'y prête ou non." + (i.zone ? " Je me déplace sur le secteur suivant : " + i.zone + "." : ""));
   }
@@ -756,7 +788,7 @@ var CHAMPS = [
   { k:"type", l:"Type d'établissement", t:"select" },
   { k:"ville", l:"Ville" },
   { k:"contactNom", l:"Contact — nom" },
-  { k:"contactFonction", l:"Contact — fonction" },
+  { k:"contactFonction", l:"Contact — fonction", t:"role" },
   { k:"email", l:"Email du contact", t:"email", w:2 },
   { k:"tel", l:"Téléphone" },
   { k:"effectif", l:"Personnes sur le site" },
@@ -771,6 +803,13 @@ function champHtml(p, c){
   } else if(c.t === "select"){
     champ = '<select id="' + id + '" data-k="' + c.k + '">' +
       TYPES.map(function(t){ return '<option' + (p.type === t ? " selected" : "") + '>' + esc(t) + '</option>'; }).join("") +
+      '</select>';
+  } else if(c.t === "role"){
+    champ = '<select id="' + id + '" data-k="' + c.k + '">' +
+      ROLES.map(function(r){
+        return '<option value="' + esc(r) + '"' + (p.contactFonction === r ? " selected" : "") + '>' +
+          (r ? esc(r) : "Non renseignée") + '</option>';
+      }).join("") +
       '</select>';
   } else {
     champ = '<input id="' + id + '" data-k="' + c.k + '" type="' + (c.t || "text") + '" value="' + val + '">';
@@ -866,7 +905,7 @@ function ouvrirFiche(id){
       p[k] = el.value;
       sauver();
       if(k === "entreprise") $("ficheTitre").textContent = el.value || "Nouvelle entreprise";
-      if(k === "entreprise" || k === "contactNom" || k === "type" || k === "email") majApercu();
+      if(k === "entreprise" || k === "contactNom" || k === "contactFonction" || k === "type" || k === "email") majApercu();
       rendreListe();
     });
   });
@@ -973,7 +1012,8 @@ function exporterTableur(){
     return [
       c(p.entreprise), c(p.type), c(p.ville), c(p.contactNom), c(p.email),
       LIBELLE_TABLEUR[p.statut] || "À envoyer",
-      c(p.dateEnvoi), c(p.dateRelance), c(p.dateReponse), c(p.note)
+      c(p.dateEnvoi), c(p.dateRelance), c(p.dateReponse), c(p.note),
+      c(p.contactFonction)
     ].join("\t");
   });
   if(!lignes.length){ flash("Aucune entreprise à exporter."); return; }

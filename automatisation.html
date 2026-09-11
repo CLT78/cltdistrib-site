@@ -150,7 +150,7 @@
       </li>
       <li>
         <strong>Collez la ligne de titres</strong>
-        <p>Cliquez sur la case A1, puis collez la ligne ci-dessous : les dix colonnes se remplissent d'un coup.</p>
+        <p>Cliquez sur la case A1, puis collez la ligne ci-dessous : les onze colonnes se remplissent d'un coup.</p>
         <div class="actions"><button class="btn btn--ghost" id="copierEntetes" type="button">Copier la ligne de titres</button></div>
       </li>
       <li>
@@ -195,6 +195,7 @@
           <tr><td><code>H</code> Date relance</td><td>Renseignée à la relance</td><td>Le script</td></tr>
           <tr><td><code>I</code> Date réponse</td><td>Renseignée à la détection</td><td>Le script</td></tr>
           <tr><td><code>J</code> Notes</td><td>Vos remarques, et les échecs éventuels</td><td>Les deux</td></tr>
+          <tr><td><code>K</code> Fonction du contact</td><td>Facultatif. Adapte l'argument du mail : <code>Gérant / dirigeant</code>, <code>Responsable RH</code>, <code>Services généraux</code>, <code>Responsable de site / production</code>, <code>Accueil / office manager</code>, <code>Propriétaire / gestionnaire</code></td><td>Vous</td></tr>
         </tbody>
       </table>
     </div>
@@ -220,6 +221,7 @@
  * Colonnes attendues, dans cet ordre, avec une ligne de titres :
  * A Entreprise | B Type | C Ville | D Contact | E Email
  * F Statut | G Date envoi | H Date relance | I Date réponse | J Notes
+ * K Fonction du contact (facultatif — adapte l'argument du mail)
  */
 
 /* ============================================================
@@ -271,6 +273,28 @@ var ANGLES = {
 };
 
 /* ============================================================
+   3 bis. ARGUMENT SELON LA FONCTION DU DESTINATAIRE
+   On n'argumente pas pareil selon la personne en face : le dirigeant
+   regarde la charge, le RH le confort des équipes, les services
+   généraux ce qu'ils auront à piloter.
+   Valeurs acceptées en colonne K, ou vide pour ne rien ajouter.
+   ============================================================ */
+var ARGUMENTS_ROLE = {
+  "Gérant / dirigeant":
+    "Concrètement, cela ne vous demande ni investissement, ni budget à débloquer, ni temps de gestion : c'est un service en plus sur votre site, sans rien à piloter.",
+  "Responsable RH":
+    "C'est souvent perçu comme un petit plus par les équipes : de quoi boire ou grignoter sans quitter le site, y compris en dehors des heures de restauration.",
+  "Services généraux":
+    "Côté exploitation, vous n'avez rien à reprendre : un seul interlocuteur, aucun stock à suivre, aucune maintenance à intégrer dans vos contrats en cours.",
+  "Responsable de site / production":
+    "L'installation se fait en une intervention courte, sans arrêter l'activité, et les passages de réassort s'organisent sur les créneaux qui vous conviennent.",
+  "Accueil / office manager":
+    "C'est le genre de détail qui se remarque à l'accueil : un visiteur qui patiente trouve de quoi boire, sans que vous ayez à vous en occuper.",
+  "Propriétaire / gestionnaire":
+    "Pour vous, c'est un service disponible en permanence sur le site, sans gestion de votre côté et sans immobiliser de trésorerie."
+};
+
+/* ============================================================
    4. LE MENU DANS LE TABLEUR
    ============================================================ */
 function onOpen() {
@@ -290,7 +314,8 @@ function onOpen() {
    5. OUTILS
    ============================================================ */
 var COL = { entreprise:0, type:1, ville:2, contact:3, email:4,
-            statut:5, dateEnvoi:6, dateRelance:7, dateReponse:8, notes:9 };
+            statut:5, dateEnvoi:6, dateRelance:7, dateReponse:8, notes:9,
+            fonction:10 };
 
 function feuille() { return SpreadsheetApp.getActiveSpreadsheet().getSheets()[0]; }
 
@@ -330,6 +355,7 @@ function corpsMail(p, estRelance) {
     l.push("Je me permets de revenir vers vous au sujet de mon message concernant l'installation d'un distributeur de boissons et snacks chez " + nom + ".");
     l.push("");
     l.push("La proposition tient toujours : CLTDistrib fournit la machine, l'installe, l'approvisionne et l'entretient. De votre côté, il s'agit simplement de mettre à disposition un emplacement adapté et une alimentation électrique.");
+    if (ARGUMENTS_ROLE[p.fonction]) { l.push(""); l.push(ARGUMENTS_ROLE[p.fonction]); }
     l.push("");
     l.push("Si le sujet n'est pas d'actualité, dites-le moi simplement, je n'insisterai pas. Et s'il l'est, je peux passer voir l'emplacement quand cela vous arrange : cette visite est gratuite et sans engagement.");
   } else {
@@ -345,6 +371,7 @@ function corpsMail(p, estRelance) {
     l.push("— Le paiement par carte et sans contact est géré de mon côté");
     l.push("");
     l.push("Aucun investissement ni gestion de stock de votre côté.");
+    if (ARGUMENTS_ROLE[p.fonction]) { l.push(""); l.push(ARGUMENTS_ROLE[p.fonction]); }
     l.push("");
     l.push("Si l'idée vous paraît pertinente pour " + nom + ", je peux passer étudier l'emplacement : la visite est gratuite et sans engagement, et je vous dirai franchement si votre site s'y prête ou non." + (MOI.zone ? " Je me déplace sur le secteur suivant : " + MOI.zone + "." : ""));
   }
@@ -410,7 +437,8 @@ function lignes() {
       statut: String(v[i][COL.statut] || "").trim(),
       dateEnvoi: v[i][COL.dateEnvoi],
       dateRelance: v[i][COL.dateRelance],
-      dateReponse: v[i][COL.dateReponse]
+      dateReponse: v[i][COL.dateReponse],
+      fonction: String(v[i][COL.fonction] || "").trim()
     });
   }
   return out;
@@ -551,7 +579,7 @@ function retirerDeclencheur() {
 <script>
 (function(){
   "use strict";
-  var ENTETES = "Entreprise\tType\tVille\tContact\tEmail\tStatut\tDate envoi\tDate relance\tDate réponse\tNotes";
+  var ENTETES = "Entreprise\tType\tVille\tContact\tEmail\tStatut\tDate envoi\tDate relance\tDate réponse\tNotes\tFonction du contact";
 
   function flash(t){
     var f = document.getElementById("flash");
