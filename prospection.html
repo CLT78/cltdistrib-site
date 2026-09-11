@@ -168,6 +168,7 @@
   .colle__l strong{ color:var(--navy); font-weight:600; }
   .colle__m{ display:block; font-size:12.5px; color:var(--ink-faint); margin-top:2px; word-break:break-all; }
   .colle__m--no{ color:var(--late); font-weight:600; }
+  .colle__m--tel{ color:var(--wait); font-weight:600; }
   .colle__n{ display:block; font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
 
   .vide{ text-align:center; padding:34px 14px; color:var(--ink-faint); font-size:14px; }
@@ -887,7 +888,11 @@ function rendreListe(){
     var r = relance(p), action = "", cls = "";
     if(r && r.du){ action = "À relancer — envoyé il y a " + r.jours + " jours"; cls = " pros__a--late"; }
     else if(r){ action = "Envoyé il y a " + r.jours + (r.jours > 1 ? " jours" : " jour"); cls = " pros__a--soon"; }
-    else if(p.statut === "a_envoyer"){ action = p.email ? "Prêt à envoyer" : "Email du contact manquant"; }
+    else if(p.statut === "a_envoyer"){
+      if(p.email) action = "Prêt à envoyer";
+      else if(p.tel){ action = "À appeler — " + p.tel; cls = " pros__a--soon"; }
+      else action = "Email du contact manquant";
+    }
     else if(p.statut === "reponse"){ action = "Réponse reçue le " + dateFr(p.dateReponse); }
 
     var meta = [p.type, p.ville].filter(Boolean).join(" · ");
@@ -939,9 +944,15 @@ function aideEmailHtml(p){
   return '<div class="aide" id="aideEmail"' + (p.email ? ' style="display:none"' : "") + ">" +
     "<strong>Trouver l'adresse email</strong>" +
     '<p class="note" style="margin:5px 0 10px">Les bases publiques ne contiennent pas les adresses email. ' +
-      "Ouvrez le site de l'entreprise, puis déduisez-la de son nom de domaine.</p>" +
+      "Ouvrez le site de l'entreprise et déduisez-la de son nom de domaine" +
+      (p.tel
+        ? ", ou appelez : sur un petit établissement, c'est souvent plus rapide."
+        : ". Sur un commerce, le numéro figure presque toujours sur sa fiche Maps.") + "</p>" +
     '<div class="actions">' +
+      (p.tel ? '<a class="btn btn--main btn--sm" href="tel:' + esc(String(p.tel).replace(/[^+\d]/g, "")) + '">Appeler ' + esc(p.tel) + "</a>" : "") +
       '<a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" href="https://www.google.com/search?q=' + q + '">Chercher sur le web</a>' +
+      (p.tel ? "" : '<a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=' +
+        encodeURIComponent((p.entreprise || "") + " " + (p.ville || "")) + '">Voir sur Maps</a>') +
       (d ? '<a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" href="https://' + esc(d) + '">Ouvrir ' + esc(d) + "</a>" : "") +
     "</div>" +
     (d
@@ -1094,7 +1105,7 @@ function ouvrirFiche(id){
       sauver();
       if(k === "entreprise") $("ficheTitre").textContent = el.value || "Nouvelle entreprise";
       if(k === "entreprise" || k === "contactNom" || k === "contactFonction" || k === "type" || k === "email") majApercu();
-      if(k === "site" || k === "entreprise" || k === "ville") majAide();
+      if(k === "site" || k === "entreprise" || k === "ville" || k === "tel") majAide();
       rendreListe();
     });
   });
@@ -1779,7 +1790,63 @@ function initRecherche(){
 var RE_MAIL_SEUL = /^[^\s@,;<>()]+@[^\s@,;<>()]+\.[A-Za-z]{2,}$/;
 var RE_MAIL_DANS = /[^\s@,;<>():]+@[^\s@,;<>():]+\.[A-Za-z]{2,}/;
 
-function analyserLigne(l){
+/* Marques de tableur sans valeur pour une fiche : « ❌ Pas d'e-mail → 06… »
+   devient un numéro de téléphone, pas une note. */
+function nettoyerCellule(c){
+  return String(c == null ? "" : c)
+    .replace(/[\u274C\u2705\u26A0\u2714\u2716\u2757\uFE0F\u2192\u27A1]/g, " ")
+    .replace(/\bpas d[e']?\s*(?:e[- ]?mail|adresse|mail)(?![a-z])/gi, " ")
+    .replace(/\bpas (?:trouv[ée]|de mail|dispo(?:nible)?)(?![a-z])/gi, " ")
+    .replace(/\bnon (?:trouv[ée]|renseign[ée]|communiqu[ée])(?![a-z])/gi, " ")
+    .replace(/\s+/g, " ").replace(/^[-–—•*·:,]+\s*/, "").replace(/\s*[-–—·:,]+$/, "").trim();
+}
+
+/* Dans une colonne « e-mail », tout ce qui n'est ni une adresse ni un
+   numéro n'est qu'une marque d'absence : elle n'a rien à faire en note. */
+var MOTS_MARQUEUR = ["telephone","tel","public","publique","aucun","aucune","non","rien",
+  "na","x","site","web","introuvable","inconnu","inconnue","manquant","manquante","appeler","appel"];
+
+function nettoyerMarqueur(c){
+  var v = nettoyerCellule(c);
+  if(!v) return "";
+  var utiles = sansAccent(v).replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter(function(w){
+    return w && MOTS_MARQUEUR.indexOf(w) < 0;
+  });
+  return utiles.length ? v : "";
+}
+
+function telDe(v){
+  var d = String(v == null ? "" : v).replace(/[^\d]/g, "");
+  if(d.length === 11 && d.slice(0, 2) === "33") d = "0" + d.slice(2);
+  if(d.length === 12 && d.slice(0, 4) === "0033") d = "0" + d.slice(4);
+  if(d.length !== 10 || d.charAt(0) !== "0") return "";
+  return d.slice(0, 2) + " " + d.slice(2, 4) + " " + d.slice(4, 6) + " " + d.slice(6, 8) + " " + d.slice(8);
+}
+
+/* Traduction d'une activité écrite à la main vers les types du site,
+   qui déterminent l'angle du mail. */
+var TYPE_MOTS = [
+  { t:"Salle de sport", m:["sport","sports","fitness","musculation","gym","piscine","padel","tennis","escalade","bowling"] },
+  { t:"Hôtel / résidence", m:["hotel","hotellerie","residence","camping","auberge","gite"] },
+  { t:"Centre de formation", m:["formation","auto ecole","autoecole","auto-ecole","cfa","apprentissage","enseignement","lycee","college"] },
+  { t:"Entrepôt / logistique", m:["logistique","entrepot","entreposage","transport","messagerie","fret","stockage","demenagement","plateforme"] },
+  { t:"Usine / atelier", m:["usine","industrie","industriel","atelier","fabrication","production","metallerie","chaudronnerie","serrurerie","menuiserie","imprimerie","chantier","installation","btp","batiment","travaux","peinture","traiteur","boulangerie","agroalimentaire","recyclage","plasturgie","usinage","mecanique"] },
+  { t:"Établissement accueillant du public", m:["laverie","lavage","pressing","controle technique","controle","garage","carrosserie","auto","automobile","vehicule","pneu","pneus","concession","station","commerce","magasin","supermarche","clinique","ehpad","laboratoire","coiffure","restaurant","cinema","attente","accueil","public"] },
+  { t:"Entreprise / bureaux", m:["bureau","bureaux","siege","agence","conseil","informatique","assurance","comptab","tertiaire"] }
+];
+
+function typeDepuisMots(txt){
+  var t = " " + sansAccent(txt).replace(/[^a-z0-9]+/g, " ").replace(/\s+/g, " ") + " ";
+  for(var i = 0; i < TYPE_MOTS.length; i++){
+    for(var j = 0; j < TYPE_MOTS[i].m.length; j++){
+      var m = TYPE_MOTS[i].m[j];
+      if(t.indexOf(" " + m + " ") >= 0 || t.indexOf(" " + m + "s ") >= 0) return TYPE_MOTS[i].t;
+    }
+  }
+  return "";
+}
+
+function decouper(l){
   var cells;
   if(l.indexOf("\t") >= 0) cells = l.split("\t");
   else if(l.indexOf(";") >= 0) cells = l.split(";");
@@ -1796,21 +1863,100 @@ function analyserLigne(l){
       cells = [l];
     }
   }
-  cells = cells.map(function(c){
+  return cells.map(function(c){
     return c.replace(/\s+/g, " ").replace(/^[-–—•*·]\s+/, "").trim();
-  }).filter(Boolean);
+  });
+}
+
+/* ---- lecture d'une ligne de titres, quand la liste vient d'un tableau ---- */
+var ENTETES = [
+  { k:"entreprise", m:["raison sociale","denomination","entreprise","societe","enseigne","prospect","client","nom"] },
+  { k:"ville", m:["ville","commune","localite","adresse","lieu"] },
+  { k:"typeTexte", m:["activite","secteur","domaine","metier","type"] },
+  { k:"email", m:["e mail","e-mail","email","mail","courriel","adresse mail"] },
+  { k:"tel", m:["telephone","tel","portable","mobile","numero"] },
+  { k:"contactNom", m:["interlocuteur","dirigeant","gerant","responsable","contact"] },
+  { k:"contactFonction", m:["fonction","poste","qualite","role"] },
+  { k:"note", m:["note","notes","remarque","commentaire","observation","statut","suite"] }
+];
+
+function detecterEntete(l){
+  var cells = decouper(l);
+  if(cells.length < 2) return null;
+  var map = [], reconnus = 0, pris = {};
+  cells.forEach(function(c, i){
+    var t = sansAccent(c).replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+    map[i] = null;
+    if(!t) return;
+    var best = null, lg = 0;
+    ENTETES.forEach(function(e){
+      if(pris[e.k]) return;
+      e.m.forEach(function(m){
+        if(t.indexOf(m) >= 0 && m.length > lg){ best = e.k; lg = m.length; }
+      });
+    });
+    if(best){ map[i] = best; pris[best] = true; reconnus++; }
+  });
+  /* Une vraie ligne de titres ne contient ni email ni numéro. */
+  if(reconnus < 2 || RE_MAIL_DANS.test(l)) return null;
+  return map;
+}
+
+function analyserAvecEntete(l, map){
+  var cells = decouper(l);
+  var o = { entreprise:"", ville:"", email:"", tel:"", contactNom:"", contactFonction:"", note:"", typeTexte:"" };
+  var extra = [];
+  cells.forEach(function(c, i){
+    var k = map[i] || null;
+    c = nettoyerCellule(c);
+    if(!c) return;
+    if(!k){
+      if(!/^\d{1,4}[.)\]]?$/.test(c)) extra.push(c);
+      return;
+    }
+    if(k === "email"){
+      if(RE_MAIL_SEUL.test(c)){ o.email = c.toLowerCase(); return; }
+      var t = telDe(c);
+      if(t){ if(!o.tel) o.tel = t; return; }
+      var m = c.match(RE_MAIL_DANS);
+      if(m){ o.email = m[0].toLowerCase(); return; }
+      var reste = nettoyerMarqueur(c);
+      if(reste) extra.push(reste);
+      return;
+    }
+    if(k === "tel"){ o.tel = telDe(c) || c; return; }
+    if(o[k]) extra.push(c); else o[k] = c;
+  });
+  if(!o.entreprise && o.email) o.entreprise = o.email.split("@")[1].split(".")[0];
+  if(!o.entreprise) return null;
+  o.type = typeDepuisMots(o.typeTexte) || typeDepuisMots(o.entreprise) || "";
+  o.note = [o.typeTexte, o.note].concat(extra).filter(Boolean).join(" · ");
+  return o;
+}
+
+function analyserLigne(l){
+  var cells = decouper(l).filter(Boolean);
   /* Numero de ligne dans sa propre colonne : on le retire. */
   if(cells.length > 1 && /^\d{1,4}[.)\]]?$/.test(cells[0])) cells.shift();
 
-  var email = "", nom = "", notes = [];
+  var email = "", nom = "", tel = "", notes = [];
   cells.forEach(function(c){
     if(!email && RE_MAIL_SEUL.test(c)){ email = c.toLowerCase(); return; }
-    if(!nom && !RE_MAIL_SEUL.test(c)){ nom = c.replace(/[.,;:]+$/, "").trim(); return; }
-    notes.push(c);
+    var propre = nettoyerCellule(c);
+    if(!propre) return;
+    if(!nom && !RE_MAIL_SEUL.test(propre)){ nom = propre.replace(/[.,;:]+$/, "").trim(); return; }
+    if(!tel){
+      var t = telDe(propre);
+      if(t){ tel = t; return; }
+    }
+    notes.push(propre);
   });
   if(!nom && email) nom = email.split("@")[1].split(".")[0];
   if(!nom) return null;
-  return { entreprise:nom, email:email, note:notes.join(" · ") };
+  return {
+    entreprise:nom, email:email, tel:tel, ville:"", type:typeDepuisMots(nom) || "",
+    note:notes.join(" · ")
+  };
 }
 
 function analyserColle(){
@@ -1819,11 +1965,13 @@ function analyserColle(){
     if(p.email) vus[p.email.toLowerCase()] = true;
     if(p.entreprise) vus["nom:" + p.entreprise.toLowerCase()] = true;
   });
-  var res = { nouveaux:[], doublons:0, illisibles:0 };
-  String($("colle").value || "").split(/\r?\n/).forEach(function(l){
-    l = l.trim();
-    if(!l) return;
-    var r = analyserLigne(l);
+  var res = { nouveaux:[], doublons:0, illisibles:0, entete:false };
+  var lignes = String($("colle").value || "").split(/\r?\n/)
+    .map(function(x){ return x.trim(); }).filter(Boolean);
+  var map = lignes.length > 1 ? detecterEntete(lignes[0]) : null;
+  if(map){ res.entete = true; lignes = lignes.slice(1); }
+  lignes.forEach(function(l){
+    var r = map ? analyserAvecEntete(l, map) : analyserLigne(l);
     if(!r){ res.illisibles++; return; }
     var cle = r.email || ("nom:" + r.entreprise.toLowerCase());
     if(vus[cle]){ res.doublons++; return; }
@@ -1848,17 +1996,30 @@ function apercuColle(){
     $("colleApercu").innerHTML = '<p class="note" style="margin-top:14px">Rien de nouveau à importer.</p>' + suffixe;
     return;
   }
+  var sansMail = r.nouveaux.filter(function(x){ return !x.email; }).length;
+  var avecTel = r.nouveaux.filter(function(x){ return !x.email && x.tel; }).length;
   var lignes = r.nouveaux.map(function(x){
+    var sous = [x.ville, x.type].filter(Boolean).join(" · ");
     return '<div class="colle__l"><strong>' + esc(x.entreprise) + "</strong>"
       + (x.email
           ? '<span class="colle__m">' + esc(x.email) + "</span>"
-          : '<span class="colle__m colle__m--no">adresse email à compléter</span>')
+          : x.tel
+            ? '<span class="colle__m colle__m--tel">pas d\'email — à appeler au ' + esc(x.tel) + "</span>"
+            : '<span class="colle__m colle__m--no">ni email ni téléphone</span>')
+      + (sous ? '<span class="colle__n">' + esc(sous) + "</span>" : "")
       + (x.note ? '<span class="colle__n">' + esc(x.note) + "</span>" : "")
       + "</div>";
   }).join("");
   $("colleApercu").innerHTML =
     '<p class="note" style="margin:14px 0 8px"><strong>' + r.nouveaux.length
-      + " entreprise(s) prête(s) à être ajoutée(s).</strong> Vérifiez que les noms et les adresses sont au bon endroit.</p>"
+      + " entreprise(s) prête(s) à être ajoutée(s).</strong> "
+      + (r.entete ? "Les colonnes de votre tableau ont été reconnues. " : "")
+      + "Vérifiez que tout est au bon endroit.</p>"
+    + (sansMail
+        ? '<p class="note" style="margin:0 0 8px">' + sansMail + " sans adresse email"
+          + (avecTel ? ", dont " + avecTel + " avec un téléphone" : "")
+          + " : elles apparaîtront comme « à appeler ».</p>"
+        : "")
     + '<div class="colle__ap">' + lignes + "</div>"
     + suffixe
     + '<div class="actions"><button class="btn btn--main btn--wide" id="colleGo" type="button">Ajouter ces '
@@ -1873,8 +2034,9 @@ function importerColle(){
   var ty = $("colleType").value;
   colleLot.forEach(function(x){
     var p = {
-      id: uid(), entreprise:x.entreprise, type:ty, ville:"",
-      contactNom:"", contactFonction:"", email:x.email, tel:"", effectif:"", note:x.note,
+      id: uid(), entreprise:x.entreprise, type:x.type || ty, ville:x.ville || "",
+      contactNom:x.contactNom || "", contactFonction:x.contactFonction || "",
+      email:x.email || "", tel:x.tel || "", site:"", effectif:"", note:x.note,
       statut:st, dateEnvoi:"", dateRelance:"", dateReponse:"",
       historique:[{ date: aujourdhui(), texte:"Importée depuis une liste collée" }]
     };
