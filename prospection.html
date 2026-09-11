@@ -127,6 +127,40 @@
   .p-rdv{ background:var(--brand-tint); color:var(--brand-deep); }
   .p-gagne{ background:var(--ok-tint); color:var(--ok); }
   .p-refus{ background:var(--late-tint); color:var(--late); }
+  /* ---------- onglet Recherche ---------- */
+  .chips{ display:flex; flex-wrap:wrap; gap:7px; margin-top:8px; }
+  .chip{
+    font:inherit; font-size:12.5px; font-weight:600; padding:8px 12px; min-height:38px;
+    border-radius:99px; border:1px solid var(--line); background:#fff; color:var(--ink-soft); cursor:pointer;
+  }
+  .chip.is-on{ background:var(--brand); border-color:var(--brand); color:#fff; }
+  .resl{ margin-top:10px; display:flex; flex-direction:column; gap:8px; }
+  .res{
+    display:flex; gap:12px; align-items:flex-start; width:100%; cursor:pointer;
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:13px 14px;
+  }
+  .res.is-on{ border-color:var(--brand); box-shadow:0 0 0 2px rgba(0,96,252,.12); }
+  .res.is-deja{ opacity:.62; cursor:default; }
+  .res input[type="checkbox"]{
+    width:22px; height:22px; min-height:0; padding:0; margin:1px 0 0; flex-shrink:0; accent-color:var(--brand);
+  }
+  .res__c{ flex:1; min-width:0; display:block; }
+  .res__n{ display:block; font-weight:600; font-size:15px; color:var(--navy); line-height:1.3; letter-spacing:-0.01em; }
+  .res__m{ display:block; font-size:12.5px; color:var(--ink-faint); margin-top:3px; line-height:1.35; }
+  .res__e{ display:block; font-size:12.5px; color:var(--ink-soft); margin-top:4px; font-weight:600; }
+  .res__d{ display:block; font-size:11.5px; color:var(--brand-deep); margin-top:4px; font-weight:700; }
+  .journal{
+    margin-top:9px; padding:11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:10.5px; line-height:1.6;
+    color:var(--ink-soft); white-space:pre-wrap; word-break:break-all; max-height:220px; overflow-y:auto;
+  }
+  .aide{
+    margin-top:15px; background:var(--brand-tint); border:1px solid #C6D9FB; border-radius:11px; padding:13px 14px;
+  }
+  .aide > strong{ font-size:13.5px; color:var(--navy); }
+  .aide .actions{ margin-top:0; }
+  .aide .actions .btn{ flex:1 1 auto; }
+
   /* ---------- import par copier-coller ---------- */
   .colle__ap{ border:1px solid var(--line); border-radius:11px; background:#fff; padding:4px 13px; }
   .colle__l{ padding:9px 0; border-bottom:1px solid var(--line-soft); font-size:14px; line-height:1.4; }
@@ -220,6 +254,7 @@
   </div>
   <div class="tabs">
     <button class="is-on" data-vue="prospects" type="button">Prospects</button>
+    <button data-vue="recherche" type="button">Recherche</button>
     <button data-vue="infos" type="button">Mes infos</button>
   </div>
 </header>
@@ -275,7 +310,7 @@
       <p>Trois minutes pour être opérationnel.</p>
       <ol>
         <li><strong>Onglet « Mes infos »</strong> — renseignez votre téléphone et votre zone, puis installez la signature dans Gmail. Elle s'ajoutera toute seule à chaque mail.</li>
-        <li><strong>Ajoutez une entreprise</strong> — nom, type d'établissement, email du contact. Le reste est facultatif.</li>
+        <li><strong>Trouvez des entreprises</strong> — onglet « Recherche » : décrivez ce que vous cherchez, cochez, elles arrivent ici. Ou ajoutez-les une par une avec le bouton +, ou collez une liste existante.</li>
         <li><strong>Ouvrez sa fiche</strong> — le mail est déjà écrit et adapté à son secteur. Relisez, envoyez, le statut se met à jour.</li>
       </ol>
       <div class="warn" style="margin-top:14px">
@@ -283,6 +318,60 @@
         <div><strong>Sauvegardez régulièrement.</strong> Vos prospects sont enregistrés dans ce navigateur, sur cet appareil. Vider les données du navigateur les efface. Utilisez « Exporter » en bas de l'onglet « Mes infos » pour en garder une copie.</div>
       </div>
     </div>
+  </div>
+
+  <!-- ============================ RECHERCHE ============================ -->
+  <div class="vue" id="v-recherche">
+
+    <div class="card">
+      <h2>Dites ce que vous cherchez</h2>
+      <p>Une phrase suffit. Les critères compris s'affichent dessous, corrigez-les si besoin.</p>
+      <textarea id="rqTexte" rows="2" spellcheck="false" style="min-height:76px"
+        placeholder="des usines de plus de 20 salariés autour de Mantes-la-Jolie, 20 km"></textarea>
+      <div class="actions">
+        <button class="btn btn--main btn--wide" id="rqGo" type="button">Chercher des entreprises</button>
+      </div>
+      <p class="note" style="margin-top:11px">
+        Recherche dans la base SIRENE de l'INSEE, via l'annuaire des entreprises de l'État.
+        Les adresses email n'y figurent pas : chaque fiche vous donne un raccourci pour la trouver.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>Critères</h2>
+      <div class="grid">
+        <div class="full">
+          <label for="rqLieu">Ville, code postal ou département</label>
+          <input id="rqLieu" type="text" autocomplete="off" placeholder="Mantes-la-Jolie, 78200 ou 78">
+          <p class="note" id="rqLieuEtat" style="margin-top:5px"></p>
+        </div>
+        <div>
+          <label for="rqRayon">Périmètre</label>
+          <select id="rqRayon"></select>
+        </div>
+        <div>
+          <label for="rqEffectif">Taille</label>
+          <select id="rqEffectif"></select>
+        </div>
+        <div class="full">
+          <label for="rqMots">Mots-clés <span class="opt">— facultatif</span></label>
+          <input id="rqMots" type="text" autocomplete="off" placeholder="un mot du nom de l'entreprise">
+        </div>
+      </div>
+      <label style="margin-top:15px">Secteurs</label>
+      <div class="chips" id="rqChips"></div>
+      <div class="actions">
+        <button class="btn btn--dark btn--wide" id="rqAppliquer" type="button">Relancer avec ces critères</button>
+      </div>
+    </div>
+
+    <div id="rqRes"></div>
+
+    <details id="rqTech">
+      <summary>Détail technique</summary>
+      <p class="note" style="margin-top:8px">Les adresses interrogées, utiles si un résultat vous surprend.</p>
+      <div class="journal" id="rqJournal"></div>
+    </details>
   </div>
 
   <!-- ============================ MES INFOS ============================ -->
@@ -829,10 +918,40 @@ var CHAMPS = [
   { k:"contactNom", l:"Contact — nom" },
   { k:"contactFonction", l:"Contact — fonction", t:"role" },
   { k:"email", l:"Email du contact", t:"email", w:2 },
+  { k:"site", l:"Site internet" },
   { k:"tel", l:"Téléphone" },
   { k:"effectif", l:"Personnes sur le site" },
   { k:"note", l:"Notes", t:"area", w:2 }
 ];
+
+function domaineDe(v){
+  var d = String(v == null ? "" : v).trim().toLowerCase()
+    .replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0].split("?")[0];
+  return /^[a-z0-9][a-z0-9.-]*\.[a-z]{2,}$/.test(d) ? d : "";
+}
+
+/* Aucune base publique ne diffuse les adresses email : ce bloc raccourcit
+   la recherche manuelle au lieu de faire croire à une trouvaille magique. */
+function aideEmailHtml(p){
+  var d = domaineDe(p.site);
+  var q = encodeURIComponent('"' + (p.entreprise || "") + '" ' + (p.ville || "") + " contact email");
+  var courantes = ["contact", "info", "accueil", "commercial"];
+  return '<div class="aide" id="aideEmail"' + (p.email ? ' style="display:none"' : "") + ">" +
+    "<strong>Trouver l'adresse email</strong>" +
+    '<p class="note" style="margin:5px 0 10px">Les bases publiques ne contiennent pas les adresses email. ' +
+      "Ouvrez le site de l'entreprise, puis déduisez-la de son nom de domaine.</p>" +
+    '<div class="actions">' +
+      '<a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" href="https://www.google.com/search?q=' + q + '">Chercher sur le web</a>' +
+      (d ? '<a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" href="https://' + esc(d) + '">Ouvrir ' + esc(d) + "</a>" : "") +
+    "</div>" +
+    (d
+      ? '<p class="note" style="margin:11px 0 7px">Adresses les plus fréquentes sur ce domaine — vérifiez avant d\'envoyer :</p>' +
+        '<div class="actions">' + courantes.map(function(a){
+          return '<button class="btn btn--dark btn--sm" type="button" data-mail="' + esc(a + "@" + d) + '">' + esc(a + "@" + d) + "</button>";
+        }).join("") + "</div>"
+      : '<p class="note" style="margin-top:11px">Renseignez « Site internet » ci-dessus : les adresses les plus probables vous seront proposées.</p>') +
+    "</div>";
+}
 
 function champHtml(p, c){
   var id = "f-" + c.k, val = esc(p[c.k] || "");
@@ -913,6 +1032,7 @@ function ouvrirFiche(id){
     '<div class="card">' +
       '<h2>Informations</h2>' +
       '<div class="grid">' + CHAMPS.map(function(c){ return champHtml(p, c); }).join("") + '</div>' +
+      aideEmailHtml(p) +
       '<div class="actions" style="margin-top:14px">' +
         '<button class="btn btn--danger" id="supprimer" type="button">Supprimer cette entreprise</button>' +
       '</div>' +
@@ -934,8 +1054,37 @@ function ouvrirFiche(id){
       if(b) b.disabled = !pret;
     });
     $("besoinEmail").style.display = pret ? "none" : "";
+    var ae = $("aideEmail");
+    if(ae) ae.style.display = pret ? "none" : "";
   }
   ouvrirFiche.majApercu = majApercu;
+
+  /* Le bloc d'aide se reconstruit quand le domaine change : les adresses
+     proposées en dépendent. */
+  function brancherAide(){
+    var a = $("aideEmail");
+    if(!a) return;
+    a.querySelectorAll("[data-mail]").forEach(function(b){
+      b.addEventListener("click", function(){
+        p.email = b.getAttribute("data-mail");
+        var fe = $("f-email");
+        if(fe) fe.value = p.email;
+        sauver();
+        majApercu();
+        rendreListe();
+        flash("Adresse renseignée. Vérifiez-la avant d'envoyer.");
+      });
+    });
+  }
+  function majAide(){
+    var a = $("aideEmail");
+    if(!a) return;
+    var t = document.createElement("div");
+    t.innerHTML = aideEmailHtml(p);
+    a.parentNode.replaceChild(t.firstChild, a);
+    brancherAide();
+  }
+  brancherAide();
 
   $("ficheCorps").querySelectorAll("[data-k]").forEach(function(el){
     var evt = el.tagName === "SELECT" ? "change" : "input";
@@ -945,6 +1094,7 @@ function ouvrirFiche(id){
       sauver();
       if(k === "entreprise") $("ficheTitre").textContent = el.value || "Nouvelle entreprise";
       if(k === "entreprise" || k === "contactNom" || k === "contactFonction" || k === "type" || k === "email") majApercu();
+      if(k === "site" || k === "entreprise" || k === "ville") majAide();
       rendreListe();
     });
   });
@@ -1025,6 +1175,601 @@ function ajouterProspect(){
   rendreListe();
   ouvrirFiche(p.id);
   setTimeout(function(){ var e = $("f-entreprise"); if(e) e.focus(); }, 120);
+}
+
+/* ============================================================
+   RECHERCHE D'ENTREPRISES — sur données publiques
+   Deux services de l'État, gratuits et sans clé :
+     · geo.api.gouv.fr                      communes et coordonnées
+     · recherche-entreprises.api.gouv.fr    base SIRENE de l'INSEE
+   Aucun des deux ne contient d'adresse email : la recherche
+   trouve les entreprises, l'adresse reste à récupérer, la fiche
+   propose un raccourci pour ça.
+   ============================================================ */
+var API_ENT = "https://recherche-entreprises.api.gouv.fr";
+var API_GEO = "https://geo.api.gouv.fr/communes";
+
+var SECTIONS_NAF = {
+  A:"Agriculture, sylviculture et pêche", B:"Industries extractives",
+  C:"Industrie manufacturière", D:"Énergie", E:"Eau, déchets, dépollution",
+  F:"Construction", G:"Commerce, réparation d'automobiles",
+  H:"Transports et entreposage", I:"Hébergement et restauration",
+  J:"Information et communication", K:"Activités financières et d'assurance",
+  L:"Activités immobilières", M:"Activités scientifiques et techniques",
+  N:"Services administratifs et de soutien", O:"Administration publique",
+  P:"Enseignement", Q:"Santé et action sociale",
+  R:"Arts, spectacles et loisirs", S:"Autres services",
+  T:"Activités des ménages", U:"Activités extra-territoriales"
+};
+
+/* Les codes NAF ci-dessous sont tous vérifiés valides : l'API refuse
+   la requête entière si un code inconnu lui est transmis. */
+var SECTEURS = [
+  { c:"industrie", l:"Usines et industrie", ls:"Usines, industrie", sect:"C", type:"Usine / atelier",
+    mots:["usine","usines","industrie","industries","industriel","industrielle","industrielles","industriels","fabrication","fabricant","manufacture","production","atelier","ateliers"] },
+  { c:"metal", l:"Métallerie, chaudronnerie, usinage", ls:"Métallerie, usinage", type:"Usine / atelier",
+    naf:["25.11Z","25.12Z","25.50A","25.50B","25.61Z","25.62A","25.62B","25.99A","25.99B","24.33Z","24.51Z"],
+    mots:["metallerie","serrurerie","metallier","ferronnerie","chaudronnerie","tolerie","metallurgie","soudure","usinage","decolletage","decoupe","mecanique industrielle"] },
+  { c:"bois", l:"Menuiserie, bois, agencement", ls:"Menuiserie, bois", type:"Usine / atelier",
+    naf:["16.10A","16.23Z","31.09A","31.09B","43.32A","43.32B","43.32C"],
+    mots:["menuiserie","menuisier","bois","agencement","ebenisterie","charpente","scierie","ameublement"] },
+  { c:"btp", l:"Bâtiment et travaux publics", ls:"Bâtiment, travaux", sect:"F", type:"Usine / atelier",
+    mots:["btp","batiment","travaux","construction","chantier","maconnerie","gros oeuvre","terrassement","demolition","couverture","plomberie","electricien","electricite","peinture","etancheite","genie civil"] },
+  { c:"logistique", l:"Transport, logistique, entreposage", ls:"Transport, logistique", sect:"H", type:"Entrepôt / logistique",
+    mots:["logistique","entrepot","entrepots","entreposage","transport","transports","transporteur","messagerie","livraison","fret","demenagement","routier","plateforme"] },
+  { c:"auto", l:"Garages, concessions, poids lourds", ls:"Garages, auto", type:"Établissement accueillant du public",
+    naf:["45.11Z","45.19Z","45.20A","45.20B","45.31Z","45.32Z","45.40Z","29.10Z","29.20Z"],
+    mots:["garage","garages","carrosserie","concession","concessionnaire","automobile","automobiles","poids lourds","vehicules","vehicule","pneus","depanneur"] },
+  { c:"agro", l:"Agroalimentaire, traiteurs, boulangeries", ls:"Agroalimentaire", type:"Usine / atelier",
+    naf:["10.13A","10.13B","10.39A","10.39B","10.51A","10.51B","10.52Z","10.61A","10.71A","10.71B","10.71C","10.71D","10.85Z","10.89Z","11.07A","56.21Z","56.29A","56.29B"],
+    mots:["agroalimentaire","alimentaire","traiteur","boulangerie","patisserie","charcuterie","conserverie","boissons","laiterie","fromagerie","plats prepares","restauration collective"] },
+  { c:"impr", l:"Imprimerie, plastique, emballage", ls:"Imprimerie, plastique", type:"Usine / atelier",
+    naf:["17.21A","17.21B","17.21C","18.11Z","18.12Z","18.13Z","22.21Z","22.22Z","22.29A","22.29B"],
+    mots:["imprimerie","imprimeur","serigraphie","plasturgie","plastique","plastiques","emballage","emballages","cartonnage","etiquettes","injection"] },
+  { c:"dechets", l:"Recyclage, déchets, environnement", ls:"Recyclage, déchets", sect:"E", type:"Usine / atelier",
+    mots:["recyclage","dechets","environnement","valorisation","assainissement","tri","depollution","ferraille"] },
+  { c:"commerce", l:"Commerces, négoces, grandes surfaces", ls:"Commerces, négoces", type:"Établissement accueillant du public",
+    naf:["46.73A","46.73B","46.90Z","47.11D","47.11F","47.19B","47.30Z","47.52B","47.78C"],
+    mots:["commerce","commerces","supermarche","hypermarche","magasin","grande surface","jardinerie","bricolage","negoce","grossiste","materiaux","station"] },
+  { c:"sport", l:"Salles de sport et clubs", ls:"Salles de sport", type:"Salle de sport",
+    naf:["93.11Z","93.12Z","93.13Z","93.29Z"],
+    mots:["salle de sport","salles de sport","sport","sportif","fitness","musculation","gym","gymnase","piscine","padel","escalade","bowling","tennis"] },
+  { c:"formation", l:"Centres de formation et auto-écoles", ls:"Formation, écoles", type:"Centre de formation",
+    naf:["85.32Z","85.42Z","85.53Z","85.59A","85.59B"],
+    mots:["formation","formations","centre de formation","auto ecole","autoecole","cfa","apprentissage","ecole","lycee","organisme de formation"] },
+  { c:"hotel", l:"Hôtels, résidences, campings", ls:"Hôtels, résidences", type:"Hôtel / résidence",
+    naf:["55.10Z","55.20Z","55.30Z","55.90Z"],
+    mots:["hotel","hotels","hotellerie","residence","residences","camping","auberge","hebergement","gite"] },
+  { c:"sante", l:"Cliniques, Ehpad, laboratoires", ls:"Cliniques, Ehpad", type:"Établissement accueillant du public",
+    naf:["86.10Z","86.21Z","86.22A","86.90A","86.90B","87.10A","87.10B","87.10C","87.30A","87.30B","88.10A","88.10C"],
+    mots:["clinique","cliniques","ehpad","maison de retraite","laboratoire","labo","sante","medical","soins","hopital","ambulance","handicap"] },
+  { c:"proprete", l:"Propreté, sécurité, espaces verts", ls:"Propreté, sécurité", type:"Entreprise / bureaux",
+    naf:["80.10Z","80.20Z","81.21Z","81.22Z","81.29A","81.29B","81.30Z"],
+    mots:["nettoyage","proprete","securite","gardiennage","surveillance","espaces verts","paysagiste","multiservices","desinfection"] },
+  { c:"bureaux", l:"Bureaux, informatique, services aux entreprises", ls:"Bureaux, services", type:"Entreprise / bureaux",
+    naf:["62.01Z","62.02A","62.03Z","62.09Z","63.11Z","66.22Z","68.20B","69.20Z","70.22Z","71.12B","71.20B","73.11Z","78.10Z","78.20Z","82.11Z","82.20Z","82.99Z"],
+    mots:["bureaux","bureau","tertiaire","informatique","numerique","logiciel","ingenierie","etudes techniques","conseil","comptabilite","assurance","interim","centre d appel","siege","agence","publicite"] },
+  { c:"loisirs", l:"Loisirs et lieux accueillant du public", ls:"Loisirs, public", sect:"R", type:"Établissement accueillant du public",
+    mots:["loisirs","cinema","parc","musee","spectacle","evenementiel","theatre","casino","discotheque"] }
+];
+
+var EFFECTIFS = [
+  { k:"", l:"Peu importe", tr:"" },
+  { k:"10", l:"À partir de 10 salariés", tr:"11,12,21,22,31,32,41,42,51,52,53" },
+  { k:"20", l:"À partir de 20 salariés", tr:"12,21,22,31,32,41,42,51,52,53" },
+  { k:"50", l:"À partir de 50 salariés", tr:"21,22,31,32,41,42,51,52,53" },
+  { k:"100", l:"À partir de 100 salariés", tr:"22,31,32,41,42,51,52,53" }
+];
+
+var RAYONS = [
+  { k:"0", l:"Cette commune seulement" },
+  { k:"5", l:"5 km autour" }, { k:"10", l:"10 km autour" },
+  { k:"15", l:"15 km autour" }, { k:"20", l:"20 km autour" },
+  { k:"30", l:"30 km autour" }, { k:"50", l:"50 km autour" }
+];
+
+/* état courant de la recherche */
+var R = {
+  lieu:null, rayon:"15", secteurs:[], effectif:"", mots:"", phrase:"",
+  page:1, total:0, res:[], sel:{}, journal:[], enCours:false
+};
+
+var NAF_LIB = null;   /* chargé à la demande depuis data/codes-naf.json */
+function chargerNaf(){
+  if(NAF_LIB) return Promise.resolve(NAF_LIB);
+  return fetch("data/codes-naf.json")
+    .then(function(r){ return r.ok ? r.json() : {}; })
+    .then(function(j){ NAF_LIB = j; return j; })
+    .catch(function(){ NAF_LIB = {}; return {}; });
+}
+function libelleNaf(code){
+  if(!code) return "";
+  if(NAF_LIB && NAF_LIB[code]) return NAF_LIB[code];
+  return code;
+}
+
+/* ---------- interprétation de la phrase ---------- */
+function sansAccent(s){
+  var t = String(s == null ? "" : s).toLowerCase().replace(/['\u2019]/g, " ");
+  return t.normalize ? t.normalize("NFD").replace(/[\u0300-\u036f]/g, "") : t;
+}
+
+function interpreter(txt){
+  var brut = String(txt || "").trim();
+  var t = " " + sansAccent(brut).replace(/[,;.!?]/g, " ").replace(/\s+/g, " ") + " ";
+  var lu = { secteurs:[], rayon:null, effectif:null, lieu:null, cp:null, dep:null, mots:"" };
+
+  /* secteurs : on retient ceux dont un mot-clé apparaît */
+  function retirer(m){
+    t = t.split(" " + m + "s ").join(" ").split(" " + m + " ").join(" ");
+  }
+  SECTEURS.forEach(function(s){
+    for(var i = 0; i < s.mots.length; i++){
+      if(t.indexOf(" " + s.mots[i] + " ") >= 0 || t.indexOf(" " + s.mots[i] + "s ") >= 0){
+        lu.secteurs.push(s.c);
+        s.mots.forEach(retirer);
+        break;
+      }
+    }
+  });
+
+  /* rayon */
+  var mk = t.match(/(\d{1,2})\s*km/);
+  if(mk){ lu.rayon = String(Math.min(50, parseInt(mk[1], 10))); t = t.replace(mk[0], " "); }
+  else if(/ (autour|alentours|environs|pres|proche|secteur) /.test(t)) lu.rayon = "15";
+
+  /* effectif */
+  var me = t.match(/(?:plus de|a partir de|mini(?:mum)?|au moins)\s*(\d{1,4})\s*(?:salarie|personne|employe)/);
+  if(!me) me = t.match(/(\d{1,4})\s*(?:a|-)\s*\d{1,4}\s*(?:salarie|personne|employe)/);
+  if(me){
+    var n = parseInt(me[1], 10), choix = "";
+    EFFECTIFS.forEach(function(e){ if(e.k && parseInt(e.k, 10) <= n) choix = e.k; });
+    lu.effectif = choix || "10";
+    t = t.replace(me[0], " ");
+  }else if(/ (grosse|grosses|grande|grandes) (entreprise|societe|boite)/.test(t)){
+    lu.effectif = "50";
+  }
+
+  /* code postal ou département */
+  var mcp = t.match(/\b(\d{5})\b/);
+  if(mcp){ lu.cp = mcp[1]; t = t.replace(mcp[0], " "); }
+  var mdep = t.match(/(?:departement|dept|dpt)\s*(\d{2,3}|2[ab])\b/);
+  if(mdep){ lu.dep = mdep[1].toUpperCase(); t = t.replace(mdep[0], " "); }
+
+  /* commune : ce qui suit « à / autour de / vers / près de / sur » dans le texte d'origine */
+  var dec = brut.replace(/\s+/g, " ");
+  var RE_NOM = "[A-Z\u00C0-\u00DD][\\wÀ-ÿ'\u2019-]*(?:[ -](?:de |du |la |le |les |d'\u2019)?[A-Z\u00C0-\u00DDa-z\u00E0-\u00FD][\\wÀ-ÿ'\u2019-]*){0,3}";
+  var mv = dec.match(new RegExp("(?:autour de |autour d['\u2019]|aux alentours de |pr[\u00e8e]s de |vers |[\u00e0a] c[\u00f4o]t[\u00e9e] de |sur |dans |[\u00e0a] )(" + RE_NOM + ")"));
+  if(mv){
+    lu.lieu = mv[1].trim().replace(/[,;.]+$/, "");
+  }else{
+    /* pas de mot déclencheur : on retient le dernier nom propre, la
+       résolution auprès de l'API tranchera s'il s'agit d'une commune. */
+    var noms = dec.match(new RegExp(RE_NOM, "g")) || [];
+    var cand = noms.filter(function(n){ return sansAccent(n).length > 3 && t.indexOf(" " + sansAccent(n) + " ") >= 0; });
+    if(cand.length){ lu.lieu = cand[cand.length - 1].trim(); lu.lieuIncertain = true; }
+  }
+  if(lu.lieu){
+    var ln = sansAccent(lu.lieu);
+    t = t.split(" " + ln + " ").join(" ");
+    ln.split(/[ -]/).forEach(function(w){ if(w.length > 2) t = t.split(" " + w + " ").join(" "); });
+  }
+
+  /* mots restants : on retire les mots vides */
+  var vides = ["des","de","du","la","le","les","un","une","dans","autour","pres","vers","sur","a","et","ou","avec","je","cherche","recherche","trouve","moi","entreprise","entreprises","societe","societes","boite","boites","client","clients","prospect","prospects","salaries","salarie","personnes","employes","km","au","aux","alentours","environs","secteur","plus","moins","qui","ont","pour","mes","mon","ma","tous","toutes","toute","tout","autre","autres","grande","grandes","grosse","grosses","petite","petites","moyenne","moyennes","centre","centres","site","sites","zone","zones","industrielle","local","locaux","alentour","autour"];
+  lu.mots = t.split(" ").filter(function(w){
+    return w.length > 2 && vides.indexOf(w) < 0 && !/^\d+$/.test(w);
+  }).join(" ").trim();
+
+  return lu;
+}
+
+/* ---------- construction et envoi de la requête ---------- */
+var TRANCHES = {
+  NN:"effectif non déclaré", "00":"pas de salarié", "01":"1 à 2 salariés", "02":"3 à 5 salariés",
+  "03":"6 à 9 salariés", "11":"10 à 19 salariés", "12":"20 à 49 salariés", "21":"50 à 99 salariés",
+  "22":"100 à 199 salariés", "31":"200 à 249 salariés", "32":"250 à 499 salariés",
+  "41":"500 à 999 salariés", "42":"1 000 à 1 999 salariés", "51":"2 000 à 4 999 salariés",
+  "52":"5 000 à 9 999 salariés", "53":"10 000 salariés et plus"
+};
+
+function secteurParCle(c){
+  for(var i = 0; i < SECTEURS.length; i++) if(SECTEURS[i].c === c) return SECTEURS[i];
+  return null;
+}
+function trancheDe(k){
+  for(var i = 0; i < EFFECTIFS.length; i++) if(EFFECTIFS[i].k === k) return EFFECTIFS[i].tr;
+  return "";
+}
+
+/* Ordre de repli : si l'API refuse la requête, on retire ces paramètres
+   un par un plutôt que de laisser l'écran vide. */
+var OPTIONNELS = ["sort_by_size", "q", "tranche_effectif_salarie", "activite_principale", "section_activite_principale"];
+
+function urlRequete(chemin, params){
+  var q = params.filter(function(p){ return p[1] !== "" && p[1] != null; })
+    .map(function(p){ return encodeURIComponent(p[0]) + "=" + encodeURIComponent(p[1]); })
+    .join("&");
+  return API_ENT + chemin + "?" + q;
+}
+
+function lieuParams(){
+  var g = R.lieu;
+  if(!g) return { chemin:"/search", p:[] };
+  if(g.type === "commune" && R.rayon !== "0" && g.lat != null){
+    return { chemin:"/near_point", p:[["lat", g.lat], ["long", g.lon], ["radius", R.rayon]] };
+  }
+  if(g.type === "commune") return { chemin:"/search", p:[["code_commune", g.code]] };
+  if(g.type === "cp") return { chemin:"/search", p:[["code_postal", g.code]] };
+  if(g.type === "dep") return { chemin:"/search", p:[["departement", g.code]] };
+  return { chemin:"/search", p:[] };
+}
+
+/* Sections et codes NAF ne peuvent pas être combinés dans une même
+   requête : l'API les cumule et ne renvoie plus rien. On envoie donc
+   jusqu'à deux requêtes et on fusionne les résultats. */
+function groupesActivite(){
+  var nafs = [], sects = [];
+  R.secteurs.forEach(function(c){
+    var s = secteurParCle(c);
+    if(!s) return;
+    if(s.naf) nafs = nafs.concat(s.naf);
+    else if(s.sect && sects.indexOf(s.sect) < 0) sects.push(s.sect);
+  });
+  var g = [];
+  if(sects.length) g.push(["section_activite_principale", sects.join(",")]);
+  if(nafs.length) g.push(["activite_principale", nafs.join(",")]);
+  return g.length ? g : [null];
+}
+
+function envoyer(chemin, params, essai){
+  var url = urlRequete(chemin, params);
+  R.journal.push(url);
+  return fetch(url, { headers:{ "Accept":"application/json" } }).then(function(rep){
+    if(rep.ok) return rep.json();
+    if(essai < 3){
+      /* on retire le premier paramètre facultatif présent, puis on réessaie */
+      for(var i = 0; i < OPTIONNELS.length; i++){
+        var k = OPTIONNELS[i], trouve = false;
+        params = params.filter(function(p){
+          if(p[0] === k && !trouve){ trouve = true; return false; }
+          return true;
+        });
+        if(trouve){
+          R.journal.push("→ " + rep.status + " : nouvelle tentative sans « " + k + " »");
+          return envoyer(chemin, params, essai + 1);
+        }
+      }
+    }
+    throw new Error(rep.status >= 500
+      ? "L'annuaire des entreprises ne répond pas pour le moment (code " + rep.status + "). Réessayez dans un instant."
+      : "L'annuaire des entreprises a refusé la requête (code " + rep.status + ").");
+  });
+}
+
+function lancerRecherche(ajoutPage){
+  if(R.enCours) return;
+  if(!R.lieu && !R.mots && !R.secteurs.length){
+    majRecherche("Indiquez au moins une ville, un secteur ou un mot-clé.");
+    return;
+  }
+  R.enCours = true;
+  if(ajoutPage) R.page += 1; else { R.page = 1; R.res = []; R.sel = {}; R.journal = []; }
+  rendreRecherche();
+
+  var lp = lieuParams();
+  var base = lp.p.concat([
+    ["etat_administratif", "A"],
+    ["sort_by_size", "true"],
+    ["per_page", "25"],
+    ["page", String(R.page)]
+  ]);
+  if(R.mots) base.push(["q", R.mots]);
+  var tr = trancheDe(R.effectif);
+  if(tr) base.push(["tranche_effectif_salarie", tr]);
+
+  var requetes = groupesActivite().map(function(act){
+    return envoyer(lp.chemin, act ? base.concat([act]) : base, 0);
+  });
+
+  Promise.all([chargerNaf()].concat(requetes)).then(function(rep){
+    var total = 0, vus = {};
+    R.res.forEach(function(x){ vus[x.siren] = true; });
+    /* Deux groupes de secteurs se recoupent : additionner leurs totaux
+       gonflerait le chiffre, on garde donc le plus grand. */
+    rep.slice(1).forEach(function(j){
+      total = Math.max(total, j.total_results || 0);
+      (j.results || []).forEach(function(e){
+        if(!e || !e.siren || vus[e.siren]) return;
+        vus[e.siren] = true;
+        R.res.push(normaliser(e));
+      });
+    });
+    R.total = ajoutPage ? Math.max(R.total, total) : total;
+    R.enCours = false;
+    rendreRecherche();
+  }).catch(function(err){
+    R.enCours = false;
+    if(ajoutPage) R.page -= 1;
+    rendreRecherche(err && err.message ? err.message :
+      "Recherche impossible. Vérifiez votre connexion et réessayez.");
+  });
+}
+
+function normaliser(e){
+  var s = e.siege || {};
+  var cp = s.code_postal || "";
+  var ville = s.libelle_commune || "";
+  return {
+    siren: e.siren,
+    nom: (e.nom_complet || e.nom_raison_sociale || "").trim(),
+    ville: ville,
+    cp: cp,
+    adresse: (s.adresse || s.geo_adresse || "").replace(/\s+/g, " ").trim(),
+    naf: e.activite_principale || s.activite_principale || "",
+    section: e.section_activite_principale || "",
+    tranche: e.tranche_effectif_salarie || "",
+    annee: e.annee_tranche_effectif_salarie || "",
+    etabs: e.nombre_etablissements_ouverts || e.nombre_etablissements || 1
+  };
+}
+
+function typeDepuisNaf(code){
+  var div = parseInt(String(code || "").slice(0, 2), 10);
+  if(!div) return "Entreprise / bureaux";
+  if(div >= 5 && div <= 43) return "Usine / atelier";
+  if(div === 46 || (div >= 49 && div <= 53)) return "Entrepôt / logistique";
+  if(div === 55) return "Hôtel / résidence";
+  if(div === 85) return "Centre de formation";
+  if(div === 93) return "Salle de sport";
+  if(div === 45 || div === 47) return "Établissement accueillant du public";
+  if(div >= 86 && div <= 88) return "Établissement accueillant du public";
+  if(div >= 90 && div <= 92) return "Établissement accueillant du public";
+  return "Entreprise / bureaux";
+}
+
+function dejaEnListe(x){
+  var n = sansAccent(x.nom);
+  for(var i = 0; i < D.prospects.length; i++){
+    var p = D.prospects[i];
+    if(p.siren && p.siren === x.siren) return true;
+    if(sansAccent(p.entreprise) === n) return true;
+  }
+  return false;
+}
+
+function ajouterSelection(){
+  var n = 0;
+  R.res.forEach(function(x){
+    if(!R.sel[x.siren] || dejaEnListe(x)) return;
+    var lib = libelleNaf(x.naf);
+    var infos = [lib, TRANCHES[x.tranche] || "", x.adresse, "SIREN " + x.siren]
+      .filter(Boolean).join(" · ");
+    D.prospects.push({
+      id: uid(), siren: x.siren, entreprise: x.nom, type: typeDepuisNaf(x.naf),
+      ville: x.ville, contactNom:"", contactFonction:"", email:"", tel:"", site:"",
+      effectif: TRANCHES[x.tranche] ? TRANCHES[x.tranche] : "", note: infos,
+      statut:"a_envoyer", dateEnvoi:"", dateRelance:"", dateReponse:"",
+      historique:[{ date: aujourdhui(), texte:"Trouvée par la recherche d'entreprises" }]
+    });
+    n++;
+  });
+  if(!n){ flash("Aucune nouvelle entreprise cochée."); return; }
+  R.sel = {};
+  sauver();
+  rendreListe();
+  rendreRecherche();
+  flash(n + " entreprise(s) ajoutée(s) à « À envoyer »." );
+  var bp = document.querySelector('.tabs button[data-vue="prospects"]');
+  if(bp) bp.click();
+}
+
+/* ---------- résolution du lieu ---------- */
+function resoudreLieu(saisie){
+  var v = String(saisie || "").trim();
+  if(!v) return Promise.resolve(null);
+  if(/^\d{5}$/.test(v)) return Promise.resolve({ type:"cp", code:v, nom:"code postal " + v });
+  if(/^(\d{2,3}|2[aAbB])$/.test(v)) return Promise.resolve({ type:"dep", code:v.toUpperCase(), nom:"département " + v.toUpperCase() });
+  var url = API_GEO + "?nom=" + encodeURIComponent(v) +
+    "&fields=nom,code,codeDepartement,centre,population&boost=population&limit=5";
+  R.journal.push(url);
+  return fetch(url).then(function(r){ return r.ok ? r.json() : []; }).then(function(j){
+    if(!j || !j.length) return null;
+    var c = j[0];
+    return {
+      type:"commune", code:c.code, nom:c.nom, dep:c.codeDepartement,
+      lat: c.centre && c.centre.coordinates ? c.centre.coordinates[1] : null,
+      lon: c.centre && c.centre.coordinates ? c.centre.coordinates[0] : null,
+      autres: j.slice(1, 5).map(function(x){ return x.nom + " (" + x.codeDepartement + ")"; })
+    };
+  }).catch(function(){ return null; });
+}
+
+/* ---------- affichage ---------- */
+function nbSelection(){
+  var n = 0;
+  Object.keys(R.sel).forEach(function(k){ if(R.sel[k]) n++; });
+  return n;
+}
+
+function rendreChips(){
+  $("rqChips").innerHTML = SECTEURS.map(function(s){
+    return '<button class="chip' + (R.secteurs.indexOf(s.c) >= 0 ? " is-on" : "") +
+      '" data-sec="' + s.c + '" type="button" title="' + esc(s.l) + '">' + esc(s.ls || s.l) + "</button>";
+  }).join("");
+}
+
+function rendreLieuEtat(){
+  var e = $("rqLieuEtat");
+  if(!R.lieu){ e.textContent = ""; e.className = "note"; return; }
+  var txt = R.lieu.type === "commune"
+    ? R.lieu.nom + " (" + R.lieu.code + ")" + (R.rayon === "0" ? ", commune seule" : ", dans " + R.rayon + " km")
+    : R.lieu.nom;
+  if(R.lieu.autres && R.lieu.autres.length) txt += " — autres communes de ce nom : " + R.lieu.autres.join(", ");
+  e.textContent = txt;
+}
+
+function rendreRecherche(erreur){
+  rendreChips();
+  rendreLieuEtat();
+  $("rqRayon").disabled = !(R.lieu && R.lieu.type === "commune");
+  $("rqJournal").textContent = R.journal.join("\n") || "Aucune requête envoyée pour l'instant.";
+  $("rqTech").style.display = R.journal.length ? "" : "none";
+
+  var h = "";
+  if(erreur){
+    h = '<div class="card"><div class="warn">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>' +
+      "<div>" + esc(erreur) + "</div></div></div>";
+  }else if(R.enCours && !R.res.length){
+    h = '<div class="card"><p class="note" style="margin:0">Recherche en cours…</p></div>';
+  }else if(R.res.length){
+    var sel = nbSelection();
+    var nouv = R.res.filter(function(x){ return !dejaEnListe(x); }).length;
+    h = '<div class="card">' +
+      "<h2>" + (R.total > R.res.length
+        ? "Au moins " + R.total.toLocaleString("fr-FR") + " entreprises correspondent"
+        : R.res.length + " entreprise(s) trouvée(s)") + "</h2>" +
+      "<p>" + R.res.length + " affichée(s)" + (nouv < R.res.length ? ", dont " + (R.res.length - nouv) + " déjà dans votre liste" : "") + ". Cochez celles à prospecter.</p>" +
+      '<div class="actions">' +
+        '<button class="btn btn--ghost" data-act="tout" type="button">' + (sel >= nouv && nouv > 0 ? "Tout décocher" : "Tout cocher") + "</button>" +
+        '<button class="btn btn--main" data-act="ajouter" type="button"' + (sel ? "" : " disabled") + ">Ajouter " + (sel ? sel + " " : "") + "à ma liste</button>" +
+      "</div></div>" +
+      '<div class="resl">' + R.res.map(function(x){
+        var deja = dejaEnListe(x);
+        var lib = libelleNaf(x.naf);
+        var sec = x.section && SECTIONS_NAF[x.section] ? SECTIONS_NAF[x.section] : "";
+        return '<label class="res' + (R.sel[x.siren] ? " is-on" : "") + (deja ? " is-deja" : "") + '">' +
+          '<input type="checkbox" data-siren="' + esc(x.siren) + '"' +
+            (R.sel[x.siren] ? " checked" : "") + (deja ? " disabled" : "") + ">" +
+          '<span class="res__c">' +
+            '<span class="res__n">' + esc(x.nom || "Sans dénomination") + "</span>" +
+            '<span class="res__m">' + esc([x.ville, x.cp].filter(Boolean).join(" ")) +
+              (x.etabs > 1 ? " · " + x.etabs + " établissements" : "") + "</span>" +
+            '<span class="res__m">' + esc(lib || sec) + "</span>" +
+            '<span class="res__e">' + esc(TRANCHES[x.tranche] || "effectif non déclaré") +
+              (x.annee ? " (" + esc(x.annee) + ")" : "") + "</span>" +
+            (deja ? '<span class="res__d">Déjà dans votre liste</span>' : "") +
+          "</span></label>";
+      }).join("") + "</div>" +
+      (R.res.length < R.total
+        ? '<div class="actions"><button class="btn btn--dark btn--wide" data-act="plus" type="button"' +
+          (R.enCours ? " disabled" : "") + ">" + (R.enCours ? "Chargement…" : "Voir 25 de plus") + "</button></div>"
+        : "");
+  }else if(R.journal.length){
+    h = '<div class="card"><h2>Aucun résultat</h2><p style="margin:0">Élargissez le périmètre, retirez un secteur ou supprimez les mots-clés.</p></div>';
+  }
+  $("rqRes").innerHTML = h;
+}
+
+/* ---------- mise en place de l'onglet ---------- */
+function appliquerLecture(lu){
+  R.secteurs = lu.secteurs.slice();
+  if(lu.rayon) R.rayon = lu.rayon;
+  if(lu.effectif !== null && lu.effectif !== undefined) R.effectif = lu.effectif;
+  R.mots = lu.mots;
+  $("rqMots").value = R.mots;
+  $("rqRayon").value = R.rayon;
+  $("rqEffectif").value = R.effectif;
+}
+
+/* Relance en respectant ce qui est affiché : une correction faite à la main
+   ne doit pas être écrasée par une nouvelle lecture de la phrase. */
+function criteresAffiches(){
+  R.journal = [];
+  R.mots = $("rqMots").value.trim();
+  R.effectif = $("rqEffectif").value;
+  R.rayon = $("rqRayon").value;
+  var v = $("rqLieu").value.trim();
+  var bon = R.lieu && (R.lieu.nom === v || R.lieu.code === v || (!v && !R.lieu));
+  (bon ? Promise.resolve(R.lieu) : resoudreLieu(v)).then(function(g){
+    R.lieu = g;
+    if(g && g.type === "commune") $("rqLieu").value = g.nom;
+    lancerRecherche(false);
+  });
+}
+
+function chercherDepuisPhrase(){
+  var txt = $("rqTexte").value.trim();
+  if(!txt || txt === R.phrase){ criteresAffiches(); return; }
+  R.phrase = txt;
+  var lu = interpreter(txt);
+  appliquerLecture(lu);
+  var saisie = lu.cp || lu.dep || lu.lieu || $("rqLieu").value;
+  R.journal = [];
+  resoudreLieu(saisie).then(function(g){
+    if(g){
+      R.lieu = g;
+      $("rqLieu").value = g.type === "commune" ? g.nom : g.code;
+    }else if(lu.lieu && lu.lieuIncertain){
+      /* ce nom propre n'était pas une commune : on le traite comme mot-clé */
+      R.mots = (R.mots ? R.mots + " " : "") + sansAccent(lu.lieu);
+      $("rqMots").value = R.mots;
+    }else if(lu.lieu){
+      R.lieu = null;
+      $("rqLieu").value = lu.lieu;
+    }
+    lancerRecherche(false);
+  });
+}
+
+function majLieuSaisi(){
+  resoudreLieu($("rqLieu").value).then(function(g){
+    R.lieu = g;
+    rendreLieuEtat();
+    $("rqRayon").disabled = !(g && g.type === "commune");
+  });
+}
+
+function initRecherche(){
+  $("rqRayon").innerHTML = RAYONS.map(function(r){
+    return '<option value="' + r.k + '"' + (r.k === R.rayon ? " selected" : "") + ">" + esc(r.l) + "</option>";
+  }).join("");
+  $("rqEffectif").innerHTML = EFFECTIFS.map(function(e){
+    return '<option value="' + e.k + '">' + esc(e.l) + "</option>";
+  }).join("");
+  rendreChips();
+  $("rqTech").style.display = "none";
+
+  $("rqGo").addEventListener("click", chercherDepuisPhrase);
+  $("rqAppliquer").addEventListener("click", criteresAffiches);
+  $("rqTexte").addEventListener("keydown", function(e){
+    if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); chercherDepuisPhrase(); }
+  });
+  $("rqLieu").addEventListener("change", majLieuSaisi);
+  $("rqRayon").addEventListener("change", function(){ R.rayon = this.value; rendreLieuEtat(); });
+  $("rqEffectif").addEventListener("change", function(){ R.effectif = this.value; });
+  $("rqMots").addEventListener("input", function(){ R.mots = this.value.trim(); });
+
+  $("rqChips").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-sec]") : null;
+    if(!b) return;
+    var c = b.getAttribute("data-sec"), i = R.secteurs.indexOf(c);
+    if(i >= 0) R.secteurs.splice(i, 1); else R.secteurs.push(c);
+    rendreChips();
+  });
+
+  $("rqRes").addEventListener("change", function(e){
+    var cb = e.target;
+    if(!cb || cb.type !== "checkbox") return;
+    R.sel[cb.getAttribute("data-siren")] = cb.checked;
+    rendreRecherche();
+  });
+
+  $("rqRes").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-act]") : null;
+    if(!b) return;
+    var a = b.getAttribute("data-act");
+    if(a === "plus") lancerRecherche(true);
+    else if(a === "ajouter") ajouterSelection();
+    else if(a === "tout"){
+      var nouv = R.res.filter(function(x){ return !dejaEnListe(x); });
+      var tout = nbSelection() >= nouv.length && nouv.length > 0;
+      R.sel = {};
+      if(!tout) nouv.forEach(function(x){ R.sel[x.siren] = true; });
+      rendreRecherche();
+    }
+  });
 }
 
 /* ------------------------------------------------------------
@@ -1269,6 +2014,8 @@ $("colleStatut").innerHTML = STATUTS.map(function(s){
 $("colleType").innerHTML = TYPES.map(function(t){ return "<option>" + esc(t) + "</option>"; }).join("");
 $("colleDate").value = aujourdhui();
 $("colleLire").addEventListener("click", apercuColle);
+
+initRecherche();
 $("fichier").addEventListener("change", function(){
   if(this.files && this.files[0]) importer(this.files[0]);
   this.value = "";
