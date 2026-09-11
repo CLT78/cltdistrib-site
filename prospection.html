@@ -243,6 +243,20 @@
     z-index:90; max-width:calc(100% - 32px); text-align:center;
   }
   .flash.is-on{ opacity:1; transform:translateX(-50%) translateY(0); }
+  .flash--action{ display:flex; align-items:center; gap:14px; text-align:left; padding:10px 12px 10px 18px; }
+  .flash__b{
+    font:inherit; font-size:13.5px; font-weight:700; color:#fff; background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.3); border-radius:8px; padding:8px 13px; min-height:38px;
+    cursor:pointer; flex-shrink:0;
+  }
+  .corb{ display:flex; flex-direction:column; gap:7px; margin-top:11px; }
+  .corb__l{
+    display:flex; align-items:center; gap:10px; background:#fff; border:1px solid var(--line);
+    border-radius:10px; padding:10px 12px;
+  }
+  .corb__c{ flex:1; min-width:0; }
+  .corb__n{ display:block; font-size:14px; font-weight:600; color:var(--navy); line-height:1.3; }
+  .corb__d{ display:block; font-size:12px; color:var(--ink-faint); margin-top:2px; }
 
   .vue{ display:none; }
   .vue.is-on{ display:block; }
@@ -487,6 +501,12 @@
     </div>
 
     <div class="card">
+      <h2>Corbeille</h2>
+      <p>Ce que vous supprimez reste ici un mois : une suppression en série n'est jamais définitive tout de suite.</p>
+      <div id="corbeille"></div>
+    </div>
+
+    <div class="card">
       <h2>Sauvegarde</h2>
       <p>Vos prospects et vos coordonnées vivent dans ce navigateur. Exportez de temps en temps, et pour passer du téléphone à l'ordinateur.</p>
       <div class="actions">
@@ -529,7 +549,7 @@
    DONNÉES — tout reste dans ce navigateur, rien n'est envoyé
    ============================================================ */
 var CLE = "cltdistrib-prospection";
-var D = { infos:{}, prospects:[] };
+var D = { infos:{}, prospects:[], corbeille:[] };
 
 var INFOS_DEFAUT = {
   nom:"Clément Pires Valente", fonction:"Fondateur", tel:"",
@@ -544,6 +564,7 @@ function charger(){
       var p = JSON.parse(brut);
       D.infos = p.infos || {};
       D.prospects = Array.isArray(p.prospects) ? p.prospects : [];
+      D.corbeille = Array.isArray(p.corbeille) ? p.corbeille : [];
     }
   }catch(e){ /* navigation privée ou données abîmées : on repart à vide */ }
   Object.keys(INFOS_DEFAUT).forEach(function(k){
@@ -580,9 +601,31 @@ var flashT = null;
 function flash(txt){
   var f = $("flash");
   f.textContent = txt;
+  f.classList.remove("flash--action");
+  f.style.pointerEvents = "none";
   f.classList.add("is-on");
   clearTimeout(flashT);
   flashT = setTimeout(function(){ f.classList.remove("is-on"); }, 3200);
+}
+
+/* Même bandeau, mais avec un geste de rattrapage : une suppression doit
+   pouvoir être défaite tout de suite, sans passer par la corbeille. */
+function flashAction(txt, libelle, action){
+  var f = $("flash");
+  f.innerHTML = '<span>' + esc(txt) + '</span>' +
+    '<button class="flash__b" type="button">' + esc(libelle) + "</button>";
+  f.classList.add("is-on", "flash--action");
+  f.style.pointerEvents = "auto";
+  f.querySelector(".flash__b").addEventListener("click", function(){
+    f.classList.remove("is-on");
+    clearTimeout(flashT);
+    action();
+  });
+  clearTimeout(flashT);
+  flashT = setTimeout(function(){
+    f.classList.remove("is-on");
+    f.style.pointerEvents = "none";
+  }, 9000);
 }
 
 /* ============================================================
@@ -1048,19 +1091,103 @@ function basculerModeSelection(force){
   rendreListe();
 }
 
+/* ============================================================
+   CORBEILLE — une suppression reste rattrapable un mois
+   ============================================================ */
+var JOURS_CORBEILLE = 30;
+
+function purgerCorbeille(){
+  var avant = D.corbeille.length;
+  D.corbeille = D.corbeille.filter(function(e){
+    var j = joursDepuis(e.date);
+    return j === null || j < JOURS_CORBEILLE;
+  }).slice(-80);
+  if(D.corbeille.length !== avant) sauver();
+}
+
+function jeter(liste){
+  var jour = aujourdhui();
+  liste.forEach(function(p){ D.corbeille.push({ date: jour, p: p }); });
+  D.corbeille = D.corbeille.slice(-80);
+}
+
+function remettre(index){
+  var e = D.corbeille[index];
+  if(!e) return;
+  var existe = D.prospects.some(function(p){ return p.id === e.p.id; });
+  if(!existe) D.prospects.push(e.p);
+  D.corbeille.splice(index, 1);
+  sauver();
+  rendreListe();
+  rendreCorbeille();
+  flash(e.p.entreprise + " remise dans la liste.");
+}
+
+function remettreTout(){
+  var n = 0;
+  D.corbeille.slice().forEach(function(e){
+    if(!D.prospects.some(function(p){ return p.id === e.p.id; })){ D.prospects.push(e.p); n++; }
+  });
+  D.corbeille = [];
+  sauver();
+  rendreListe();
+  rendreCorbeille();
+  flash(n + " entreprise(s) remise(s) dans la liste.");
+}
+
+function rendreCorbeille(){
+  var c = $("corbeille");
+  if(!c) return;
+  if(!D.corbeille.length){
+    c.innerHTML = '<p class="note" style="margin:0">La corbeille est vide. Une entreprise supprimée y reste ' +
+      JOURS_CORBEILLE + " jours avant de disparaître pour de bon.</p>";
+    return;
+  }
+  c.innerHTML =
+    '<p class="note" style="margin:0 0 4px">' + D.corbeille.length +
+      " entreprise(s) supprimée(s) récemment. Elles disparaîtront définitivement au bout de " +
+      JOURS_CORBEILLE + " jours.</p>" +
+    '<div class="corb">' + D.corbeille.map(function(e, i){
+      var meta = [e.p.ville, libelleStatut(e.p.statut)].filter(Boolean).join(" · ");
+      return '<div class="corb__l"><span class="corb__c">' +
+        '<span class="corb__n">' + esc(e.p.entreprise || "Sans nom") + "</span>" +
+        '<span class="corb__d">supprimée le ' + esc(dateFr(e.date)) + (meta ? " · " + esc(meta) : "") + "</span>" +
+        '</span><button class="btn btn--ghost btn--sm" data-remettre="' + i + '" type="button">Remettre</button></div>';
+    }).join("") + "</div>" +
+    '<div class="actions">' +
+      '<button class="btn btn--dark" id="corbTout" type="button">Tout remettre</button>' +
+      '<button class="btn btn--ghost" id="corbVider" type="button">Vider la corbeille</button>' +
+    "</div>";
+
+  c.querySelectorAll("[data-remettre]").forEach(function(b){
+    b.addEventListener("click", function(){ remettre(parseInt(b.getAttribute("data-remettre"), 10)); });
+  });
+  $("corbTout").addEventListener("click", remettreTout);
+  $("corbVider").addEventListener("click", function(){
+    if(!confirm("Vider la corbeille ? Les " + D.corbeille.length + " entreprise(s) seront perdues pour de bon.")) return;
+    D.corbeille = [];
+    sauver();
+    rendreCorbeille();
+    flash("Corbeille vidée.");
+  });
+}
+
 function supprimerSelection(){
   var ids = Object.keys(selection).filter(function(k){ return selection[k]; });
   if(!ids.length) return;
   var noms = D.prospects.filter(function(p){ return ids.indexOf(p.id) >= 0; })
     .map(function(p){ return p.entreprise || "sans nom"; });
   var apercu = noms.slice(0, 4).join(", ") + (noms.length > 4 ? " et " + (noms.length - 4) + " autre(s)" : "");
-  if(!confirm("Supprimer " + ids.length + " entreprise(s) et tout leur historique ?\n\n" + apercu)) return;
+  if(!confirm("Supprimer " + ids.length + " entreprise(s) ?\n\n" + apercu +
+    "\n\nElles resteront " + JOURS_CORBEILLE + " jours dans la corbeille, onglet « Mes infos ».")) return;
+  jeter(D.prospects.filter(function(p){ return ids.indexOf(p.id) >= 0; }));
   D.prospects = D.prospects.filter(function(p){ return ids.indexOf(p.id) < 0; });
   selection = {};
   modeSelection = false;
   sauver();
   rendreListe();
-  flash(ids.length + " entreprise(s) supprimée(s).");
+  rendreCorbeille();
+  flashAction(ids.length + " supprimée(s).", "Annuler", remettreTout);
 }
 
 /* ============================================================
@@ -1303,10 +1430,12 @@ function ouvrirFiche(id){
   if(mp) mp.addEventListener("click", function(){ changerStatut(p, "reponse"); });
 
   $("supprimer").addEventListener("click", function(){
-    if(!confirm("Supprimer « " + (p.entreprise || "cette entreprise") + " » et tout son historique ?")) return;
+    if(!confirm("Supprimer « " + (p.entreprise || "cette entreprise") + " » ?\n\n" +
+      "Elle restera " + JOURS_CORBEILLE + " jours dans la corbeille, onglet « Mes infos ».")) return;
+    jeter([p]);
     D.prospects = D.prospects.filter(function(x){ return x.id !== p.id; });
-    sauver(); fermerFiche(); rendreListe();
-    flash("Entreprise supprimée.");
+    sauver(); fermerFiche(); rendreListe(); rendreCorbeille();
+    flashAction((p.entreprise || "Entreprise") + " supprimée.", "Annuler", function(){ remettre(D.corbeille.length - 1); });
   });
 
   $("fiche").classList.add("is-on");
@@ -2267,9 +2396,12 @@ function importer(fichier){
       D.prospects = p.prospects;
       if(p.infos) D.infos = Object.assign({}, INFOS_DEFAUT, p.infos);
       sauver();
+      if(Array.isArray(p.corbeille)) D.corbeille = p.corbeille;
+      sauver();
       remplirInfos();
       rendreSignature();
       rendreListe();
+      rendreCorbeille();
       flash(D.prospects.length + " entreprise(s) importée(s).");
     }catch(e){
       flash("Fichier illisible : ce n'est pas un export de cette page.");
@@ -2291,9 +2423,11 @@ function remplirInfos(){
 }
 
 charger();
+purgerCorbeille();
 remplirInfos();
 rendreSignature();
 rendreListe();
+rendreCorbeille();
 
 CHAMPS_INFOS.forEach(function(k){
   var e = $(k);
