@@ -36,11 +36,20 @@
   .top__t{ flex:1; min-width:0; }
   .top__t strong{ display:block; font-size:15px; letter-spacing:-0.02em; line-height:1.2; }
   .top__t span{ display:block; font-size:11.5px; color:#8B9AB5; }
+  .top__set{
+    font:inherit; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.18); color:#fff;
+    width:40px; height:40px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0;
+  }
+  .top__set svg{ width:20px; height:20px; }
+  .top__set.is-on{ background:var(--brand); border-color:var(--brand); }
   .tabs{ display:flex; gap:0; max-width:900px; margin:0 auto; padding:0 10px; }
   .tabs button{
-    flex:1; font:inherit; font-size:14px; font-weight:600; padding:11px 8px 13px; min-height:46px;
+    flex:1; font:inherit; font-size:12.5px; font-weight:600; padding:11px 4px 13px; min-height:46px;
     background:none; border:none; border-bottom:3px solid transparent; color:#8B9AB5; cursor:pointer;
+    white-space:nowrap; letter-spacing:-0.01em;
   }
+  @media (min-width:520px){ .tabs button{ font-size:14px; padding-left:8px; padding-right:8px; } }
   .tabs button.is-on{ color:#fff; border-bottom-color:var(--brand); }
 
   /* ---------- blocs ---------- */
@@ -159,6 +168,7 @@
   .res__m{ display:block; font-size:12.5px; color:var(--ink-faint); margin-top:3px; line-height:1.35; }
   .res__e{ display:block; font-size:12.5px; color:var(--ink-soft); margin-top:4px; font-weight:600; }
   .res__d{ display:block; font-size:11.5px; color:var(--brand-deep); margin-top:4px; font-weight:700; }
+  .res__f{ display:block; font-size:11.5px; color:var(--wait); margin-top:3px; }
   .journal{
     margin-top:9px; padding:11px; border:1px solid var(--line); border-radius:9px; background:var(--bg);
     font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:10.5px; line-height:1.6;
@@ -180,6 +190,27 @@
   .colle__m--no{ color:var(--late); font-weight:600; }
   .colle__m--tel{ color:var(--wait); font-weight:600; }
   .colle__n{ display:block; font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+
+  /* ---------- historique ---------- */
+  .recap{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:15px; }
+  @media (min-width:560px){ .recap{ grid-template-columns:repeat(4,1fr); } }
+  .recap > div{
+    background:#fff; border:1px solid var(--line); border-radius:11px; padding:10px 12px;
+    display:flex; align-items:baseline; gap:8px;
+  }
+  .recap b{ font-size:18px; color:var(--navy); letter-spacing:-0.02em; }
+  .recap span{ font-size:11.5px; color:var(--ink-faint); line-height:1.3; }
+  .jour{ display:flex; flex-direction:column; }
+  .jour__l{
+    display:flex; gap:10px; align-items:baseline; font-size:13.5px; padding:8px 0;
+    border-bottom:1px solid var(--line-soft); text-align:left; width:100%;
+    background:none; border-left:0; border-right:0; border-top:0; cursor:pointer; font-family:inherit;
+  }
+  .jour__l:last-child{ border-bottom:0; }
+  .jour__d{ font-family:ui-monospace,Menlo,monospace; font-size:11px; color:var(--ink-faint); flex-shrink:0; }
+  .jour__c{ flex:1; min-width:0; }
+  .jour__e{ display:block; font-weight:600; color:var(--navy); }
+  .jour__t{ display:block; color:var(--ink-soft); margin-top:1px; }
 
   /* ---------- mode sélection ---------- */
   .pros--sel{ cursor:pointer; }
@@ -290,21 +321,26 @@
   <div class="top__in">
     <img class="top__logo" src="images/signature-logo.png" alt="CLTDistrib">
     <div class="top__t">
-      <strong>Espace prospection</strong>
-      <span>Vos données restent sur cet appareil</span>
+      <strong>Prospection CLTDistrib</strong>
+      <span id="topResume">Vos données restent sur cet appareil</span>
     </div>
+    <button class="top__set" id="allerInfos" type="button" aria-label="Mes infos et réglages">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6h.09A1.65 1.65 0 0 0 10 3.09V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 15 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9v.09a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
   </div>
   <div class="tabs">
-    <button class="is-on" data-vue="prospects" type="button">Prospects</button>
     <button data-vue="recherche" type="button">Recherche</button>
-    <button data-vue="infos" type="button">Mes infos</button>
+    <button class="is-on" data-vue="envoyer" type="button">À envoyer</button>
+    <button data-vue="envoyes" type="button">Envoyés</button>
+    <button data-vue="relances" type="button">Relances</button>
+    <button data-vue="historique" type="button">Historique</button>
   </div>
 </header>
 
 <div class="wrap">
 
-  <!-- ============================ PROSPECTS ============================ -->
-  <div class="vue is-on" id="v-prospects">
+  <!-- ====== LISTES : à envoyer, envoyés, relances (même bloc) ====== -->
+  <div class="vue is-on" id="v-liste">
 
     <div class="kpis" id="kpis"></div>
 
@@ -354,14 +390,25 @@
       <h2>Par où commencer</h2>
       <p>Trois minutes pour être opérationnel.</p>
       <ol>
-        <li><strong>Onglet « Mes infos »</strong> — renseignez votre téléphone et votre zone, puis installez la signature dans Gmail. Elle s'ajoutera toute seule à chaque mail.</li>
-        <li><strong>Trouvez des entreprises</strong> — onglet « Recherche » : décrivez ce que vous cherchez, cochez, elles arrivent ici. Ou ajoutez-les une par une avec le bouton +, ou collez une liste existante.</li>
-        <li><strong>Ouvrez sa fiche</strong> — le mail est déjà écrit et adapté à son secteur. Relisez, envoyez, le statut se met à jour.</li>
+        <li><strong>La roue dentée, en haut à droite</strong> — renseignez votre téléphone et votre zone : ils figurent au bas de chaque mail.</li>
+        <li><strong>Onglet « Recherche »</strong> — décrivez ce que vous cherchez, cochez les entreprises, elles arrivent ici. Vous pouvez aussi les ajouter une par une avec le bouton +, ou coller une liste.</li>
+        <li><strong>Ici, ouvrez une fiche</strong> — « Générer le mail », vous relisez, « Ouvrir dans Gmail », vous envoyez, puis « Mail envoyé ».</li>
+        <li><strong>Sept jours plus tard</strong> — sans réponse, l'entreprise passe seule dans « Relances », avec sa relance déjà écrite.</li>
       </ol>
       <div class="warn" style="margin-top:14px">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></svg>
         <div><strong>Sauvegardez régulièrement.</strong> Vos prospects sont enregistrés dans ce navigateur, sur cet appareil. Vider les données du navigateur les efface. Utilisez « Exporter » en bas de l'onglet « Mes infos » pour en garder une copie.</div>
       </div>
+    </div>
+  </div>
+
+  <!-- ============================ HISTORIQUE ============================ -->
+  <div class="vue" id="v-historique">
+    <div class="recap" id="recap"></div>
+    <div class="card">
+      <h2>Journal des actions</h2>
+      <p>Tout ce qui s'est passé, du plus récent au plus ancien.</p>
+      <div id="journal"></div>
     </div>
   </div>
 
@@ -397,6 +444,15 @@
         <div>
           <label for="rqEffectif">Taille</label>
           <select id="rqEffectif"></select>
+        </div>
+        <div>
+          <label for="rqNombre">Nombre de résultats</label>
+          <select id="rqNombre">
+            <option value="25">25</option>
+            <option value="50" selected>50</option>
+            <option value="75">75</option>
+            <option value="100">100</option>
+          </select>
         </div>
         <div class="full">
           <label for="rqMots">Mots-clés <span class="opt">— facultatif</span></label>
@@ -565,12 +621,32 @@ function charger(){
       D.infos = p.infos || {};
       D.prospects = Array.isArray(p.prospects) ? p.prospects : [];
       D.corbeille = Array.isArray(p.corbeille) ? p.corbeille : [];
+      migrer();
     }
   }catch(e){ /* navigation privée ou données abîmées : on repart à vide */ }
   Object.keys(INFOS_DEFAUT).forEach(function(k){
     if(typeof D.infos[k] !== "string") D.infos[k] = INFOS_DEFAUT[k];
   });
 }
+/* Reprise des fiches enregistrées avant le changement de statuts et de
+   types : rien à ressaisir. */
+function migrer(){
+  var n = 0;
+  D.prospects.forEach(function(p){
+    if(ANCIENS_STATUTS[p.statut]){ p.statut = ANCIENS_STATUTS[p.statut]; n++; }
+    ["adresse", "objet", "corps", "activite", "site", "siren"].forEach(function(k){
+      if(typeof p[k] !== "string") p[k] = "";
+    });
+    /* Les laveries, garages et contrôles techniques étaient rangés dans le
+       type fourre-tout : ils ont maintenant leur propre argumentaire. */
+    if(!p.type || p.type === "Établissement accueillant du public"){
+      var t = typeDepuisMots([p.activite, p.note, p.entreprise].join(" "));
+      if(t && t !== p.type){ p.type = t; n++; }
+    }
+  });
+  if(n) sauver();
+}
+
 function sauver(){
   try{ localStorage.setItem(CLE, JSON.stringify(D)); }
   catch(e){ flash("Enregistrement impossible : pensez à exporter."); }
@@ -632,15 +708,23 @@ function flashAction(txt, libelle, action){
    STATUTS ET RELANCES
    ============================================================ */
 var STATUTS = [
-  { k:"a_envoyer",  l:"À envoyer" },
-  { k:"envoye",     l:"Mail envoyé" },
-  { k:"a_relancer", l:"À relancer" },
-  { k:"relance",    l:"Relancé" },
-  { k:"reponse",   l:"Réponse reçue" },
-  { k:"rdv",       l:"Rendez-vous" },
-  { k:"gagne",     l:"Emplacement signé" },
-  { k:"refus",     l:"Sans suite" }
+  { k:"a_preparer",      l:"À préparer" },
+  { k:"mail_pret",       l:"Mail prêt" },
+  { k:"envoye",          l:"Mail envoyé" },
+  { k:"a_relancer",      l:"À relancer" },
+  { k:"relance_envoyee", l:"Relance envoyée" },
+  { k:"reponse",         l:"Réponse reçue" },
+  { k:"interesse",       l:"Intéressé" },
+  { k:"rdv",             l:"Rendez-vous" },
+  { k:"gagne",           l:"Emplacement obtenu" },
+  { k:"refus",           l:"Refus" },
+  { k:"stop",            l:"Ne plus contacter" }
 ];
+
+/* « Relance prévue » et « relance aujourd'hui » ne sont pas enregistrés :
+   ils se déduisent de la date d'envoi. Deux sources de vérité finiraient
+   par se contredire. */
+var ANCIENS_STATUTS = { a_envoyer:"a_preparer", relance:"relance_envoyee" };
 function libelleStatut(k){
   var s = STATUTS.find(function(x){ return x.k === k; });
   return s ? s.l : k;
@@ -649,8 +733,8 @@ var DELAI_RELANCE = 7;   /* jours avant de proposer une relance */
 
 /* Depuis combien de jours ce prospect attend-il ? */
 function relance(p){
-  if(["envoye", "a_relancer", "relance"].indexOf(p.statut) < 0) return null;
-  var base = p.statut === "relance" ? p.dateRelance : p.dateEnvoi;
+  if(["envoye", "a_relancer", "relance_envoyee"].indexOf(p.statut) < 0) return null;
+  var base = p.statut === "relance_envoyee" ? p.dateRelance : p.dateEnvoi;
   var j = joursDepuis(base);
   if(j === null) return null;
   return { jours:j, du: p.statut === "a_relancer" };
@@ -666,6 +750,10 @@ function basculerRelances(){
     var j = joursDepuis(p.dateEnvoi);
     if(j === null || j < DELAI_RELANCE) return;
     p.statut = "a_relancer";
+    /* Le mail enregistré est celui du premier envoi : on le retire pour
+       que la relance soit rédigée à neuf. */
+    p.objet = "";
+    p.corps = "";
     ajouterHisto(p, "Sans réponse depuis " + j + " jours : passé en « à relancer »");
     n++;
   });
@@ -677,7 +765,8 @@ function basculerRelances(){
    MODÈLES DE MAIL — un angle par type d'établissement
    ============================================================ */
 var TYPES = [
-  "Entreprise / bureaux", "Usine / atelier", "Entrepôt / logistique",
+  "Entreprise / bureaux", "Usine / atelier", "BTP / chantiers", "Entrepôt / logistique",
+  "Garage / carrosserie", "Contrôle technique", "Laverie / pressing",
   "Salle de sport", "Centre de formation", "Hôtel / résidence",
   "Établissement accueillant du public", "Gare / lieu de passage", "Autre"
 ];
@@ -687,6 +776,14 @@ var ANGLES = {
     "Vos équipes n'ont pas toujours de quoi boire ou grignoter sur place, et sortir pour une pause fait perdre du temps à tout le monde.",
   "Usine / atelier":
     "Sur un site en horaires décalés, les commerces sont souvent fermés quand vos équipes prennent leur pause.",
+  "BTP / chantiers":
+    "Sur une base-vie ou un dépôt, les équipes commencent tôt, et il n'y a pas toujours de quoi boire ou manger sur place.",
+  "Garage / carrosserie":
+    "Entre les clients qui patientent pendant une intervention et les équipes de l'atelier, il y a souvent du monde sur place, sans rien à proximité.",
+  "Contrôle technique":
+    "Un contrôle prend une vingtaine de minutes : autant de temps d'attente pour vos clients, sans rien à faire ni rien à boire.",
+  "Laverie / pressing":
+    "Un cycle de lavage se compte en dizaines de minutes, que vos clients passent sur place : beaucoup apprécieraient de pouvoir boire quelque chose pendant ce temps.",
   "Entrepôt / logistique":
     "Entre les zones de quai et la salle de repos, un point boissons accessible à toute heure change le quotidien des équipes.",
   "Salle de sport":
@@ -729,69 +826,66 @@ var ARGUMENTS_ROLE = {
 
 function infos(){ return D.infos; }
 
-function ligneContact(){
+function objetMail(p, type){
+  var nom = p.entreprise || "votre établissement";
+  if(type === "relance") return "Relance — distributeur de boissons et snacks pour " + nom;
+  return "Un distributeur de boissons et snacks pour " + nom + " ?";
+}
+
+function signatureMail(){
   var i = infos(), l = [];
+  l.push("Cordialement,");
+  l.push("");
+  l.push(i.nom || "");
+  l.push((i.fonction ? i.fonction + " — " : "") + "CLTDistrib");
   if(i.tel) l.push(i.tel);
   if(i.email) l.push(i.email);
-  return l.join(" — ");
+  if(i.site) l.push(i.site);
+  return l;
 }
 
-function objetMail(p, type){
-  if(type === "relance")
-    return "Relance — un distributeur de boissons et snacks pour " + (p.entreprise || "votre établissement");
-  return "Un distributeur de boissons et snacks pour " + (p.entreprise || "votre établissement") + " ?";
-}
-
+/* Trame fixe, un paragraphe qui change selon l'activité, un autre selon la
+   fonction du destinataire. Rien n'est inventé sur l'entreprise. */
 function corpsMail(p, type){
-  var i = infos();
-  var salut = p.contactNom ? "Bonjour " + p.contactNom + "," : "Bonjour,";
-  var nomSite = p.entreprise || "votre établissement";
   var l = [];
+  l.push(p.contactNom ? "Bonjour " + p.contactNom + "," : "Bonjour,");
+  l.push("");
 
   if(type === "relance"){
-    l.push(salut, "");
-    l.push("Je me permets de revenir vers vous au sujet de mon message concernant l'installation d'un distributeur de boissons et snacks chez " + nomSite + ".");
+    l.push("Je me permets de revenir vers vous concernant mon précédent message au sujet de CLTDistrib " +
+      "et de la possibilité d'installer un distributeur automatique de boissons et snacks sur votre site.");
     l.push("");
-    l.push("La proposition tient toujours : CLTDistrib fournit la machine, l'installe, l'approvisionne et l'entretient. De votre côté, il s'agit simplement de mettre à disposition un emplacement adapté et une alimentation électrique.");
+    l.push("Je souhaitais simplement savoir si ce type de service pourrait être envisagé dans votre établissement.");
     if(ARGUMENTS_ROLE[p.contactFonction]){
       l.push("");
       l.push(ARGUMENTS_ROLE[p.contactFonction]);
     }
     l.push("");
-    l.push("Si le sujet n'est pas d'actualité, dites-le moi simplement, je n'insisterai pas. Et s'il l'est, je peux passer voir l'emplacement quand cela vous arrange : cette visite est gratuite et sans engagement.");
+    l.push("Je reste à votre disposition pour échanger quelques minutes à ce sujet.");
   } else {
-    l.push(salut, "");
-    /* La zone est annoncée à part : « du secteur de Yvelines » passe mal,
-       et l'élision dépend de ce qui sera saisi. */
-    l.push("Je suis " + (i.nom || "") + ", " + (i.fonction ? i.fonction.toLowerCase() + " de " : "") + "CLTDistrib. J'installe et j'exploite des distributeurs automatiques de boissons et de snacks pour les entreprises et les établissements.");
+    l.push("Je me permets de vous contacter dans le cadre du développement de CLTDistrib, " +
+      "une entreprise spécialisée dans l'exploitation de distributeurs automatiques de boissons et snacks.");
     l.push("");
     l.push(ANGLES[p.type] || ANGLES["Autre"]);
     l.push("");
-    l.push("Le principe est simple : vous mettez à disposition un emplacement adapté, et je m'occupe du reste.");
+    l.push("Je souhaiterais savoir si vous seriez ouverts à étudier la possibilité d'installer " +
+      "un distributeur automatique sur votre site afin de proposer ce service à vos collaborateurs, clients ou visiteurs.");
     l.push("");
-    l.push("— La machine est fournie et installée par mes soins");
-    l.push("— Les produits sont sélectionnés selon le public du lieu");
-    l.push("— Le réassort, le nettoyage et la maintenance sont assurés");
-    l.push("— Le paiement par carte et sans contact est géré de mon côté");
+    l.push("CLTDistrib prend en charge l'installation, l'approvisionnement, le réassort, " +
+      "l'entretien, la maintenance et la gestion des paiements.");
     l.push("");
-    l.push("Aucun investissement ni gestion de stock de votre côté.");
+    l.push("Le principe est simple : vous mettez à disposition un emplacement adapté, CLTDistrib s'occupe du reste.");
     if(ARGUMENTS_ROLE[p.contactFonction]){
       l.push("");
       l.push(ARGUMENTS_ROLE[p.contactFonction]);
     }
     l.push("");
-    l.push("Si l'idée vous paraît pertinente pour " + nomSite + ", je peux passer étudier l'emplacement : la visite est gratuite et sans engagement, et je vous dirai franchement si votre site s'y prête ou non." + (i.zone ? " Je me déplace sur le secteur suivant : " + i.zone + "." : ""));
+    l.push("Je serais ravi de pouvoir échanger quelques minutes avec vous afin de voir " +
+      "si ce projet pourrait être adapté à votre établissement.");
   }
 
   l.push("");
-  l.push("Seriez-vous disponible pour en échanger quelques minutes ?");
-  l.push("");
-  l.push("Bien cordialement,");
-  l.push(i.nom || "");
-  if(ligneContact()) l.push(ligneContact());
-  if(i.site) l.push(i.site);
-
-  return l.join("\n");
+  return l.concat(signatureMail()).join("\n");
 }
 
 /* ============================================================
@@ -910,50 +1004,76 @@ function copierRiche(noeud){
 /* ============================================================
    LISTE DES PROSPECTS
    ============================================================ */
-var filtre = "tous";
+var onglet = "envoyer";       /* onglet de liste affiché */
 var recherche = "";
 var modeSelection = false;
 var selection = {};
 var ficheId = null;
 
+/* Quels statuts s'affichent dans quel onglet. Les entreprises ne sont
+   jamais dans deux onglets à la fois, ni nulle part. */
+var ONGLETS = {
+  envoyer: [
+    { k:"mail_pret",  t:"Mail prêt à envoyer", aide:"Ouvrez la fiche, vérifiez, puis « Ouvrir dans Gmail »." },
+    { k:"a_preparer", t:"À préparer",          aide:"Ouvrez la fiche et générez le mail." }
+  ],
+  envoyes: [
+    { k:"envoye",          t:"En attente de réponse", aide:"" },
+    { k:"relance_envoyee", t:"Relancés, en attente",  aide:"" },
+    { k:"reponse",         t:"Réponses reçues",       aide:"À traiter en priorité." },
+    { k:"interesse",       t:"Intéressés",            aide:"" },
+    { k:"rdv",             t:"Rendez-vous",           aide:"" },
+    { k:"gagne",           t:"Emplacements obtenus",  aide:"" },
+    { k:"refus",           t:"Refus",                 aide:"" },
+    { k:"stop",            t:"Ne plus contacter",     aide:"" }
+  ],
+  relances: [
+    { k:"a_relancer", t:"À relancer", aide:"Sept jours sans réponse. La relance est déjà écrite." }
+  ]
+};
+
+function statutsDeLOnglet(){
+  return (ONGLETS[onglet] || []).map(function(g){ return g.k; });
+}
+
 function compteurs(){
-  var c = { tous:D.prospects.length, a_envoyer:0, attente:0, relancer:0, reponse:0 };
+  var c = { tous:D.prospects.length, envoyer:0, envoyes:0, relances:0, reponses:0,
+            rdv:0, gagne:0, refus:0 };
   D.prospects.forEach(function(p){
-    if(p.statut === "a_envoyer") c.a_envoyer++;
-    if(p.statut === "envoye" || p.statut === "relance") c.attente++;
-    if(p.statut === "a_relancer") c.relancer++;
-    if(p.statut === "reponse" || p.statut === "rdv" || p.statut === "gagne") c.reponse++;
+    if(p.statut === "a_preparer" || p.statut === "mail_pret") c.envoyer++;
+    else if(p.statut === "envoye" || p.statut === "relance_envoyee") c.envoyes++;
+    else if(p.statut === "a_relancer") c.relances++;
+    if(p.statut === "reponse" || p.statut === "interesse") c.reponses++;
+    if(p.statut === "rdv") c.rdv++;
+    if(p.statut === "gagne") c.gagne++;
+    if(p.statut === "refus" || p.statut === "stop") c.refus++;
   });
   return c;
 }
 
+/* Les compteurs servent aussi de raccourcis vers l'onglet correspondant. */
 function rendreKpis(){
   var c = compteurs();
+  $("topResume").textContent = (c.envoyer || c.relances)
+    ? c.envoyer + " à envoyer · " + c.relances + " à relancer"
+    : "Vos données restent sur cet appareil";
   var cases = [
-    { k:"a_envoyer", n:c.a_envoyer, l:"À envoyer" },
-    { k:"attente",   n:c.attente,   l:"En attente" },
-    { k:"relancer",  n:c.relancer,  l:"À relancer" },
-    { k:"reponse",   n:c.reponse,   l:"Réponses" }
+    { v:"envoyer",  n:c.envoyer,  l:"À envoyer" },
+    { v:"envoyes",  n:c.envoyes,  l:"En attente" },
+    { v:"relances", n:c.relances, l:"À relancer" },
+    { v:"envoyes",  n:c.reponses, l:"Réponses" }
   ];
   $("kpis").innerHTML = cases.map(function(x){
-    return '<button class="kpi' + (filtre === x.k ? " is-on" : "") + '" data-f="' + x.k + '" type="button">' +
-      '<b>' + x.n + '</b><span>' + x.l + '</span></button>';
+    return '<button class="kpi' + (onglet === x.v ? " is-on" : "") + '" data-onglet="' + x.v + '" type="button">' +
+      "<b>" + x.n + "</b><span>" + x.l + "</span></button>";
   }).join("");
-  $("kpis").querySelectorAll("[data-f]").forEach(function(b){
-    b.addEventListener("click", function(){
-      var f = b.getAttribute("data-f");
-      filtre = (filtre === f) ? "tous" : f;
-      rendreListe();
-    });
+  $("kpis").querySelectorAll("[data-onglet]").forEach(function(b){
+    b.addEventListener("click", function(){ allerOnglet(b.getAttribute("data-onglet")); });
   });
 }
 
 function passeFiltre(p){
-  if(filtre === "a_envoyer") return p.statut === "a_envoyer";
-  if(filtre === "attente")   return p.statut === "envoye" || p.statut === "relance";
-  if(filtre === "relancer")  return p.statut === "a_relancer";
-  if(filtre === "reponse")   return p.statut === "reponse" || p.statut === "rdv" || p.statut === "gagne";
-  return true;
+  return statutsDeLOnglet().indexOf(p.statut) >= 0;
 }
 function passeRecherche(p){
   if(!recherche) return true;
@@ -962,39 +1082,48 @@ function passeRecherche(p){
 }
 
 
-/* Les entreprises sont rangées par statut : chaque groupe est un bloc, dans
-   l'ordre de ce qui demande une action. */
-var GROUPES = [
-  { k:"a_relancer", t:"À relancer",            aide:"Sept jours sans réponse. Le mail de relance est déjà écrit." },
-  { k:"reponse",    t:"Réponses reçues",       aide:"À traiter en premier." },
-  { k:"a_envoyer",  t:"À envoyer",             aide:"Ouvrez la fiche, copiez le mail, envoyez depuis votre boîte." },
-  { k:"envoye",     t:"En attente de réponse", aide:"" },
-  { k:"relance",    t:"Relancés",              aide:"" },
-  { k:"rdv",        t:"Rendez-vous",           aide:"" },
-  { k:"gagne",      t:"Emplacements signés",   aide:"" },
-  { k:"refus",      t:"Sans suite",            aide:"" }
-];
+function dateRelancePrevue(p){
+  if(!p.dateEnvoi) return "";
+  var base = p.statut === "relance_envoyee" && p.dateRelance ? p.dateRelance : p.dateEnvoi;
+  var d = new Date(base + "T00:00:00");
+  if(isNaN(d.getTime())) return "";
+  d.setDate(d.getDate() + DELAI_RELANCE);
+  return d.toISOString().slice(0, 10);
+}
+
+/* « Relance dans 6 jours » puis « Relance aujourd'hui » : calculé, jamais
+   enregistré, pour ne pas avoir deux vérités qui divergent. */
+function libelleAttente(p){
+  var r = relance(p);
+  if(!r) return "";
+  var reste = DELAI_RELANCE - r.jours;
+  if(reste > 1) return "Relance dans " + reste + " jours";
+  if(reste === 1) return "Relance demain";
+  return "Relance aujourd'hui";
+}
 
 function ligneProspect(p){
-  var r = relance(p), action = "", cls = "";
-  if(p.statut === "a_relancer"){
-    action = "Sans réponse depuis " + r.jours + " jours";
-    cls = " pros__a--late";
-  }else if(p.statut === "envoye"){
-    action = "Envoyé il y a " + r.jours + (r.jours > 1 ? " jours" : " jour") +
-      " — relance dans " + Math.max(0, DELAI_RELANCE - r.jours) + " j";
-    cls = " pros__a--soon";
-  }else if(p.statut === "relance"){
-    action = "Relancé il y a " + r.jours + (r.jours > 1 ? " jours" : " jour");
-  }else if(p.statut === "a_envoyer"){
-    if(p.email) action = "Prêt à envoyer";
+  var action = "", cls = "";
+  if(p.statut === "a_preparer"){
+    if(p.email) action = "Mail à générer";
     else if(p.tel){ action = "À appeler — " + p.tel; cls = " pros__a--soon"; }
-    else { action = "Email du contact manquant"; cls = " pros__a--soon"; }
+    else { action = "E-mail non trouvé"; cls = " pros__a--soon"; }
+  }else if(p.statut === "mail_pret"){
+    action = p.email ? "Prêt — " + p.email : "Mail prêt, e-mail manquant";
+    cls = p.email ? " pros__a--ok" : " pros__a--soon";
+  }else if(p.statut === "envoye" || p.statut === "relance_envoyee"){
+    action = libelleAttente(p);
+    cls = /aujourd/.test(action) ? " pros__a--late" : " pros__a--soon";
+  }else if(p.statut === "a_relancer"){
+    var r = relance(p);
+    action = "Sans réponse depuis " + (r ? r.jours : DELAI_RELANCE) + " jours";
+    cls = " pros__a--late";
   }else if(p.statut === "reponse"){
     action = "Réponse reçue le " + dateFr(p.dateReponse);
+    cls = " pros__a--ok";
   }
 
-  var meta = [p.type, p.ville].filter(Boolean).join(" · ");
+  var meta = [p.ville, p.activite || p.type].filter(Boolean).join(" · ");
   var dedans =
     '<span class="pros__c">' +
       '<span class="pros__n">' + esc(p.entreprise || "Sans nom") + "</span>" +
@@ -1013,24 +1142,70 @@ function ligneProspect(p){
   return '<button class="pros" data-id="' + p.id + '" type="button">' + dedans + "</button>";
 }
 
+var VIDE = {
+  envoyer:"Aucune entreprise à préparer.\nPassez par l'onglet Recherche, le bouton + ou collez une liste.",
+  envoyes:"Aucun mail envoyé pour l'instant.",
+  relances:"Aucune relance à faire. Tout ce qui a été envoyé a moins de sept jours."
+};
+
+function rendreHistorique(){
+  var c = compteurs();
+  $("recap").innerHTML = [
+    ["Prospects", c.tous], ["À envoyer", c.envoyer], ["Mails envoyés", c.envoyes],
+    ["Relances à faire", c.relances], ["Réponses", c.reponses], ["Rendez-vous", c.rdv],
+    ["Emplacements obtenus", c.gagne], ["Sans suite", c.refus]
+  ].map(function(x){
+    return "<div><b>" + x[1] + "</b><span>" + esc(x[0]) + "</span></div>";
+  }).join("");
+
+  var lignes = [];
+  D.prospects.forEach(function(p){
+    (p.historique || []).forEach(function(h){
+      lignes.push({ date:h.date || "", t:h.t || 0, texte:h.texte || "", id:p.id, nom:p.entreprise });
+    });
+  });
+  lignes.sort(function(a, b){
+    if(a.date !== b.date) return a.date < b.date ? 1 : -1;
+    return (b.t || 0) - (a.t || 0);
+  });
+
+  if(!lignes.length){
+    $("journal").innerHTML = '<p class="note" style="margin:0">Rien encore. Chaque envoi, relance et changement de statut viendra s\'inscrire ici.</p>';
+    return;
+  }
+  var montrees = lignes.slice(0, 200);
+  $("journal").innerHTML = '<div class="jour">' + montrees.map(function(x){
+    return '<button class="jour__l" data-id="' + esc(x.id) + '" type="button">' +
+      '<span class="jour__d">' + esc(dateFr(x.date)) + "</span>" +
+      '<span class="jour__c"><span class="jour__e">' + esc(x.nom || "Sans nom") + "</span>" +
+      '<span class="jour__t">' + esc(x.texte) + "</span></span></button>";
+  }).join("") + "</div>" +
+  (lignes.length > montrees.length
+    ? '<p class="note" style="margin-top:10px">' + (lignes.length - montrees.length) + " événement(s) plus ancien(s) non affiché(s).</p>"
+    : "");
+
+  $("journal").querySelectorAll("[data-id]").forEach(function(b){
+    b.addEventListener("click", function(){ ouvrirFiche(b.getAttribute("data-id")); });
+  });
+}
+
 function rendreListe(){
   basculerRelances();
   rendreKpis();
-  $("demarrage").style.display = D.prospects.length ? "none" : "";
+  var surEnvoyer = onglet === "envoyer";
+  $("demarrage").style.display = (surEnvoyer && !D.prospects.length) ? "" : "none";
+  $("coller").style.display = surEnvoyer ? "" : "none";
 
   var visibles = D.prospects.filter(function(p){ return passeFiltre(p) && passeRecherche(p); });
 
   if(!visibles.length){
     $("liste").innerHTML = '<div class="vide">' +
-      (D.prospects.length
-        ? "Aucune entreprise ne correspond."
-        : "Aucune entreprise pour l'instant.<br>Appuyez sur + pour en ajouter une, ou collez une liste plus bas.") +
-      "</div>";
+      esc(VIDE[onglet] || "Rien ici.").replace(/\n/g, "<br>") + "</div>";
     majBarreSelection();
     return;
   }
 
-  $("liste").innerHTML = GROUPES.map(function(g){
+  $("liste").innerHTML = (ONGLETS[onglet] || []).map(function(g){
     var liste = visibles.filter(function(p){ return p.statut === g.k; });
     if(!liste.length) return "";
     liste.sort(function(a, b){
@@ -1197,14 +1372,16 @@ function trouver(id){ return D.prospects.find(function(p){ return p.id === id; }
 
 var CHAMPS = [
   { k:"entreprise", l:"Nom de l'entreprise", w:2 },
-  { k:"type", l:"Type d'établissement", t:"select" },
+  { k:"activite", l:"Activité", w:2 },
+  { k:"type", l:"Type d'établissement — choisit l'argument du mail", t:"select", w:2 },
   { k:"ville", l:"Ville" },
+  { k:"effectif", l:"Personnes sur le site" },
+  { k:"adresse", l:"Adresse", w:2 },
+  { k:"email", l:"E-mail du contact", t:"email", w:2 },
+  { k:"tel", l:"Téléphone" },
+  { k:"site", l:"Site internet" },
   { k:"contactNom", l:"Contact — nom" },
   { k:"contactFonction", l:"Contact — fonction", t:"role" },
-  { k:"email", l:"Email du contact", t:"email", w:2 },
-  { k:"site", l:"Site internet" },
-  { k:"tel", l:"Téléphone" },
-  { k:"effectif", l:"Personnes sur le site" },
   { k:"note", l:"Notes", t:"area", w:2 }
 ];
 
@@ -1271,11 +1448,13 @@ function ouvrirFiche(id){
   ficheId = id;
   $("ficheTitre").textContent = p.entreprise || "Nouvelle entreprise";
 
-  var estRelance = p.statut === "a_relancer" || p.statut === "relance";
+  var estRelance = p.statut === "a_relancer" || p.statut === "relance_envoyee";
   var typeMail = estRelance ? "relance" : "premier";
-  /* Recalculé à chaque frappe : les boutons doivent envoyer le texte à jour,
-     jamais celui figé à l'ouverture de la fiche. */
-  var courant = { objet: objetMail(p, typeMail), corps: corpsMail(p, typeMail) };
+  /* Le mail est enregistré dans la fiche dès qu'il est généré : ce qui
+     part dans Gmail est exactement ce qui est affiché, modifications
+     comprises. Tant qu'il n'existe pas, on propose de le générer. */
+  var aEcrire = !p.corps;
+  var courant = { objet: p.objet || objetMail(p, typeMail), corps: p.corps || corpsMail(p, typeMail) };
 
   var histo = (p.historique || []).slice().reverse().map(function(h){
     return '<div class="hist__l"><span class="hist__d">' + esc(dateFr(h.date)) + '</span><span>' + esc(h.texte) + '</span></div>';
@@ -1295,35 +1474,46 @@ function ouvrirFiche(id){
     '<div class="card">' +
       '<h2>' + (estRelance ? "Mail de relance" : "Mail de prospection") + '</h2>' +
       '<p>' + (estRelance
-        ? "Adapté au fait que vous avez déjà écrit. Relisez avant d'envoyer."
-        : p.statut === "envoye"
-          ? "Le mail déjà envoyé le " + esc(dateFr(p.dateEnvoi)) + ". La relance s'écrira toute seule au bout de sept jours."
-          : "Adapté au type d'établissement. Relisez et ajustez avant d'envoyer.") + '</p>' +
-      '<div class="apercu" id="apercu"><div class="objet" id="apercuObjet">Objet : ' + esc(courant.objet) + '</div>' +
-        '<span id="apercuCorps">' + esc(courant.corps) + '</span></div>' +
-      '<div class="miss" id="besoinEmail" style="margin-top:10px' + (p.email ? ';display:none' : '') + '">Renseignez l\'email du contact plus bas pour pouvoir envoyer.</div>' +
-      '<div class="actions">' +
-        '<button class="btn btn--main" id="ouvrirGmail" type="button"' + (p.email ? '' : ' disabled') + '>' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>' +
-          'Ouvrir dans Gmail</button>' +
-        '<button class="btn btn--ghost" id="ouvrirMailto" type="button"' + (p.email ? '' : ' disabled') + '>Ma messagerie</button>' +
-      '</div>' +
-      '<p class="note" style="margin:13px 0 7px">Pour écrire depuis votre boîte habituelle, copiez les deux morceaux :</p>' +
-      '<div class="actions" style="margin-top:0">' +
-        '<button class="btn btn--dark" id="copierObjet" type="button">Copier l\'objet</button>' +
-        '<button class="btn btn--dark" id="copierCorps" type="button">Copier le message</button>' +
-        (p.email ? '<button class="btn btn--ghost" id="copierAdresse" type="button">Copier l\'adresse</button>' : '') +
-      '</div>' +
-      '<p class="note" style="margin-top:11px">Votre signature n\'est pas dans ce texte : Gmail l\'ajoute tout seul si vous l\'avez installée depuis l\'onglet « Mes infos ».</p>' +
-      (p.statut === "a_envoyer"
-        ? '<button class="btn btn--dark btn--wide" id="marquerEnvoye" type="button" style="margin-top:11px">J\'ai envoyé ce mail</button>'
-        : '') +
-      (estRelance
-        ? '<div class="actions" style="margin-top:4px">' +
-            '<button class="btn btn--dark" id="marquerRelance" type="button">J\'ai relancé</button>' +
+        ? "Écrit pour une relance : court, sans insister."
+        : "Écrit pour son activité" + (p.contactFonction ? " et pour la fonction du contact" : "") + ". Relisez avant d'envoyer.") + '</p>' +
+
+      (aEcrire
+        ? '<button class="btn btn--main btn--wide" id="genererMail" type="button">Générer le mail</button>' +
+          '<p class="note" style="margin-top:10px">Rien n\'est envoyé : le texte s\'affichera ici pour que vous le relisiez.</p>'
+        : '<div><label for="mObjet">Objet</label>' +
+            '<input id="mObjet" type="text" value="' + esc(courant.objet) + '"></div>' +
+          '<div style="margin-top:11px"><label for="mCorps">Message</label>' +
+            '<textarea id="mCorps" rows="14" style="min-height:290px"></textarea></div>' +
+          '<div class="miss" id="besoinEmail" style="margin-top:11px' + (p.email ? ";display:none" : "") +
+            '">E-mail non trouvé : renseignez-le plus bas, ou appelez.</div>' +
+          '<div class="actions">' +
+            '<button class="btn btn--main" id="ouvrirGmail" type="button"' + (p.email ? "" : " disabled") + ">" +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>' +
+              "Ouvrir dans Gmail</button>" +
+            '<button class="btn btn--ghost" id="enregistrerMail" type="button">Enregistrer</button>' +
+            '<button class="btn btn--ghost" id="genererMail" type="button">Régénérer</button>' +
+          "</div>" +
+          '<details><summary>Envoyer depuis une autre messagerie</summary>' +
+            '<div class="actions">' +
+              '<button class="btn btn--dark btn--sm" id="copierObjet" type="button">Copier l\'objet</button>' +
+              '<button class="btn btn--dark btn--sm" id="copierCorps" type="button">Copier le message</button>' +
+              (p.email ? '<button class="btn btn--ghost btn--sm" id="copierAdresse" type="button">Copier l\'adresse</button>' : "") +
+              '<button class="btn btn--ghost btn--sm" id="ouvrirMailto" type="button"' + (p.email ? "" : " disabled") + ">Messagerie du téléphone</button>" +
+            "</div></details>" +
+          (estRelance
+            ? '<button class="btn btn--dark btn--wide" id="marquerRelance" type="button" style="margin-top:13px">Relance envoyée</button>'
+            : '<button class="btn btn--dark btn--wide" id="marquerEnvoye" type="button" style="margin-top:13px">Mail envoyé</button>') +
+          '<p class="note" style="margin-top:10px">Ce bouton ne fait que classer l\'entreprise : appuyez dessus après avoir cliqué « Envoyer » dans Gmail.</p>'
+      ) +
+      (p.statut === "envoye" || p.statut === "relance_envoyee"
+        ? '<p class="note" style="margin-top:12px">Envoyé le ' + esc(dateFr(p.dateRelance || p.dateEnvoi)) +
+          ". " + esc(libelleAttente(p)) + " le " + esc(dateFr(dateRelancePrevue(p))) + ".</p>"
+        : "") +
+      (estRelance || p.statut === "envoye" || p.statut === "relance_envoyee"
+        ? '<div class="actions">' +
             '<button class="btn btn--ghost" id="marquerReponse" type="button">Réponse reçue</button>' +
-          '</div>'
-        : '') +
+          "</div>"
+        : "") +
     '</div>' +
 
     '<div class="card">' +
@@ -1339,18 +1529,41 @@ function ouvrirFiche(id){
   var zn = $("f-note");
   if(zn) zn.value = p.note || "";
 
-  /* enregistrement au fil de la frappe */
+  var zc = $("mCorps");
+  if(zc) zc.value = courant.corps;
+
+  /* Ce qui est affiché est ce qui partira : on relit les champs avant
+     chaque action plutôt que de se fier au texte chargé à l'ouverture. */
+  function lire(){
+    if($("mObjet")) courant.objet = $("mObjet").value;
+    if($("mCorps")) courant.corps = $("mCorps").value;
+    return courant;
+  }
+
+  function enregistrerMail(discret){
+    lire();
+    p.objet = courant.objet;
+    p.corps = courant.corps;
+    if(p.statut === "a_preparer" && p.corps){
+      p.statut = "mail_pret";
+      ajouterHisto(p, "Mail préparé");
+    }
+    sauver();
+    rendreListe();
+    if(!discret) flash("Mail enregistré.");
+  }
+
+  /* Appelée quand une information de la fiche change : le texte déjà écrit
+     n'est pas réécrit — « Régénérer » est là pour ça — mais l'état des
+     boutons d'envoi dépend de l'adresse email. */
   function majApercu(){
-    courant.objet = objetMail(p, typeMail);
-    courant.corps = corpsMail(p, typeMail);
-    $("apercuObjet").textContent = "Objet : " + courant.objet;
-    $("apercuCorps").textContent = courant.corps;
     var pret = !!p.email;
-    ["ouvrirGmail","ouvrirMailto"].forEach(function(id){
-      var b = $(id);
+    ["ouvrirGmail", "ouvrirMailto"].forEach(function(i){
+      var b = $(i);
       if(b) b.disabled = !pret;
     });
-    $("besoinEmail").style.display = pret ? "none" : "";
+    var be = $("besoinEmail");
+    if(be) be.style.display = pret ? "none" : "";
     var ae = $("aideEmail");
     if(ae) ae.style.display = pret ? "none" : "";
   }
@@ -1390,7 +1603,7 @@ function ouvrirFiche(id){
       p[k] = el.value;
       sauver();
       if(k === "entreprise") $("ficheTitre").textContent = el.value || "Nouvelle entreprise";
-      if(k === "entreprise" || k === "contactNom" || k === "contactFonction" || k === "type" || k === "email") majApercu();
+      if(k === "email") majApercu();
       if(k === "site" || k === "entreprise" || k === "ville" || k === "tel") majAide();
       rendreListe();
     });
@@ -1400,34 +1613,67 @@ function ouvrirFiche(id){
     b.addEventListener("click", function(){ changerStatut(p, b.getAttribute("data-s")); });
   });
 
+  /* Génération et régénération portent le même identifiant : une seule des
+     deux est affichée à la fois. */
+  var bg = $("genererMail");
+  if(bg) bg.addEventListener("click", function(){
+    var neuf = !p.corps;
+    p.objet = objetMail(p, typeMail);
+    p.corps = corpsMail(p, typeMail);
+    if(p.statut === "a_preparer") p.statut = "mail_pret";
+    ajouterHisto(p, neuf ? "Mail généré" : "Mail régénéré");
+    sauver();
+    rendreListe();
+    ouvrirFiche(p.id);
+    flash(neuf ? "Mail prêt. Relisez-le avant d'envoyer." : "Mail réécrit.");
+  });
+
+  var bs = $("enregistrerMail");
+  if(bs) bs.addEventListener("click", function(){ enregistrerMail(false); });
+
+  /* Sauvegarde discrète dès qu'on quitte un champ, pour ne rien perdre. */
+  ["mObjet", "mCorps"].forEach(function(i){
+    var el = $(i);
+    if(el) el.addEventListener("change", function(){ enregistrerMail(true); });
+  });
+
   var g = $("ouvrirGmail");
   if(g) g.addEventListener("click", function(){
+    enregistrerMail(true);
     window.open("https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=" + encodeURIComponent(p.email) +
       "&su=" + encodeURIComponent(courant.objet) + "&body=" + encodeURIComponent(courant.corps), "_blank", "noopener");
-    flash("Gmail ouvert. Pensez à repasser ici pour marquer l'envoi.");
+    flash("Gmail ouvert. Revenez appuyer sur « Mail envoyé » après l'envoi.");
   });
   var m = $("ouvrirMailto");
   if(m) m.addEventListener("click", function(){
+    enregistrerMail(true);
     window.location.href = "mailto:" + encodeURIComponent(p.email) +
       "?subject=" + encodeURIComponent(courant.objet) + "&body=" + encodeURIComponent(courant.corps);
   });
-  $("copierObjet").addEventListener("click", function(){
-    copierTexte(courant.objet, "Objet copié. Collez-le dans la ligne « Objet ».");
+
+  var co = $("copierObjet");
+  if(co) co.addEventListener("click", function(){
+    copierTexte(lire().objet, "Objet copié. Collez-le dans la ligne « Objet ».");
   });
-  $("copierCorps").addEventListener("click", function(){
-    copierTexte(courant.corps, "Message copié. Collez-le dans le corps du mail.");
+  var cc = $("copierCorps");
+  if(cc) cc.addEventListener("click", function(){
+    copierTexte(lire().corps, "Message copié. Collez-le dans le corps du mail.");
   });
   var ca = $("copierAdresse");
-  if(ca) ca.addEventListener("click", function(){
-    copierTexte(p.email, "Adresse copiée.");
-  });
+  if(ca) ca.addEventListener("click", function(){ copierTexte(p.email, "Adresse copiée."); });
 
   var me = $("marquerEnvoye");
-  if(me) me.addEventListener("click", function(){ changerStatut(p, "envoye"); });
+  if(me) me.addEventListener("click", function(){
+    enregistrerMail(true);
+    changerStatut(p, "envoye", true);
+  });
   var mr = $("marquerRelance");
-  if(mr) mr.addEventListener("click", function(){ changerStatut(p, "relance"); });
+  if(mr) mr.addEventListener("click", function(){
+    enregistrerMail(true);
+    changerStatut(p, "relance_envoyee", true);
+  });
   var mp = $("marquerReponse");
-  if(mp) mp.addEventListener("click", function(){ changerStatut(p, "reponse"); });
+  if(mp) mp.addEventListener("click", function(){ changerStatut(p, "reponse", true); });
 
   $("supprimer").addEventListener("click", function(){
     if(!confirm("Supprimer « " + (p.entreprise || "cette entreprise") + " » ?\n\n" +
@@ -1450,19 +1696,24 @@ function fermerFiche(){
 
 function ajouterHisto(p, texte){
   if(!Array.isArray(p.historique)) p.historique = [];
-  p.historique.push({ date: aujourdhui(), texte: texte });
+  p.historique.push({ date: aujourdhui(), texte: texte, t: Date.now() });
 }
 
-function changerStatut(p, s){
-  if(p.statut === s && s !== "relance") return;
+function changerStatut(p, s, fermer){
+  if(p.statut === s && s !== "relance_envoyee") return;
   p.statut = s;
   if(s === "envoye"){ p.dateEnvoi = aujourdhui(); ajouterHisto(p, "Mail de prospection envoyé"); }
-  else if(s === "relance"){ p.dateRelance = aujourdhui(); ajouterHisto(p, "Relance envoyée"); }
+  else if(s === "relance_envoyee"){ p.dateRelance = aujourdhui(); ajouterHisto(p, "Relance envoyée"); }
   else if(s === "reponse"){ p.dateReponse = aujourdhui(); ajouterHisto(p, "Réponse reçue"); }
-  else { ajouterHisto(p, "Statut : " + libelleStatut(s)); }
+  else {
+    if(s === "a_relancer"){ p.objet = ""; p.corps = ""; }
+    ajouterHisto(p, "Statut : " + libelleStatut(s));
+  }
   sauver();
   rendreListe();
-  ouvrirFiche(p.id);
+  /* Après « Mail envoyé » ou « Relance envoyée », le travail sur cette
+     fiche est fini : on rend la liste plutôt que de la laisser ouverte. */
+  if(fermer) fermerFiche(); else ouvrirFiche(p.id);
   flash("Statut : " + libelleStatut(s));
 }
 
@@ -1473,8 +1724,8 @@ function ajouterProspect(){
   var p = {
     id: uid(), entreprise:"", type:"Entreprise / bureaux", ville:"",
     contactNom:"", contactFonction:"", email:"", tel:"", effectif:"", note:"",
-    statut:"a_envoyer", dateEnvoi:"", dateRelance:"", dateReponse:"",
-    historique:[{ date: aujourdhui(), texte:"Entreprise ajoutée" }]
+    statut:"a_preparer", dateEnvoi:"", dateRelance:"", dateReponse:"",
+    historique:[{ date: aujourdhui(), texte:"Entreprise ajoutée", t: Date.now() }]
   };
   D.prospects.push(p);
   sauver();
@@ -1576,7 +1827,7 @@ var RAYONS = [
 
 /* état courant de la recherche */
 var R = {
-  lieu:null, rayon:"15", secteurs:[], effectif:"", mots:"", phrase:"",
+  lieu:null, rayon:"15", secteurs:[], effectif:"", mots:"", phrase:"", voulu:50,
   page:1, total:0, res:[], sel:{}, journal:[], enCours:false
 };
 
@@ -1778,6 +2029,7 @@ function lancerRecherche(ajoutPage){
     return envoyer(lp.chemin, act ? base.concat([act]) : base, 0);
   });
 
+  var avant = R.res.length;
   Promise.all([chargerNaf()].concat(requetes)).then(function(rep){
     var total = 0, vus = {};
     R.res.forEach(function(x){ vus[x.siren] = true; });
@@ -1794,6 +2046,11 @@ function lancerRecherche(ajoutPage){
     R.total = ajoutPage ? Math.max(R.total, total) : total;
     R.enCours = false;
     rendreRecherche();
+    /* L'annuaire renvoie vingt-cinq entreprises par page : on enchaîne
+       jusqu'au nombre demandé, en s'arrêtant si une page n'apporte rien. */
+    if(R.res.length < R.voulu && R.res.length < R.total && R.res.length > avant){
+      lancerRecherche(true);
+    }
   }).catch(function(err){
     R.enCours = false;
     if(ajoutPage) R.page -= 1;
@@ -1820,9 +2077,19 @@ function normaliser(e){
   };
 }
 
+var NAF_TYPE = {
+  "71.20A":"Contrôle technique",
+  "96.01A":"Laverie / pressing", "96.01B":"Laverie / pressing",
+  "45.20A":"Garage / carrosserie", "45.20B":"Garage / carrosserie",
+  "45.11Z":"Garage / carrosserie", "45.19Z":"Garage / carrosserie",
+  "45.40Z":"Garage / carrosserie", "45.32Z":"Garage / carrosserie"
+};
+
 function typeDepuisNaf(code){
+  if(NAF_TYPE[code]) return NAF_TYPE[code];
   var div = parseInt(String(code || "").slice(0, 2), 10);
   if(!div) return "Entreprise / bureaux";
+  if(div >= 41 && div <= 43) return "BTP / chantiers";
   if(div >= 5 && div <= 43) return "Usine / atelier";
   if(div === 46 || (div >= 49 && div <= 53)) return "Entrepôt / logistique";
   if(div === 55) return "Hôtel / résidence";
@@ -1849,14 +2116,14 @@ function ajouterSelection(){
   R.res.forEach(function(x){
     if(!R.sel[x.siren] || dejaEnListe(x)) return;
     var lib = libelleNaf(x.naf);
-    var infos = [lib, TRANCHES[x.tranche] || "", x.adresse, "SIREN " + x.siren]
-      .filter(Boolean).join(" · ");
     D.prospects.push({
       id: uid(), siren: x.siren, entreprise: x.nom, type: typeDepuisNaf(x.naf),
-      ville: x.ville, contactNom:"", contactFonction:"", email:"", tel:"", site:"",
-      effectif: TRANCHES[x.tranche] ? TRANCHES[x.tranche] : "", note: infos,
-      statut:"a_envoyer", dateEnvoi:"", dateRelance:"", dateReponse:"",
-      historique:[{ date: aujourdhui(), texte:"Trouvée par la recherche d'entreprises" }]
+      activite: lib, adresse: x.adresse || "", ville: x.ville,
+      contactNom:"", contactFonction:"", email:"", tel:"", site:"", objet:"", corps:"",
+      effectif: TRANCHES[x.tranche] || "",
+      note: ["SIREN " + x.siren, x.cp ? "code postal " + x.cp : ""].filter(Boolean).join(" · "),
+      statut:"a_preparer", dateEnvoi:"", dateRelance:"", dateReponse:"",
+      historique:[{ date: aujourdhui(), texte:"Trouvée par la recherche d'entreprises", t: Date.now() }]
     });
     n++;
   });
@@ -1866,8 +2133,7 @@ function ajouterSelection(){
   rendreListe();
   rendreRecherche();
   flash(n + " entreprise(s) ajoutée(s) à « À envoyer »." );
-  var bp = document.querySelector('.tabs button[data-vue="prospects"]');
-  if(bp) bp.click();
+  allerOnglet("envoyer");
 }
 
 /* ---------- résolution du lieu ---------- */
@@ -1939,7 +2205,8 @@ function rendreRecherche(erreur){
       "<p>" + R.res.length + " affichée(s)" + (nouv < R.res.length ? ", dont " + (R.res.length - nouv) + " déjà dans votre liste" : "") + ". Cochez celles à prospecter.</p>" +
       '<div class="actions">' +
         '<button class="btn btn--ghost" data-act="tout" type="button">' + (sel >= nouv && nouv > 0 ? "Tout décocher" : "Tout cocher") + "</button>" +
-        '<button class="btn btn--main" data-act="ajouter" type="button"' + (sel ? "" : " disabled") + ">Ajouter " + (sel ? sel + " " : "") + "à ma liste</button>" +
+        '<button class="btn btn--main" data-act="ajouter" type="button"' + (sel ? "" : " disabled") +
+          ">Ajouter " + (sel ? sel + " " : "") + "aux mails à envoyer</button>" +
       "</div></div>" +
       '<div class="resl">' + R.res.map(function(x){
         var deja = dejaEnListe(x);
@@ -1955,6 +2222,7 @@ function rendreRecherche(erreur){
             '<span class="res__m">' + esc(lib || sec) + "</span>" +
             '<span class="res__e">' + esc(TRANCHES[x.tranche] || "effectif non déclaré") +
               (x.annee ? " (" + esc(x.annee) + ")" : "") + "</span>" +
+            '<span class="res__f">E-mail non trouvé — le registre public n\'en contient pas</span>' +
             (deja ? '<span class="res__d">Déjà dans votre liste</span>' : "") +
           "</span></label>";
       }).join("") + "</div>" +
@@ -2045,6 +2313,7 @@ function initRecherche(){
   $("rqLieu").addEventListener("change", majLieuSaisi);
   $("rqRayon").addEventListener("change", function(){ R.rayon = this.value; rendreLieuEtat(); });
   $("rqEffectif").addEventListener("change", function(){ R.effectif = this.value; });
+  $("rqNombre").addEventListener("change", function(){ R.voulu = parseInt(this.value, 10) || 50; });
   $("rqMots").addEventListener("input", function(){ R.mots = this.value.trim(); });
 
   $("rqChips").addEventListener("click", function(e){
@@ -2121,13 +2390,17 @@ function telDe(v){
 /* Traduction d'une activité écrite à la main vers les types du site,
    qui déterminent l'angle du mail. */
 var TYPE_MOTS = [
-  { t:"Salle de sport", m:["sport","sports","fitness","musculation","gym","piscine","padel","tennis","escalade","bowling"] },
-  { t:"Hôtel / résidence", m:["hotel","hotellerie","residence","camping","auberge","gite"] },
-  { t:"Centre de formation", m:["formation","auto ecole","autoecole","auto-ecole","cfa","apprentissage","enseignement","lycee","college"] },
-  { t:"Entrepôt / logistique", m:["logistique","entrepot","entreposage","transport","messagerie","fret","stockage","demenagement","plateforme"] },
-  { t:"Usine / atelier", m:["usine","industrie","industriel","atelier","fabrication","production","metallerie","chaudronnerie","serrurerie","menuiserie","imprimerie","chantier","installation","btp","batiment","travaux","peinture","traiteur","boulangerie","agroalimentaire","recyclage","plasturgie","usinage","mecanique"] },
-  { t:"Établissement accueillant du public", m:["laverie","lavage","pressing","controle technique","controle","garage","carrosserie","auto","automobile","vehicule","pneu","pneus","concession","station","commerce","magasin","supermarche","clinique","ehpad","laboratoire","coiffure","restaurant","cinema","attente","accueil","public"] },
-  { t:"Entreprise / bureaux", m:["bureau","bureaux","siege","agence","conseil","informatique","assurance","comptab","tertiaire"] }
+  { t:"Laverie / pressing", m:["laverie","laveries","lavage","pressing","blanchisserie","teinturerie","wash","laundry","speed queen","lavomatic"] },
+  { t:"Contrôle technique", m:["controle technique","controles techniques","auto bilan","autosur","securitest","dekra","autovision","controle auto","ct auto"] },
+  { t:"Garage / carrosserie", m:["garage","garages","carrosserie","concession","concessionnaire","depannage","pneu","pneus","mecanique auto","entretien automobile","reparation automobile","speedy","midas","norauto","feu vert"] },
+  { t:"Salle de sport", m:["sport","sports","fitness","musculation","gym","gymnase","piscine","padel","tennis","escalade","bowling"] },
+  { t:"Hôtel / résidence", m:["hotel","hotels","hotellerie","residence","residences","camping","auberge","gite"] },
+  { t:"Centre de formation", m:["formation","formations","centre de formation","auto ecole","autoecole","auto-ecole","cfa","apprentissage","enseignement","lycee","college","universite"] },
+  { t:"Entrepôt / logistique", m:["logistique","entrepot","entrepots","entreposage","transport","transports","messagerie","fret","stockage","demenagement","plateforme"] },
+  { t:"BTP / chantiers", m:["btp","batiment","travaux","chantier","chantiers","maconnerie","terrassement","couverture","charpente","plomberie","electricite generale","etancheite","genie civil","demolition","gros oeuvre","base vie","installation","echafaudage","tp"] },
+  { t:"Usine / atelier", m:["usine","usines","industrie","industriel","industriels","atelier","ateliers","fabrication","fabricant","production","metallerie","chaudronnerie","serrurerie","ferronnerie","menuiserie","ebenisterie","imprimerie","mecanique","usinage","decolletage","scierie","plasturgie","agroalimentaire","traiteur","boulangerie","recyclage","peinture industrielle","manufacture"] },
+  { t:"Établissement accueillant du public", m:["clinique","cliniques","ehpad","maison de retraite","laboratoire","labo","sante","medical","soins","hopital","ambulance","magasin","commerce","supermarche","hypermarche","jardinerie","bricolage","coiffure","restaurant","brasserie","cinema","attente","accueil","public","station"] },
+  { t:"Entreprise / bureaux", m:["bureau","bureaux","siege","agence","conseil","informatique","numerique","logiciel","ingenierie","comptabilite","assurance","interim","tertiaire","immobilier","publicite"] }
 ];
 
 function typeDepuisMots(txt){
@@ -2166,7 +2439,8 @@ function decouper(l){
 /* ---- lecture d'une ligne de titres, quand la liste vient d'un tableau ---- */
 var ENTETES = [
   { k:"entreprise", m:["raison sociale","denomination","entreprise","societe","enseigne","prospect","client","nom"] },
-  { k:"ville", m:["ville","commune","localite","adresse","lieu"] },
+  { k:"ville", m:["ville","commune","localite","lieu"] },
+  { k:"adresse", m:["adresse","rue","voie"] },
   { k:"typeTexte", m:["activite","secteur","domaine","metier","type"] },
   { k:"email", m:["e mail","e-mail","email","mail","courriel","adresse mail"] },
   { k:"tel", m:["telephone","tel","portable","mobile","numero"] },
@@ -2199,7 +2473,8 @@ function detecterEntete(l){
 
 function analyserAvecEntete(l, map){
   var cells = decouper(l);
-  var o = { entreprise:"", ville:"", email:"", tel:"", contactNom:"", contactFonction:"", note:"", typeTexte:"" };
+  var o = { entreprise:"", ville:"", adresse:"", email:"", tel:"", contactNom:"",
+            contactFonction:"", note:"", typeTexte:"" };
   var extra = [];
   cells.forEach(function(c, i){
     var k = map[i] || null;
@@ -2330,16 +2605,18 @@ function importerColle(){
   colleLot.forEach(function(x){
     var p = {
       id: uid(), entreprise:x.entreprise, type:x.type || ty, ville:x.ville || "",
+      activite:x.typeTexte || "", adresse:x.adresse || "",
       contactNom:x.contactNom || "", contactFonction:x.contactFonction || "",
-      email:x.email || "", tel:x.tel || "", site:"", effectif:"", note:x.note,
+      email:x.email || "", tel:x.tel || "", site:"", objet:"", corps:"",
+      effectif:"", note:x.note,
       statut:st, dateEnvoi:"", dateRelance:"", dateReponse:"",
       historique:[{ date: aujourdhui(), texte:"Importée depuis une liste collée" }]
     };
     if(st === "envoye"){ p.dateEnvoi = dt; }
-    else if(st === "relance"){ p.dateEnvoi = dt; p.dateRelance = dt; }
+    else if(st === "relance_envoyee"){ p.dateEnvoi = dt; p.dateRelance = dt; }
     else if(st === "reponse"){ p.dateEnvoi = dt; p.dateReponse = dt; }
     else if(st === "rdv" || st === "gagne" || st === "refus"){ p.dateEnvoi = dt; }
-    if(st !== "a_envoyer") p.historique.push({ date: dt, texte: libelleStatut(st) });
+    if(st !== "a_preparer") p.historique.push({ date: dt, texte: libelleStatut(st), t: Date.now() });
     D.prospects.push(p);
   });
   var n = colleLot.length;
@@ -2367,8 +2644,9 @@ function exporter(){
 
 /* Colonnes attendues par le script Apps Script, dans cet ordre exact. */
 var LIBELLE_TABLEUR = {
-  a_envoyer:"À envoyer", envoye:"Envoyé", relance:"Relancé", reponse:"Réponse reçue",
-  rdv:"Rendez-vous", gagne:"Emplacement signé", refus:"Sans suite"
+  a_preparer:"À préparer", mail_pret:"Mail prêt", envoye:"Envoyé", a_relancer:"À relancer",
+  relance_envoyee:"Relancé", reponse:"Réponse reçue", interesse:"Intéressé",
+  rdv:"Rendez-vous", gagne:"Emplacement obtenu", refus:"Refus", stop:"Ne plus contacter"
 };
 
 function exporterTableur(){
@@ -2439,14 +2717,37 @@ CHAMPS_INFOS.forEach(function(k){
   });
 });
 
-document.querySelectorAll(".tabs button").forEach(function(b){
-  b.addEventListener("click", function(){
-    document.querySelectorAll(".tabs button").forEach(function(x){ x.classList.remove("is-on"); });
-    b.classList.add("is-on");
-    document.querySelectorAll(".vue").forEach(function(v){ v.classList.remove("is-on"); });
-    $("v-" + b.getAttribute("data-vue")).classList.add("is-on");
-    window.scrollTo(0, 0);
+/* Trois onglets partagent la même vue de liste : seul le statut affiché
+   change, ce qui évite de dupliquer la barre de recherche et l'import. */
+var VUE_DE = {
+  recherche:"recherche", envoyer:"liste", envoyes:"liste", relances:"liste",
+  historique:"historique", infos:"infos"
+};
+
+function allerOnglet(nom){
+  if(!VUE_DE[nom]) return;
+  if(ONGLETS[nom]){
+    onglet = nom;
+    if(modeSelection){ modeSelection = false; selection = {}; }
+  }
+  document.querySelectorAll(".tabs button").forEach(function(b){
+    b.classList.toggle("is-on", b.getAttribute("data-vue") === nom);
   });
+  $("allerInfos").classList.toggle("is-on", nom === "infos");
+  document.querySelectorAll(".vue").forEach(function(v){
+    v.classList.toggle("is-on", v.id === "v-" + VUE_DE[nom]);
+  });
+  if(VUE_DE[nom] === "liste") rendreListe();
+  if(nom === "historique") rendreHistorique();
+  if(nom === "infos") rendreCorbeille();
+  window.scrollTo(0, 0);
+}
+
+document.querySelectorAll(".tabs button").forEach(function(b){
+  b.addEventListener("click", function(){ allerOnglet(b.getAttribute("data-vue")); });
+});
+$("allerInfos").addEventListener("click", function(){
+  allerOnglet($("allerInfos").classList.contains("is-on") ? onglet : "infos");
 });
 
 document.querySelectorAll("[data-sig]").forEach(function(b){
@@ -2504,7 +2805,7 @@ $("importer").addEventListener("click", function(){ $("fichier").click(); });
 $("exporterTableur").addEventListener("click", exporterTableur);
 
 $("colleStatut").innerHTML = STATUTS.map(function(s){
-  return '<option value="' + s.k + '"' + (s.k === "envoye" ? " selected" : "") + ">" + esc(s.l) + "</option>";
+  return '<option value="' + s.k + '"' + (s.k === "a_preparer" ? " selected" : "") + ">" + esc(s.l) + "</option>";
 }).join("");
 $("colleType").innerHTML = TYPES.map(function(t){ return "<option>" + esc(t) + "</option>"; }).join("");
 $("colleDate").value = aujourdhui();
@@ -2516,11 +2817,8 @@ $("fichier").addEventListener("change", function(){
   this.value = "";
 });
 
-/* L'onglet peut être ouvert directement : prospection.html#infos */
-if(location.hash === "#infos"){
-  var bi = document.querySelector('.tabs button[data-vue="infos"]');
-  if(bi) bi.click();
-}
+/* La page peut être ouverte directement sur un onglet : #infos, #recherche… */
+if(location.hash && VUE_DE[location.hash.slice(1)]) allerOnglet(location.hash.slice(1));
 
 })();
 </script>
