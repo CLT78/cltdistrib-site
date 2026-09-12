@@ -43,13 +43,17 @@
   }
   .top__set svg{ width:20px; height:20px; }
   .top__set.is-on{ background:var(--brand); border-color:var(--brand); }
-  .tabs{ display:flex; gap:0; max-width:900px; margin:0 auto; padding:0 10px; }
+  .tabs{
+    display:flex; gap:0; max-width:900px; margin:0 auto; padding:0 10px;
+    overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{ display:none; }
   .tabs button{
-    flex:1; font:inherit; font-size:12.5px; font-weight:600; padding:11px 4px 13px; min-height:46px;
+    flex:0 0 auto; font:inherit; font-size:12.5px; font-weight:600; padding:11px 9px 13px; min-height:46px;
     background:none; border:none; border-bottom:3px solid transparent; color:#8B9AB5; cursor:pointer;
     white-space:nowrap; letter-spacing:-0.01em;
   }
-  @media (min-width:520px){ .tabs button{ font-size:14px; padding-left:8px; padding-right:8px; } }
+  @media (min-width:760px){ .tabs button{ flex:1; font-size:13.5px; } }
   .tabs button.is-on{ color:#fff; border-bottom-color:var(--brand); }
 
   /* ---------- blocs ---------- */
@@ -190,6 +194,36 @@
   .colle__m--no{ color:var(--late); font-weight:600; }
   .colle__m--tel{ color:var(--wait); font-weight:600; }
   .colle__n{ display:block; font-size:12.5px; color:var(--ink-soft); margin-top:2px; }
+
+  /* ---------- infos manquantes ---------- */
+  .manq{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:13px 14px; margin-top:9px; }
+  .manq__h{ display:flex; align-items:flex-start; gap:11px; }
+  .manq__h input[type="checkbox"]{
+    width:22px; height:22px; min-height:0; padding:0; margin:2px 0 0; flex-shrink:0; accent-color:var(--brand);
+  }
+  .manq__n{
+    flex:1; min-width:0; text-align:left; background:none; border:0; padding:0; cursor:pointer;
+    font:inherit; font-size:15px; font-weight:600; color:var(--navy); line-height:1.3;
+  }
+  .manq__v{ display:block; font-size:12.5px; font-weight:400; color:var(--ink-faint); margin-top:2px; }
+  .manq__e{
+    font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.03em; padding:4px 8px;
+    border-radius:99px; background:var(--mute-tint); color:var(--mute); white-space:nowrap; flex-shrink:0;
+  }
+  .manq__e--trouve{ background:var(--ok-tint); color:var(--ok); }
+  .manq__e--partiel{ background:var(--wait-tint); color:var(--wait); }
+  .manq__e--introuvable{ background:var(--late-tint); color:var(--late); }
+  .manq__e--encours{ background:var(--info-tint); color:var(--info); }
+  .manq__g{ display:grid; grid-template-columns:1fr; gap:8px; margin-top:12px; }
+  @media (min-width:620px){ .manq__g{ grid-template-columns:1fr 1fr 1fr; } }
+  .manq__g label{ font-size:12px; margin-bottom:0; }
+  .manq__g input{ margin-top:3px; font-size:14px; padding:9px 11px; min-height:40px; }
+  .mq{ font-weight:700; }
+  .mq--ok{ color:var(--ok); }
+  .mq--no{ color:var(--late); }
+  .manq__s{ font-size:11.5px; color:var(--ink-faint); margin:10px 0 0; }
+  .manq__a{ display:flex; gap:7px; flex-wrap:wrap; margin-top:11px; }
+  .manq__a .btn{ flex:1 1 auto; }
 
   /* ---------- historique ---------- */
   .recap{ display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:15px; }
@@ -333,6 +367,7 @@
     <button class="is-on" data-vue="envoyer" type="button">À envoyer</button>
     <button data-vue="envoyes" type="button">Envoyés</button>
     <button data-vue="relances" type="button">Relances</button>
+    <button data-vue="manquantes" type="button">Infos manquantes</button>
     <button data-vue="historique" type="button">Historique</button>
   </div>
 </header>
@@ -400,6 +435,24 @@
         <div><strong>Sauvegardez régulièrement.</strong> Vos prospects sont enregistrés dans ce navigateur, sur cet appareil. Vider les données du navigateur les efface. Utilisez « Exporter » en bas de l'onglet « Mes infos » pour en garder une copie.</div>
       </div>
     </div>
+  </div>
+
+  <!-- ======================= INFOS MANQUANTES ======================= -->
+  <div class="vue" id="v-manquantes">
+    <div class="recap" id="manqRecap"></div>
+
+    <div class="card">
+      <h2>Compléter les coordonnées</h2>
+      <p>Une entreprise sort de cette liste dès qu'elle a un téléphone et un e-mail. Le site internet est un plus, pas une obligation.</p>
+      <div class="actions">
+        <button class="btn btn--main" id="manqToutes" type="button">Rechercher pour toutes</button>
+        <button class="btn btn--dark" id="manqSel" type="button" disabled>Rechercher les cochées</button>
+      </div>
+      <p class="note" id="manqEtat" style="margin-top:11px"></p>
+    </div>
+
+    <div class="chips" id="manqFiltres" style="margin-top:15px"></div>
+    <div id="manqListe"></div>
   </div>
 
   <!-- ============================ HISTORIQUE ============================ -->
@@ -634,7 +687,8 @@ function migrer(){
   var n = 0;
   D.prospects.forEach(function(p){
     if(ANCIENS_STATUTS[p.statut]){ p.statut = ANCIENS_STATUTS[p.statut]; n++; }
-    ["adresse", "objet", "corps", "activite", "site", "siren"].forEach(function(k){
+    ["adresse", "objet", "corps", "activite", "site", "siren",
+     "telSource", "emailSource", "siteSource", "etatRecherche", "dateRecherche"].forEach(function(k){
       if(typeof p[k] !== "string") p[k] = "";
     });
     /* Les laveries, garages et contrôles techniques étaient rangés dans le
@@ -1267,6 +1321,378 @@ function basculerModeSelection(force){
 }
 
 /* ============================================================
+   INFOS MANQUANTES — compléter téléphone, e-mail et site
+   ------------------------------------------------------------
+   Un site servi par GitHub Pages ne peut pas parcourir le web :
+   le navigateur refuse de lire une page d'un autre domaine. La
+   seule source interrogeable depuis ici est OpenStreetMap, qui
+   contient de vrais numéros et sites saisis par des humains.
+   Ce qui n'y figure pas reste à récupérer à la main, avec les
+   raccourcis prévus sous chaque entreprise. Rien n'est deviné.
+   ============================================================ */
+
+var OVERPASS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter"
+];
+var RAYON_OSM = 6000;          /* mètres autour du centre de la commune */
+var PAUSE_OSM = 1200;          /* ms entre deux requêtes : service gratuit et partagé */
+var MAX_PAR_SERIE = 30;
+
+var ETATS_RECHERCHE = {
+  "":           "À rechercher",
+  encours:      "Recherche en cours",
+  trouve:       "Informations trouvées",
+  partiel:      "Informations partiellement trouvées",
+  introuvable:  "Introuvable"
+};
+
+var manqFiltre = "tous";
+var manqSel = {};
+var manqEnCours = false;
+var manqStop = false;
+var geoCommunes = {};          /* commune -> {lat, lon} déjà résolue */
+
+function manqueDe(p){
+  var m = [];
+  if(!p.email) m.push("E-mail");
+  if(!p.tel) m.push("Téléphone");
+  if(!p.site) m.push("Site");
+  return m;
+}
+
+/* Téléphone et e-mail suffisent : le site n'est qu'un confort. */
+function estIncomplet(p){
+  return !p.email || !p.tel;
+}
+
+function compteursManq(){
+  var c = { incomplets:0, email:0, tel:0, deux:0, complets:0, fait:0, introuvable:0 };
+  D.prospects.forEach(function(p){
+    if(estIncomplet(p)){
+      c.incomplets++;
+      if(!p.email) c.email++;
+      if(!p.tel) c.tel++;
+      if(!p.email && !p.tel) c.deux++;
+      if(p.etatRecherche === "introuvable") c.introuvable++;
+      if(p.dateRecherche) c.fait++;
+    }else{
+      c.complets++;
+    }
+  });
+  return c;
+}
+
+var MANQ_FILTRES = [
+  { k:"tous",  l:"Tout" },
+  { k:"email", l:"E-mail manquant" },
+  { k:"tel",   l:"Téléphone manquant" },
+  { k:"deux",  l:"Les deux" },
+  { k:"fait",  l:"Recherche effectuée" },
+  { k:"intro", l:"Introuvable" }
+];
+
+function passeManqFiltre(p){
+  if(manqFiltre === "email") return !p.email;
+  if(manqFiltre === "tel")   return !p.tel;
+  if(manqFiltre === "deux")  return !p.email && !p.tel;
+  if(manqFiltre === "fait")  return !!p.dateRecherche;
+  if(manqFiltre === "intro") return p.etatRecherche === "introuvable";
+  return true;
+}
+
+function listeManquantes(){
+  return D.prospects.filter(function(p){ return estIncomplet(p) && passeManqFiltre(p); })
+    .sort(function(a, b){
+      var da = (a.email ? 0 : 2) + (a.tel ? 0 : 1);
+      var db = (b.email ? 0 : 2) + (b.tel ? 0 : 1);
+      if(da !== db) return db - da;
+      return (a.entreprise || "").localeCompare(b.entreprise || "", "fr");
+    });
+}
+
+function marque(ok){
+  return ok
+    ? '<span class="mq mq--ok">✓</span>'
+    : '<span class="mq mq--no">✗</span>';
+}
+
+function rendreManquantes(){
+  var c = compteursManq();
+  $("manqRecap").innerHTML = [
+    ["Infos manquantes", c.incomplets], ["E-mail manquant", c.email],
+    ["Téléphone manquant", c.tel], ["Fiches complètes", c.complets]
+  ].map(function(x){
+    return "<div><b>" + x[1] + "</b><span>" + esc(x[0]) + "</span></div>";
+  }).join("");
+
+  $("manqFiltres").innerHTML = MANQ_FILTRES.map(function(f){
+    return '<button class="chip' + (manqFiltre === f.k ? " is-on" : "") +
+      '" data-mf="' + f.k + '" type="button">' + esc(f.l) + "</button>";
+  }).join("");
+
+  var liste = listeManquantes();
+  var nsel = Object.keys(manqSel).filter(function(k){ return manqSel[k]; }).length;
+  $("manqSel").disabled = !nsel || manqEnCours;
+  $("manqSel").textContent = nsel ? "Rechercher les " + nsel + " cochées" : "Rechercher les cochées";
+  $("manqToutes").disabled = manqEnCours || !D.prospects.some(estIncomplet);
+
+  if(!liste.length){
+    $("manqListe").innerHTML = '<div class="vide">' +
+      (c.incomplets
+        ? "Aucune entreprise ne correspond à ce filtre."
+        : "Toutes vos entreprises ont un téléphone et un e-mail.") + "</div>";
+    return;
+  }
+
+  $("manqListe").innerHTML = liste.map(function(p){
+    var q = encodeURIComponent('"' + (p.entreprise || "") + '" ' + (p.ville || ""));
+    var etat = ETATS_RECHERCHE[p.etatRecherche] || ETATS_RECHERCHE[""];
+    return '<div class="manq" data-p="' + esc(p.id) + '">' +
+      '<div class="manq__h">' +
+        '<input type="checkbox" data-msel="' + esc(p.id) + '"' + (manqSel[p.id] ? " checked" : "") + ">" +
+        '<button class="manq__n" data-ouvrir="' + esc(p.id) + '" type="button">' +
+          esc(p.entreprise || "Sans nom") +
+          (p.ville ? '<span class="manq__v">' + esc(p.ville) + "</span>" : "") +
+        "</button>" +
+        '<span class="manq__e manq__e--' + esc(p.etatRecherche || "vide") + '">' + esc(etat) + "</span>" +
+      "</div>" +
+      '<div class="manq__g">' +
+        '<label>E-mail ' + marque(!!p.email) + '<input type="text" inputmode="email" data-mk="email" ' +
+          'value="' + esc(p.email) + '" placeholder="à compléter"></label>' +
+        '<label>Téléphone ' + marque(!!p.tel) + '<input type="text" inputmode="tel" data-mk="tel" ' +
+          'value="' + esc(p.tel) + '" placeholder="à compléter"></label>' +
+        '<label>Site ' + marque(!!p.site) + '<input type="text" inputmode="url" data-mk="site" ' +
+          'value="' + esc(p.site) + '" placeholder="facultatif"></label>' +
+      "</div>" +
+      ((p.telSource || p.emailSource || p.siteSource)
+        ? '<p class="manq__s">Source : ' +
+          esc([p.emailSource ? "e-mail " + p.emailSource : "",
+               p.telSource ? "téléphone " + p.telSource : "",
+               p.siteSource ? "site " + p.siteSource : ""].filter(Boolean).join(" · ")) + "</p>"
+        : "") +
+      '<div class="manq__a">' +
+        '<button class="btn btn--dark btn--sm" data-mun="' + esc(p.id) + '" type="button"' +
+          (manqEnCours ? " disabled" : "") + ">Rechercher</button>" +
+        '<a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" ' +
+          'href="https://www.google.com/maps/search/?api=1&query=' + q + '">Maps</a>' +
+        '<a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" ' +
+          'href="https://www.google.com/search?q=' + q + '+contact">Web</a>' +
+        (p.site
+          ? '<a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" href="' +
+            esc(normaliserUrl(p.site)) + '">Son site</a>'
+          : "") +
+      "</div>" +
+    "</div>";
+  }).join("");
+}
+
+/* ---------- recherche automatique sur OpenStreetMap ---------- */
+
+var MOTS_GENERIQUES = ["laverie","laveries","garage","garages","auto","autos","automobile","automobiles",
+  "controle","technique","carrosserie","pressing","lavage","sarl","sas","sasu","eurl","sa","ets",
+  "etablissements","societe","entreprise","entreprises","france","groupe","atelier","ateliers","usine",
+  "industrie","industries","transport","transports","centre","service","services","station","distribution",
+  "batiment","travaux","conseil","concept","expert","experts","pro","plus","and","the","les","des","del"];
+
+/* Le mot le plus distinctif du nom : ni un mot de métier, ni le nom de la
+   commune, sinon « Midas Mantes » ferait chercher « mantes ». */
+function motCleNom(nom, ville){
+  var mots = sansAccent(nom).replace(/[^a-z0-9 ]+/g, " ").split(/\s+/)
+    .filter(function(m){ return m.length > 2; });
+  var motsVille = sansAccent(ville || "").replace(/[^a-z0-9 ]+/g, " ").split(/\s+/);
+  var forts = mots.filter(function(m){
+    return MOTS_GENERIQUES.indexOf(m) < 0 && motsVille.indexOf(m) < 0;
+  });
+  var choix = (forts.length ? forts : mots).slice().sort(function(a, b){ return b.length - a.length; })[0];
+  return choix || "";
+}
+
+/* Un nom proche ne suffit pas : sans correspondance franche, on ne prend
+   rien, plutôt que d'attribuer le numéro du voisin. */
+function memeEtablissement(nomFiche, nomOsm){
+  var a = sansAccent(nomFiche).replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter(function(m){ return m.length > 2; });
+  var b = sansAccent(nomOsm).replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter(function(m){ return m.length > 2; });
+  if(!a.length || !b.length) return false;
+  var communs = a.filter(function(m){ return b.indexOf(m) >= 0; });
+  var forts = a.filter(function(m){ return MOTS_GENERIQUES.indexOf(m) < 0; });
+  var fortsCommuns = communs.filter(function(m){ return MOTS_GENERIQUES.indexOf(m) < 0; });
+  /* Sans aucun mot distinctif en commun, ce n'est pas la même maison. */
+  if(forts.length && !fortsCommuns.length) return false;
+  if(communs.length >= 2) return true;
+  /* Un nom plus court côté carte (« Midas » pour « Midas Mantes ») reste
+     valable s'il est entièrement contenu dans l'autre. */
+  var osmDansFiche = b.every(function(m){ return a.indexOf(m) >= 0; });
+  var ficheDansOsm = a.every(function(m){ return b.indexOf(m) >= 0; });
+  return osmDansFiche || ficheDansOsm;
+}
+
+function communeDe(p){
+  var ville = (p.ville || "").trim();
+  if(!ville) return Promise.resolve(null);
+  var cle = sansAccent(ville);
+  if(geoCommunes[cle] !== undefined) return Promise.resolve(geoCommunes[cle]);
+  return resoudreLieu(ville).then(function(g){
+    var r = (g && g.type === "commune" && g.lat != null) ? { lat:g.lat, lon:g.lon } : null;
+    geoCommunes[cle] = r;
+    return r;
+  }).catch(function(){ geoCommunes[cle] = null; return null; });
+}
+
+function interrogerOsm(mot, lat, lon, index){
+  index = index || 0;
+  if(index >= OVERPASS.length) return Promise.reject(new Error("OpenStreetMap ne répond pas."));
+  var q = "[out:json][timeout:20];nwr(around:" + RAYON_OSM + "," + lat + "," + lon + ")" +
+    '["name"~"' + mot.replace(/["\\]/g, "") + '",i];out tags center 15;';
+  return fetch(OVERPASS[index], {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: "data=" + encodeURIComponent(q)
+  }).then(function(r){
+    if(!r.ok) throw new Error("code " + r.status);
+    return r.json();
+  }).catch(function(){
+    return interrogerOsm(mot, lat, lon, index + 1);
+  });
+}
+
+function tagsUtiles(t){
+  t = t || {};
+  var tel = t.phone || t["contact:phone"] || t["phone:FR"] || t.telephone || "";
+  var mail = t.email || t["contact:email"] || "";
+  var site = t.website || t["contact:website"] || t.url || "";
+  return {
+    tel: telDe(tel) || "",
+    email: /^[^\s@]+@[^\s@]+\.[A-Za-z]{2,}$/.test(mail) ? mail.toLowerCase() : "",
+    site: /^https?:\/\/\S+$/i.test(site) ? site : (/^[a-z0-9.-]+\.[a-z]{2,}/i.test(site) ? normaliserUrl(site) : "")
+  };
+}
+
+/* Une seule entreprise. Ne remplit que ce qui manque, et n'écrase rien. */
+function chercherInfos(p){
+  p.etatRecherche = "encours";
+  rendreManquantes();
+  return communeDe(p).then(function(g){
+    if(!g) throw new Error("ville inconnue");
+    var mot = motCleNom(p.entreprise, p.ville);
+    if(!mot) throw new Error("nom trop générique");
+    return interrogerOsm(mot, g.lat, g.lon);
+  }).then(function(j){
+    var trouve = null;
+    (j.elements || []).some(function(el){
+      var t = el.tags || {};
+      if(!t.name || !memeEtablissement(p.entreprise, t.name)) return false;
+      var u = tagsUtiles(t);
+      if(!u.tel && !u.email && !u.site) return false;
+      trouve = u;
+      return true;
+    });
+    var ajouts = [];
+    if(trouve){
+      if(!p.email && trouve.email){ p.email = trouve.email; p.emailSource = "OpenStreetMap"; ajouts.push("e-mail"); }
+      if(!p.tel && trouve.tel){ p.tel = trouve.tel; p.telSource = "OpenStreetMap"; ajouts.push("téléphone"); }
+      if(!p.site && trouve.site){ p.site = trouve.site; p.siteSource = "OpenStreetMap"; ajouts.push("site"); }
+    }
+    p.dateRecherche = aujourdhui();
+    if(!estIncomplet(p)) p.etatRecherche = "trouve";
+    else if(ajouts.length) p.etatRecherche = "partiel";
+    else p.etatRecherche = "introuvable";
+    if(ajouts.length) ajouterHisto(p, "Trouvé sur OpenStreetMap : " + ajouts.join(", "));
+    sauver();
+    return ajouts.length;
+  }).catch(function(e){
+    p.dateRecherche = aujourdhui();
+    p.etatRecherche = "introuvable";
+    ajouterHisto(p, "Recherche sans résultat" + (e && e.message ? " (" + e.message + ")" : ""));
+    sauver();
+    return 0;
+  });
+}
+
+function lancerSerie(liste){
+  if(manqEnCours || !liste.length) return;
+  manqEnCours = true;
+  manqStop = false;
+  var total = Math.min(liste.length, MAX_PAR_SERIE);
+  var faits = 0, remplis = 0;
+  $("manqToutes").textContent = "Arrêter";
+  $("manqToutes").disabled = false;
+
+  function suite(){
+    if(manqStop || faits >= total){
+      manqEnCours = false;
+      $("manqToutes").textContent = "Rechercher pour toutes";
+      $("manqEtat").textContent = "Terminé : " + remplis + " entreprise(s) complétée(s) sur " + faits + " examinée(s)." +
+        (liste.length > total ? " Relancez pour les " + (liste.length - total) + " suivantes." : "");
+      manqSel = {};
+      rendreManquantes();
+      rendreListe();
+      return;
+    }
+    var p = liste[faits];
+    $("manqEtat").textContent = "Recherche en cours… " + (faits + 1) + " / " + total + " — " + (p.entreprise || "");
+    chercherInfos(p).then(function(n){
+      if(n) remplis++;
+      faits++;
+      rendreManquantes();
+      setTimeout(suite, PAUSE_OSM);
+    });
+  }
+  suite();
+}
+
+function brancherManquantes(){
+  $("manqFiltres").addEventListener("click", function(e){
+    var b = e.target.closest ? e.target.closest("[data-mf]") : null;
+    if(!b) return;
+    manqFiltre = b.getAttribute("data-mf");
+    rendreManquantes();
+  });
+
+  $("manqListe").addEventListener("change", function(e){
+    var el = e.target;
+    if(el.type === "checkbox" && el.getAttribute("data-msel")){
+      manqSel[el.getAttribute("data-msel")] = el.checked;
+      rendreManquantes();
+      return;
+    }
+    var k = el.getAttribute && el.getAttribute("data-mk");
+    if(!k) return;
+    var carte = el.closest("[data-p]");
+    var p = trouver(carte.getAttribute("data-p"));
+    if(!p) return;
+    var v = el.value.trim();
+    if(k === "tel") v = telDe(v) || v;
+    if(k === "site" && v) v = normaliserUrl(v);
+    p[k] = v;
+    p[k + "Source"] = v ? "saisi à la main" : "";
+    if(v) ajouterHisto(p, (k === "tel" ? "Téléphone" : k === "email" ? "E-mail" : "Site") + " renseigné à la main");
+    if(!estIncomplet(p)) p.etatRecherche = "trouve";
+    sauver();
+    rendreManquantes();
+    rendreListe();
+  });
+
+  $("manqListe").addEventListener("click", function(e){
+    var o = e.target.closest ? e.target.closest("[data-ouvrir]") : null;
+    if(o){ ouvrirFiche(o.getAttribute("data-ouvrir")); return; }
+    var u = e.target.closest ? e.target.closest("[data-mun]") : null;
+    if(!u) return;
+    var p = trouver(u.getAttribute("data-mun"));
+    if(p) lancerSerie([p]);
+  });
+
+  $("manqToutes").addEventListener("click", function(){
+    if(manqEnCours){ manqStop = true; return; }
+    lancerSerie(D.prospects.filter(estIncomplet));
+  });
+
+  $("manqSel").addEventListener("click", function(){
+    lancerSerie(D.prospects.filter(function(p){ return estIncomplet(p) && manqSel[p.id]; }));
+  });
+}
+
+/* ============================================================
    CORBEILLE — une suppression reste rattrapable un mois
    ============================================================ */
 var JOURS_CORBEILLE = 30;
@@ -1385,6 +1811,13 @@ var CHAMPS = [
   { k:"note", l:"Notes", t:"area", w:2 }
 ];
 
+function normaliserUrl(u){
+  u = String(u == null ? "" : u).trim();
+  if(!u) return "";
+  if(!/^https?:\/\//i.test(u)) u = "https://" + u;
+  return u.replace(/\/+$/, "");
+}
+
 function domaineDe(v){
   var d = String(v == null ? "" : v).trim().toLowerCase()
     .replace(/^https?:\/\//, "").replace(/^www\./, "").split("/")[0].split("?")[0];
@@ -1396,11 +1829,10 @@ function domaineDe(v){
 function aideEmailHtml(p){
   var d = domaineDe(p.site);
   var q = encodeURIComponent('"' + (p.entreprise || "") + '" ' + (p.ville || "") + " contact email");
-  var courantes = ["contact", "info", "accueil", "commercial"];
   return '<div class="aide" id="aideEmail"' + (p.email ? ' style="display:none"' : "") + ">" +
     "<strong>Trouver l'adresse email</strong>" +
     '<p class="note" style="margin:5px 0 10px">Les bases publiques ne contiennent pas les adresses email. ' +
-      "Ouvrez le site de l'entreprise et déduisez-la de son nom de domaine" +
+      "Ouvrez sa page de contact et relevez l'adresse qui y figure" +
       (p.tel
         ? ", ou appelez : sur un petit établissement, c'est souvent plus rapide."
         : ". Sur un commerce, le numéro figure presque toujours sur sa fiche Maps.") + "</p>" +
@@ -1411,12 +1843,8 @@ function aideEmailHtml(p){
         encodeURIComponent((p.entreprise || "") + " " + (p.ville || "")) + '">Voir sur Maps</a>') +
       (d ? '<a class="btn btn--ghost btn--sm" target="_blank" rel="noopener" href="https://' + esc(d) + '">Ouvrir ' + esc(d) + "</a>" : "") +
     "</div>" +
-    (d
-      ? '<p class="note" style="margin:11px 0 7px">Adresses les plus fréquentes sur ce domaine — vérifiez avant d\'envoyer :</p>' +
-        '<div class="actions">' + courantes.map(function(a){
-          return '<button class="btn btn--dark btn--sm" type="button" data-mail="' + esc(a + "@" + d) + '">' + esc(a + "@" + d) + "</button>";
-        }).join("") + "</div>"
-      : '<p class="note" style="margin-top:11px">Renseignez « Site internet » ci-dessus : les adresses les plus probables vous seront proposées.</p>') +
+    '<p class="note" style="margin-top:11px">Une adresse n\'est jamais devinée : relevez celle qui figure ' +
+      "sur la page de contact, sinon le mail reviendra en erreur.</p>" +
     "</div>";
 }
 
@@ -2721,7 +3149,7 @@ CHAMPS_INFOS.forEach(function(k){
    change, ce qui évite de dupliquer la barre de recherche et l'import. */
 var VUE_DE = {
   recherche:"recherche", envoyer:"liste", envoyes:"liste", relances:"liste",
-  historique:"historique", infos:"infos"
+  manquantes:"manquantes", historique:"historique", infos:"infos"
 };
 
 function allerOnglet(nom){
@@ -2731,13 +3159,17 @@ function allerOnglet(nom){
     if(modeSelection){ modeSelection = false; selection = {}; }
   }
   document.querySelectorAll(".tabs button").forEach(function(b){
-    b.classList.toggle("is-on", b.getAttribute("data-vue") === nom);
+    var actif = b.getAttribute("data-vue") === nom;
+    b.classList.toggle("is-on", actif);
+    /* La barre défile sur un écran étroit : l'onglet choisi doit rester visible. */
+    if(actif && b.scrollIntoView) b.scrollIntoView({ inline:"nearest", block:"nearest" });
   });
   $("allerInfos").classList.toggle("is-on", nom === "infos");
   document.querySelectorAll(".vue").forEach(function(v){
     v.classList.toggle("is-on", v.id === "v-" + VUE_DE[nom]);
   });
   if(VUE_DE[nom] === "liste") rendreListe();
+  if(nom === "manquantes") rendreManquantes();
   if(nom === "historique") rendreHistorique();
   if(nom === "infos") rendreCorbeille();
   window.scrollTo(0, 0);
@@ -2812,6 +3244,7 @@ $("colleDate").value = aujourdhui();
 $("colleLire").addEventListener("click", apercuColle);
 
 initRecherche();
+brancherManquantes();
 $("fichier").addEventListener("change", function(){
   if(this.files && this.files[0]) importer(this.files[0]);
   this.value = "";
